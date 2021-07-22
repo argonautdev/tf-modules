@@ -1,7 +1,13 @@
 # Set account-wide variables. These are automatically pulled in to configure the remote state bucket in the root
-# terragrunt.hcl configuration.
+# terragrunt.hcl configuration
+// account level specs kept here
 locals {
-  account_name   = "non-prod"
-  aws_account_id = "replaceme" # TODO: replace me with your AWS account ID!
-  aws_profile    = "non-prod"
+  map_users = [
+    {
+      userarn = "{{.AWS.AWSArn}}"
+      username = "{{.AWS.Username}}"
+      groups = ["system:masters"]
+    }
+  ]
+  map_accounts = ["{{.AWS.AWSAccountID}}"]
 }
