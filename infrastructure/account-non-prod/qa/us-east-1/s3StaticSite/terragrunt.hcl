@@ -22,9 +22,9 @@ locals {
 terraform {
 
   # the below config is an example of what the config should like
-  # source = "git::git@github.com:gruntwork-io/terragrunt-modules.git//aws/env_cluster_nodegroup?ref=v0.4.0"
+  # source = "git::git@github.com:gruntwork-io/tf-modules.git//modules/aws/env_cluster_nodegroup?ref=v0.4.0"
 
-  source = "git::git@github.com:argonautdev/terragrunt-modules.git//aws/s3StaticSite?ref={{ .RefVersion }}"
+  source = "git::git@github.com:argonautdev/tf-modules.git//modules/aws/s3StaticSite?ref={{ .RefVersion }}"
 }
 
 # Include all settings from the root terragrunt.hcl file
@@ -49,4 +49,5 @@ inputs = {
 
   index_document = "{{ .AwsS3.IndexDocument }}"
   error_document = "{{ .AwsS3.ErrorDocument }}"
+  website = "{{ .AwsS3.Website }}"
 }

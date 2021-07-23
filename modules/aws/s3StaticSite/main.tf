@@ -21,7 +21,7 @@ module "s3_static_site_bucket" {
                 "s3:GetObject"
             ],
             "Resource": [
-                "arn:aws:s3:::{{ .AwsS3.Website }}/*"
+                "arn:aws:s3:::${var.website}/*"
             ]
         }
     ]

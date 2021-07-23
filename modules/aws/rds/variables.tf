@@ -1,5 +1,4 @@
 variable "aws_region" {
-  default = "{{ .Environment.Region} }"
   description = "aws region"
   type = string
 }
@@ -10,7 +9,6 @@ variable "db_subnet_group_name" {
 }
 
 variable "storage" {
-  default     = "{{ .Storage }}"
   description = "Storage capacity in GB"
   type        = number
 }
