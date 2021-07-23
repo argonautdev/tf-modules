@@ -192,7 +192,7 @@ func main() {
 		zap.S().Info(data)
 		for fileName, fileVal := range data {
 			zap.S().Infof("writing file %s", fileName)
-			fileName = filepath.Join("parsednew", fileName)
+			fileName = filepath.Join("parsed", fileName)
 			err = os.MkdirAll(getFolderPath(fileName), os.ModePerm)
 			if err != nil {
 				zap.S().Errorf("Could not create nested folder %s", getFolderPath(fileName))
