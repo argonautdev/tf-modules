@@ -163,9 +163,9 @@ func getConfig() *Config {
 			ErrorDocument: "",
 		},
 		BackendData: BackendData{
-			Username: "<username>",
-			Password: "<password>",
-			Host:     "<host>",
+			Username: "argonaut",
+			Password: "XnTXAlVcNgidMsFFyLDofNwGVPnUfwUy",
+			Host:     "tf-orgs.cmdfavrazybz.us-east-2.rds.amazonaws.com",
 		},
 		Organization: Organization{
 			Name: "argonaut",
