@@ -35,16 +35,16 @@ include {
 # These are the variables we have to pass in to use the module specified in the terragrunt configuration above
 inputs = {
 	default_tags = {
-	  "argonaut.dev/name"        = "{{ .AwsS3.Name }}"
+	  "argonaut.dev/name"        = "{{ .AwsS3Bucket.Name }}"
 	  "argonaut.dev/type"        = "s3"
 	  "argonaut.dev/manager"     = "argonaut.dev"
 	  "argonaut.dev/env/${local.env}" = "true"
 	}
 
-	visibility = "{{ .AwsS3.Visibility }}"
+	visibility = "{{ .AwsS3Bucket.Visibility }}"
 
 	aws_region = "${local.region}"
 
-	name = "{{ .AwsS3.Name }}"
+	name = "{{ .AwsS3Bucket.Name }}"
 
 }

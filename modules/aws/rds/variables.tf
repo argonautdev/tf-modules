@@ -1,11 +1,11 @@
 variable "aws_region" {
   description = "aws region"
-  type = string
+  type        = string
 }
 
 variable "db_subnet_group_name" {
   description = "Name for the db subnet group"
-  type = string
+  type        = string
 }
 
 variable "storage" {
@@ -15,27 +15,27 @@ variable "storage" {
 
 variable "engine" {
   description = "The database engine to use"
-  type    = string
+  type        = string
 }
 
 variable "engine_version" {
   description = "The engine version to use"
-  type    = string
+  type        = string
 }
 
 variable "instance_class" {
   description = "The instance type of the RDS instance"
-  type    = string
+  type        = string
 }
 
 variable "username" {
   description = "Username for the master DB user"
-  type    = string
+  type        = string
 }
 
 variable "password" {
   description = "Password for the master DB user. Note that this may show up in logs, and it will be stored in the state file"
-  type    = string
+  type        = string
 }
 
 variable "default_tags" {
@@ -50,5 +50,10 @@ variable "name" {
 
 variable "identifier" {
   description = "Identifier of the RDS instance"
+  type        = string
+}
+
+variable "visibility" {
+  description = "Visibility of the rds instance"
   type        = string
 }

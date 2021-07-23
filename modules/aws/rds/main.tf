@@ -26,7 +26,7 @@ module "rds_db_subnet_group" {
   source     = "terraform-aws-modules/rds/aws//modules/db_subnet_group"
   name       = var.db_subnet_group_name
   // TODO: remove non-existing field subnet_id. Don't know how right now
-  subnet_ids = data.terraform_remote_state.environment.outputs.subnet_id
+  subnet_ids = var.visibility == "public" ? module.vpc.public_subnets : module.vpc.private_subnets
   version    = "3.3.0"
 }
 

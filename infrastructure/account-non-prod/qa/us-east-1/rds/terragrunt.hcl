@@ -49,7 +49,7 @@ inputs = {
   engine         = "{{ .RDS.Engine }}"
   engine_version = "{{ .RDS.EngineVersion }}"
 
-  storage        = "{{ .RDS.Storage }}"
+  storage        = {{ .RDS.Storage }}
   instance_class = "{{ .RDS.InstanceClass }}"
   username       = "{{ .RDS.Username }}"
   password       = "{{ .RDS.Password }}"
