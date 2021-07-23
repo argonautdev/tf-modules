@@ -1,10 +1,3 @@
-data "terraform_remote_state" "environment" {
-  backend "pg" {
-    conn_str    = "postgres://{{ .BackendData.Username}}:{{.BackendData.Password}}@{{.BackendData.Host}}/{{.Organization.Name }}"
-    schema_name = "tf_{{ .Environment.Name }}"
-  }
-}
-
 # *** Installs postgres
 
 module "security_group" {
@@ -13,7 +6,7 @@ module "security_group" {
 
   name        = var.identifier
   description = "Complete PostgreSQL example security group"
-  vpc_id      = data.terraform_remote_state.environment.vpc.vpc_id
+  vpc_id      = module.vpc.vpc_id
 
   # ingress
   ingress_with_cidr_blocks = [
@@ -22,7 +15,7 @@ module "security_group" {
       to_port     = 5432
       protocol    = "tcp"
       description = "PostgreSQL access from within VPC"
-      cidr_blocks = data.terraform_remote_state.environment.vpc.vpc_cidr_block
+      cidr_blocks = module.vpc.vpc_cidr_block
     },
   ]
 
@@ -32,11 +25,12 @@ module "security_group" {
 module "rds_db_subnet_group" {
   source     = "terraform-aws-modules/rds/aws//modules/db_subnet_group"
   name       = var.db_subnet_group_name
-  subnet_ids = data.terraform_remote_state.environment.outputs.subnet_id
+  // TODO: remove non-existing field subnet_id. Don't know how right now
+  subnet_ids = var.visibility == "public" ? module.vpc.public_subnets : module.vpc.private_subnets
   version    = "3.3.0"
 }
 
-# resource "aws_db_subnet_group" "{{ .RDS.Name }}-db-subnet-{{ .UID }}" {
+# resource "aws_db_subnet_group" "{{ .RDS.Name }}-db-subnet" {
 #   name       = "${var.name} db subnet group"
 #   subnet_ids = data.terraform_remote_state.environment.outputs.subnet_id
 # }
@@ -55,7 +49,7 @@ module "db" {
   username                              = var.username
   password                              = var.password
   parameter_group_name                  = "default.${var.engine}${var.engine_version}"
-  db_subnet_group_name                  = "${aws_db_subnet_group.{{ .RDS.Name }}-db-subnet-{{ .UID }}.name}"
+  db_subnet_group_name                  = "${aws_db_subnet_group.${var.db_subnet}.name}"
   apply_immediately                     = true
   skip_final_snapshot                   = false
   auto_minor_version_upgrade            = true
@@ -77,7 +71,7 @@ module "db" {
   publicly_accessible                   = true
   storage_encrypted                     = true
   storage_type                          = "gp2"
-  vpc_security_group_ids                = [aws_vpc.${var.name}-"{{ .UID }}".id]
+  vpc_security_group_ids                = [aws_vpc.${var.name}.id]
 }
 
 # resource "aws_db_instance" "{{ .RDS.Name }}" {

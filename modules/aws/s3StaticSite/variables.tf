@@ -24,6 +24,11 @@ variable "error_document" {
   description = "404 page path"
 }
 
+variable "website" {
+  description = "website info to be filled in policy of s3"
+  type = string
+}
+
 variable "default_tags" {
   description = "Default Tags"
   type        = map(string)
