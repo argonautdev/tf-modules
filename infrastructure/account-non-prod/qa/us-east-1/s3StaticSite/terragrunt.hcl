@@ -28,7 +28,7 @@ terraform {
 }
 
 dependency "vpc" {
-  config_path = "../config_path"
+  config_path = "../vpc"
 }
 
 # Include all settings from the root terragrunt.hcl file
