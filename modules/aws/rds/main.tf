@@ -71,7 +71,7 @@ module "db" {
   publicly_accessible                   = true
   storage_encrypted                     = true
   storage_type                          = "gp2"
-  vpc_security_group_ids                = [aws_vpc.${var.name}.id]
+  vpc_security_group_ids                = [module.vpc.outputs.default_security_group_id]
 }
 
 # resource "aws_db_instance" "{{ .RDS.Name }}" {
