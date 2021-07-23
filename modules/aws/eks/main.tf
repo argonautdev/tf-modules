@@ -23,11 +23,11 @@ module "eks" {
   source          = "terraform-aws-modules/eks/aws"
   cluster_name    = var.cluster.name
   cluster_version = "1.20"
-  subnets         = module.vpc.private_subnets
+  subnets         = var.vpc.subnets
 
   tags = var.default_tags
 
-  vpc_id = module.vpc.vpc_id
+  vpc_id = var.vpc.id
 
   node_groups_defaults = {
     ami_type  = "AL2_x86_64"

@@ -57,3 +57,15 @@ variable "visibility" {
   description = "Visibility of the rds instance"
   type        = string
 }
+
+variable "vpc" {
+  description = "All vpc info"
+  type = object({
+    name = string
+    id   = string
+    public_subnets = list(string)
+    private_subnets = list(string)
+    database_subnets_cidr_blocks = list(string)
+    default_security_group_id = string
+  })
+}

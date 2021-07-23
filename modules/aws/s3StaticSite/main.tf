@@ -1,6 +1,6 @@
 module "s3_logging_bucket" {
   source = "terraform-aws-modules/s3-bucket/aws"
-  bucket = var.s3_logging_bucket
+  bucket = var.name
   acl    = "log-delivery-write"
 }
 

@@ -1,3 +1,8 @@
+variable "default_tags" {
+  description = "Default Tags for s3"
+  type        = map(string)
+}
+
 variable "aws_region" {
   default     = "us-east-1"
   description = "s3 bucket region"

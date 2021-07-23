@@ -32,6 +32,10 @@ include {
   path = find_in_parent_folders("backend.hcl")
 }
 
+dependency "vpc" {
+  config_path = "../vpc"
+}
+
 # These are the variables we have to pass in to use the module specified in the terragrunt configuration above
 inputs = {
   default_tags = {
@@ -42,7 +46,9 @@ inputs = {
   }
 
   vpc = {
-    name = "${local.env}"
+    name    = "${local.env}"
+    id      = dependency.vpc.outputs.vpc_id
+    subnets = dependency.vpc.outputs.private_subnets
   }
 
   cluster = {
