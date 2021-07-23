@@ -114,18 +114,17 @@ type Config struct {
 	RefVersion      string
 }
 
-func main() {
-	InitZap()
+func getConfig() *Config {
 	awsArn := "arn:aws:iam::054565121117:user/surya"
 	splitted := strings.Split(awsArn, "/")
-	conf := Config{
-		Environment{
+	return &Config{
+		Environment: Environment{
 			Name: "ligma",
 		},
-		Cluster{
+		Cluster: Cluster{
 			Name: "ligma",
 		},
-		NodeGroup{
+		NodeGroup: NodeGroup{
 			Name:                "ligma",
 			InstanceType:        "t3.medium",
 			Spot:                true,
@@ -135,7 +134,7 @@ func main() {
 			NumberOfInstanceMin: 1,
 			DiskSize:            20,
 		},
-		RDS{
+		RDS: RDS{
 			Name:          "ligmapostgres",
 			Visibility:    VisibilityTypePrivate,
 			Identifier:    "ligmapostgres",
@@ -146,16 +145,16 @@ func main() {
 			Username:      "admin",
 			Password:      "admin",
 		},
-		AWS{
+		AWS: AWS{
 			AWSArn:       awsArn,
 			Username:     splitted[len(splitted)-1],
 			AWSAccountID: "54565121117",
 		},
-		AwsS3Bucket{
+		AwsS3Bucket: AwsS3Bucket{
 			Name:       "ligmabucket",
 			Visibility: VisibilityTypePrivate,
 		},
-		AwsS3StaticSite{
+		AwsS3StaticSite: AwsS3StaticSite{
 			Name:          "ligmastaticsite",
 			Visibility:    VisibilityTypePrivate,
 			Website:       "website",
@@ -163,16 +162,22 @@ func main() {
 			IndexDocument: "index.html",
 			ErrorDocument: "",
 		},
-		BackendData{
-			Username: "argonaut",
-			Password: "VPnoVfCdNQiJypbRaSUjisFNHmEKonal",
-			Host:     "tf-orgs.cmdfavrazybz.us-east-2.rds.amazonaws.com",
+		BackendData: BackendData{
+			Username: "<username>",
+			Password: "<password>",
+			Host:     "<host>",
 		},
-		Organization{
+		Organization: Organization{
 			Name: "argonaut",
 		},
-		"pr-pure-modules",
+		RefVersion: "v0.3.0",
 	}
+}
+
+func main() {
+	InitZap()
+	conf := getConfig()
+
 	// tml, err := template.ParseGlob("infrastructure/account-non-prod/qa/us-east-1/*.hcl")
 	// if err != nil {
 	// 	fmt.Printf("Could not parse glob")
@@ -182,17 +187,17 @@ func main() {
 	// return
 
 	for _, module := range []string{
-		"infrastructure/account-non-prod/qa",
+		"infrastructure/",
 	} {
 		location := fmt.Sprintf("%s", module)
-		data, err := ParseNestedFiles(location, &conf)
+		data, err := ParseNestedFiles(location, conf)
 		if err != nil {
 			return
 		}
 		zap.S().Info(data)
 		for fileName, fileVal := range data {
+			fileName = filepath.Join("parsednew", fileName)
 			zap.S().Infof("writing file %s", fileName)
-			fileName = filepath.Join("parsed", fileName)
 			err = os.MkdirAll(getFolderPath(fileName), os.ModePerm)
 			if err != nil {
 				zap.S().Errorf("Could not create nested folder %s", getFolderPath(fileName))
