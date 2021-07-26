@@ -1,6 +1,6 @@
 module "s3_logging_bucket" {
   source = "terraform-aws-modules/s3-bucket/aws"
-  bucket = var.s3_logging_bucket
+  bucket = "${var.website}-logs"
   acl    = "log-delivery-write"
 }
 
@@ -21,7 +21,7 @@ module "s3_static_site_bucket" {
                 "s3:GetObject"
             ],
             "Resource": [
-                "arn:aws:s3:::{{ .AwsS3.Website }}/*"
+                "arn:aws:s3:::'${var.website}'/*"
             ]
         }
     ]

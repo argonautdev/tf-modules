@@ -4,13 +4,7 @@ variable "aws_region" {
   type = string
 }
 
-variable "db_subnet_group_name" {
-  description = "Name for the db subnet group"
-  type = string
-}
-
 variable "storage" {
-  default     = "{{ .Storage }}"
   description = "Storage capacity in GB"
   type        = number
 }
@@ -42,7 +36,6 @@ variable "password" {
 
 variable "default_tags" {
   description = "Default Tags"
-  type        = map(string)
 }
 
 variable "name" {
@@ -53,4 +46,25 @@ variable "name" {
 variable "identifier" {
   description = "Identifier of the RDS instance"
   type        = string
+}
+
+variable "db_subnet" {
+  description = "db_subnet of the RDS instance"
+  type        = string
+}
+
+variable "family" {
+  description = "db parameter of the RDS instance"
+  type        = string
+}
+
+
+variable "vpc" {
+  description = "All vpc info"
+  type = object({
+    name = string
+    vpc_cidr_block = string
+    vpc_id = string
+    public_subnets = list(string)
+  })
 }

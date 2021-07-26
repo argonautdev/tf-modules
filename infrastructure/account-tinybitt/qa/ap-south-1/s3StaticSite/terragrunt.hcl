@@ -19,11 +19,15 @@ locals {
 #   source = "git::git@github.com:gruntwork-io/terragrunt-infrastructure-modules-example.git//mysql?ref=v0.4.0"
 # }
 
+include {
+  path = find_in_parent_folders("backend.hcl")
+}
+
 terraform {
 
   # the below config is an example of what the config should like
   # source = "git::git@github.com:gruntwork-io/tf-modules.git//modules/aws/env_cluster_nodegroup?ref=v0.4.0"
-  source = "git::git@github.com:gruntwork-io/tf-modules.git//modules/aws/s3StaticSite?ref={{.RefVersion}}"
+  source = "git::git@github.com:argonautdev/tf-modules.git//modules/aws/s3StaticSite?ref={{.RefVersion}}"
 
   # source = "/Users/akash.patro/Code/argonaut/tf-modules//modules/aws/s3StaticSite"
 }

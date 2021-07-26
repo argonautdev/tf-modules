@@ -4,10 +4,5 @@ terraform {
 
 provider "aws" {
   region = var.aws_region
+  profile = "argonaut"
 }
-
-data "aws_availability_zones" "available" {
-  state = "available"
-}
-
-

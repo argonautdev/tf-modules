@@ -22,9 +22,13 @@ locals {
 terraform {
 
   # the below config is an example of what the config should like
-  source = "git::git@github.com:gruntwork-io/tf-modules.git//modules/aws/eks?ref={{.RefVersion}}"
+  source = "git::git@github.com:argonautdev/tf-modules.git//modules/aws/eks?ref={{.RefVersion}}"
 
   # source = "/Users/akash.patro/Code/argonaut/tf-modules//modules/aws/eks"
+}
+
+include {
+  path = find_in_parent_folders("backend.hcl")
 }
 
 dependency "vpc" {
