@@ -42,9 +42,7 @@ module "eks" {
       instance_types = [var.node_group.instance_type]
       capacity_type  = var.node_group.spot ? "SPOT" : "ON_DEMAND"
 
-      k8s_labels = var.node_group.spot ? merge({
-        argonaut.dev/env/${var.env} = var.env
-      }, var.spot_labels) : {}
+      k8s_labels = var.node_group.spot ? merge(var.default_tags, var.spot_labels) : var.default_tags
 
       additional_tags = var.node_group.spot ? merge(var.default_tags, var.spot_tags) : merge(var.default_tags, var.on_demand_tags)
       taints = []
