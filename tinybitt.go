@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"io/ioutil"
 	"log"
 	"os"
@@ -180,6 +181,9 @@ func getConfig() *Config {
 func main() {
 	InitZap()
 	conf := getConfig()
+	bytesData, _ := json.Marshal(conf)
+	ioutil.WriteFile("out.json", bytesData, os.ModePerm)
+	return
 
 	// tml, err := template.ParseGlob("infrastructure/account-non-prod/qa/us-east-1/*.hcl")
 	// if err != nil {

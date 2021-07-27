@@ -27,7 +27,7 @@ terraform {
 
   # the below config is an example of what the config should like
   # source = "git::git@github.com:gruntwork-io/tf-modules.git//modules/aws/env_cluster_nodegroup?ref=v0.4.0"
-  source = "git::git@github.com:argonautdev/tf-modules.git//modules/aws/rds?ref={{.RefVersion}}"
+  source = "github.com/argonautdev/tf-modules.git//modules/aws/rds?ref={{.RefVersion}}"
 
   # source = "/Users/akash.patro/Code/argonaut/tf-modules//modules/aws/rds"
 }
