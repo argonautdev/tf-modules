@@ -45,13 +45,7 @@ module "eks" {
         Environment = var.env
       }
       additional_tags = var.default_tags
-      taints = [
-        {
-          key    = "dedicated"
-          value  = "gpuGroup"
-          effect = "NO_SCHEDULE"
-        }
-      ]
+      taints = []
     }
   }
 
