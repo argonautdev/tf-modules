@@ -7,6 +7,21 @@ variable "default_tags" {
   type        = map(string)
 }
 
+variable "spot_tags" {
+  description = "All the additional spot tags"
+  type        = map(string)
+}
+
+variable "on_demand_tags" {
+  description = "All the additional ondemand tags"
+  type        = map(string)
+}
+
+variable "spot_labels" {
+  description = "All the spot lables"
+  type        = map(string)
+}
+
 variable "map_accounts" {
   description = "Additional AWS account numbers to add to the aws-auth configmap."
   type        = list(string)
