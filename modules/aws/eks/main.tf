@@ -18,7 +18,7 @@ data "aws_availability_zones" "available" {
 
 module "eks" {
   source          = "terraform-aws-modules/eks/aws"
-  cluster_name    = "${var.cluster.name}-cluster"
+  cluster_name    = "${var.cluster.name}"
   cluster_version = "1.21"
   wait_for_cluster_timeout = 900
   subnets         = var.vpc.private_subnets
