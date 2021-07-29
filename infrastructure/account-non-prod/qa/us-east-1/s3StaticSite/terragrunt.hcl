@@ -27,6 +27,10 @@ terraform {
   source = "git::git@github.com:argonautdev/tf-modules.git//modules/aws/s3StaticSite?ref={{ .RefVersion }}"
 }
 
+dependency "vpc" {
+  config_path = "../vpc"
+}
+
 # Include all settings from the root terragrunt.hcl file
 include {
   path = find_in_parent_folders("backend.hcl")

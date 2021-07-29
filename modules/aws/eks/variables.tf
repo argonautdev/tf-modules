@@ -28,6 +28,8 @@ variable "vpc" {
   description = "All vpc info"
   type = object({
     name = string
+    id   = string
+    subnets = list(string)
   })
 }
 

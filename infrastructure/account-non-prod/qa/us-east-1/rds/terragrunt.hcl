@@ -27,6 +27,10 @@ terraform {
   source = "git::git@github.com:argonautdev/tf-modules.git//modules/aws/rds?ref={{ .RefVersion }}"
 }
 
+dependency "vpc" {
+  config_path = "../vpc"
+}
+
 # Include all settings from the root terragrunt.hcl file
 include {
   path = find_in_parent_folders("backend.hcl")
@@ -40,6 +44,16 @@ inputs = {
     "argonaut.dev/manager"     = "argonaut.dev"
     "argonaut.dev/env/${local.env}" = "true"
   }
+
+  vpc = {
+    name    = "${local.env}"
+    id      = dependency.vpc.outputs.vpc_id
+    public_subnets = dependency.vpc.outputs.public_subnets
+    private_subnets = dependency.vpc.outputs.private_subnets
+    database_subnets_cidr_blocks = dependency.vpc.outputs.database_subnets_cidr_blocks
+    default_security_group_id = string
+  }
+
   aws_region = "${local.region}"
 
   visibility = "{{ .RDS.Visibility }}"
