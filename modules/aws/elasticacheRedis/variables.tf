@@ -1,5 +1,4 @@
 variable "aws_region" {
-  default     = "{{ .Environment.Region} }"
   description = "aws region"
   type        = string
 }
