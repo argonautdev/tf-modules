@@ -3,6 +3,11 @@ variable "aws_region" {
   type        = string
 }
 
+variable "default_tags" {
+  description = "Default Tags"
+  type        = map(string)
+}
+
 variable "name" {
   description = "Name of redis cluster"
   type        = string
