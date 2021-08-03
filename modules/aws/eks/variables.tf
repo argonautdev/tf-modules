@@ -20,7 +20,6 @@ variable "on_demand_tags" {
 
 variable "spot_labels" {
   description = "All the spot lables"
-  description = "Default Tags for Auto Scaling Group"
   type        = map(string)
 }
 
