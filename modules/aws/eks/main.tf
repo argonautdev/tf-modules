@@ -18,7 +18,6 @@ data "aws_availability_zones" "available" {
 
 module "eks" {
   source          = "terraform-aws-modules/eks/aws"
-<<<<<<< HEAD:modules/aws/eks/main.tf
   cluster_name    = "${var.cluster.name}"
   cluster_version = "1.21"
   wait_for_cluster_timeout = 900
@@ -26,16 +25,7 @@ module "eks" {
 
   tags = var.default_tags
 
-  vpc_id = var.vpc.vpc_id
-=======
-  cluster_name    = var.cluster.name
-  cluster_version = "1.20"
-  subnets         = var.vpc.subnets
-
-  tags = var.default_tags
-
   vpc_id = var.vpc.id
->>>>>>> c16062af375e9b908b542d25e2722ff48eb79425:modules/aws/env_cluster_nodegroup/main.tf
 
   node_groups_defaults = {
     ami_type  = "AL2_x86_64"
