@@ -23,8 +23,6 @@ module "eks" {
   wait_for_cluster_timeout = 900
   subnets         = var.vpc.private_subnets
 
-  tags = var.default_tags
-
   vpc_id = var.vpc.vpc_id
 
   node_groups_defaults = {
