@@ -22,9 +22,9 @@ locals {
 terraform {
 
   # the below config is an example of what the config should like
-  # source = "git::git@github.com:gruntwork-io/terragrunt-modules.git//aws/env_cluster_nodegroup?ref=v0.4.0"
+  # source = "git::git@github.com:gruntwork-io/tf-modules.git//modules/aws/env_cluster_nodegroup?ref=v0.4.0"
 
-  source = "git::git@github.com:argonautdev/terragrunt-modules.git//aws/vpc?ref={{ .RefVersion }}"
+  source = "git::git@github.com:argonautdev/tf-modules.git//modules/aws/vpc?ref={{ .RefVersion }}"
 }
 
 # Include all settings from the root terragrunt.hcl file

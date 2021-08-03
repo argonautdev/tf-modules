@@ -1,13 +1,15 @@
-variable "name" {
-  description = "VPC name"
+variable "default_tags" {
+  description = "Default Tags for s3"
+  type        = map(string)
 }
 
 variable "aws_region" {
-  description = "provider region"
+  default     = "us-east-1"
+  description = "s3 bucket region"
 }
 
-variable "default_tags" {
-  description = "default tags"
+variable "name" {
+  description = "VPC name"
 }
 
 variable "cidr_block" {

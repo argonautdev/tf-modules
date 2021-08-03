@@ -1,30 +1,20 @@
-variable "aws_region" {
-  description = "provider region"
+variable "region" {
+  default = "us-west-2"
 }
 
 variable "default_tags" {
-  description = "Default Tags"
-  type        = map(string)
-}
-
-variable "spot_tags" {
-  description = "All the additional spot tags"
-  type        = map(string)
-}
-
-variable "on_demand_tags" {
-  description = "All the additional ondemand tags"
-  type        = map(string)
-}
-
-variable "spot_labels" {
-  description = "All the spot lables"
+  description = "Default Tags for Auto Scaling Group"
   type        = map(string)
 }
 
 variable "map_accounts" {
   description = "Additional AWS account numbers to add to the aws-auth configmap."
   type        = list(string)
+
+  # default = [
+  #   "777777777777",
+  #   "888888888888",
+  # ]
 }
 
 variable "cluster" {
@@ -38,8 +28,8 @@ variable "vpc" {
   description = "All vpc info"
   type = object({
     name = string
-    vpc_id = string
-    private_subnets = list(string)
+    id   = string
+    subnets = list(string)
   })
 }
 
@@ -56,6 +46,33 @@ variable "node_group" {
   })
 }
 
+# variable "node_group_tags" {
+#   description = "All the node group tags apart from the default ones for all the resources"
+#   type = map(string)
+# }
+
+# variable "node_group_labels" {
+#   description = "All the node group labels"
+#   type = map(string)
+# }
+
+# variable "map_roles" {
+#   description = "Additional IAM roles to add to the aws-auth configmap."
+#   type = list(object({
+#     rolearn  = string
+#     username = string
+#     groups   = list(string)
+#   }))
+
+#   # default = [
+#   #   {
+#   #     rolearn  = "arn:aws:iam::66666666666:role/role1"
+#   #     username = "role1"
+#   #     groups   = ["system:masters"]
+#   #   },
+#   # ]
+# }
+
 variable "map_users" {
   description = "Additional IAM users to add to the aws-auth configmap."
   type = list(object({
@@ -63,8 +80,17 @@ variable "map_users" {
     username = string
     groups   = list(string)
   }))
-}
 
-variable "env" {
-  description = "environment name"
+  # default = [
+  #   {
+  #     userarn  = "arn:aws:iam::66666666666:user/user1"
+  #     username = "user1"
+  #     groups   = ["system:masters"]
+  #   },
+  #   {
+  #     userarn  = "arn:aws:iam::66666666666:user/user2"
+  #     username = "user2"
+  #     groups   = ["system:masters"]
+  #   },
+  # ]
 }

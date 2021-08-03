@@ -22,9 +22,13 @@ locals {
 terraform {
 
   # the below config is an example of what the config should like
-  # source = "git::git@github.com:gruntwork-io/terragrunt-modules.git//aws/env_cluster_nodegroup?ref=v0.4.0"
+  # source = "git::git@github.com:gruntwork-io/tf-modules.git//modules/aws/env_cluster_nodegroup?ref=v0.4.0"
 
-  source = "git::git@github.com:argonautdev/terragrunt-modules.git//aws/rds?ref={{ .RefVersion }}"
+  source = "git::git@github.com:argonautdev/tf-modules.git//modules/aws/rds?ref={{ .RefVersion }}"
+}
+
+dependency "vpc" {
+  config_path = "../vpc"
 }
 
 # Include all settings from the root terragrunt.hcl file
@@ -40,6 +44,16 @@ inputs = {
     "argonaut.dev/manager"     = "argonaut.dev"
     "argonaut.dev/env/${local.env}" = "true"
   }
+
+  vpc = {
+    name    = "${local.env}"
+    id      = dependency.vpc.outputs.vpc_id
+    public_subnets = dependency.vpc.outputs.public_subnets
+    private_subnets = dependency.vpc.outputs.private_subnets
+    database_subnets_cidr_blocks = dependency.vpc.outputs.database_subnets_cidr_blocks
+    default_security_group_id = string
+  }
+
   aws_region = "${local.region}"
 
   visibility = "{{ .RDS.Visibility }}"
@@ -49,9 +63,9 @@ inputs = {
   engine         = "{{ .RDS.Engine }}"
   engine_version = "{{ .RDS.EngineVersion }}"
 
-  storage        = "{{ .RDS.Storage }}"
+  storage        = {{ .RDS.Storage }}
   instance_class = "{{ .RDS.InstanceClass }}"
   username       = "{{ .RDS.Username }}"
   password       = "{{ .RDS.Password }}"
-  db_subnet_group_name = "{{ .RDS.Name }}-db-subnet-{{ .UID }}"
+  db_subnet = "{{ .RDS.Name }}-db-subnet"
 }

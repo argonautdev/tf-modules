@@ -22,9 +22,13 @@ locals {
 terraform {
 
   # the below config is an example of what the config should like
-  # source = "git::git@github.com:gruntwork-io/terragrunt-modules.git//aws/env_cluster_nodegroup?ref=v0.4.0"
+  # source = "git::git@github.com:gruntwork-io/tf-modules.git//modules/aws/env_cluster_nodegroup?ref=v0.4.0"
 
-  source = "git::git@github.com:argonautdev/terragrunt-modules.git//aws/s3StaticSite?ref={{ .RefVersion }}"
+  source = "git::git@github.com:argonautdev/tf-modules.git//modules/aws/s3StaticSite?ref={{ .RefVersion }}"
+}
+
+dependency "vpc" {
+  config_path = "../vpc"
 }
 
 # Include all settings from the root terragrunt.hcl file
@@ -35,18 +39,19 @@ include {
 # These are the variables we have to pass in to use the module specified in the terragrunt configuration above
 inputs = {
   default_tags = {
-    "argonaut.dev/name" = "{{ .AwsS3.Name }}"
+    "argonaut.dev/name" = "{{ .AwsS3StaticSite.Name }}"
     "argonaut.dev/manager" = "argonaut.dev"
     "argonaut.dev/type" = "s3-static-site"
     "argonaut.dev/env/${local.env}" = "true"
   }
 
-  visibility = "{{ .AwsS3.Visibility }}"
+  visibility = "{{ .AwsS3StaticSite.Visibility }}"
 
   aws_region = "${local.region}"
-  name = "{{ .AwsS3.Name }}"
-  log_bucket_name = "{{ .AwsS3.LogBucketName }}"
+  name = "{{ .AwsS3StaticSite.Name }}"
+  log_bucket_name = "{{ .AwsS3StaticSite.LogBucketName }}"
 
-  index_document = "{{ .AwsS3.IndexDocument }}"
-  error_document = "{{ .AwsS3.ErrorDocument }}"
+  index_document = "{{ .AwsS3StaticSite.IndexDocument }}"
+  error_document = "{{ .AwsS3StaticSite.ErrorDocument }}"
+  website = "{{ .AwsS3StaticSite.Website }}"
 }

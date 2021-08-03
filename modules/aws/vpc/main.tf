@@ -4,11 +4,18 @@ module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
   name = var.name
-  cidr = var.cidr_block
+  cidr = "172.16.0.0/16"
+  // cidr = var.cidr_block
 
   azs             = data.aws_availability_zones.available.names
-  private_subnets = slice(var.private_subnet_cidr_blocks, 0, var.private_subnet_count)
-  public_subnets  = slice(var.public_subnet_cidr_blocks, 0, var.public_subnet_count)
+  // private_subnets = slice(var.private_subnet_cidr_blocks, 0, var.private_subnet_count)
+  // public_subnets  = slice(var.public_subnet_cidr_blocks, 0, var.public_subnet_count)
+  private_subnets      = ["172.16.11.0/24", "172.16.12.0/24", "172.16.13.0/24"]
+  public_subnets       = ["172.16.14.0/24", "172.16.15.0/24", "172.16.16.0/24"]
+  #   database_subnets    = ["20.10.21.0/24", "20.10.22.0/24", "20.10.23.0/24"]
+  #   elasticache_subnets = ["20.10.31.0/24", "20.10.32.0/24", "20.10.33.0/24"]
+  #   redshift_subnets    = ["20.10.41.0/24", "20.10.42.0/24", "20.10.43.0/24"]
+  #   intra_subnets       = ["20.10.51.0/24", "20.10.52.0/24", "20.10.53.0/24"]
 
   manage_default_route_table = true
   default_route_table_tags   = { DefaultRouteTable = true }
