@@ -1,7 +1,3 @@
-provider "aws" {
-  region = var.region
-}
-
 data "aws_eks_cluster" "cluster" {
   name = module.eks.cluster_id
 }
@@ -14,6 +10,7 @@ provider "kubernetes" {
   host                   = data.aws_eks_cluster.cluster.endpoint
   cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority.0.data)
   token                  = data.aws_eks_cluster_auth.cluster.token
+  load_config_file       = false
 }
 
 data "aws_availability_zones" "available" {
@@ -21,6 +18,16 @@ data "aws_availability_zones" "available" {
 
 module "eks" {
   source          = "terraform-aws-modules/eks/aws"
+<<<<<<< HEAD:modules/aws/eks/main.tf
+  cluster_name    = "${var.cluster.name}"
+  cluster_version = "1.21"
+  wait_for_cluster_timeout = 900
+  subnets         = var.vpc.private_subnets
+
+  tags = var.default_tags
+
+  vpc_id = var.vpc.vpc_id
+=======
   cluster_name    = var.cluster.name
   cluster_version = "1.20"
   subnets         = var.vpc.subnets
@@ -28,6 +35,7 @@ module "eks" {
   tags = var.default_tags
 
   vpc_id = var.vpc.id
+>>>>>>> c16062af375e9b908b542d25e2722ff48eb79425:modules/aws/env_cluster_nodegroup/main.tf
 
   node_groups_defaults = {
     ami_type  = "AL2_x86_64"
@@ -43,11 +51,12 @@ module "eks" {
 
       instance_types = [var.node_group.instance_type]
       capacity_type  = var.node_group.spot ? "SPOT" : "ON_DEMAND"
-      k8s_labels = {}
-      additional_tags = var.default_tags
-      node_group_name_prefix = ""
-      # additional_tags = merge(var.default_tags, var.node_group_tags)
-      # labels = var.node_group_labels
+
+      k8s_labels = {
+        Environment = var.env
+      }
+
+      additional_tags = var.node_group.spot ? merge(var.default_tags, var.spot_tags) : merge(var.default_tags, var.on_demand_tags)
       taints = []
     }
   }
@@ -67,7 +76,7 @@ module "eks" {
   #   }
   # ]
 
-  # map_roles    = var.map_roles
+  #   map_roles    = var.map_roles
   map_users    = var.map_users
   map_accounts = var.map_accounts
 }

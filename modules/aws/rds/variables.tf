@@ -40,7 +40,6 @@ variable "password" {
 
 variable "default_tags" {
   description = "Default Tags"
-  type        = map(string)
 }
 
 variable "name" {
@@ -53,15 +52,36 @@ variable "identifier" {
   type        = string
 }
 
+<<<<<<< HEAD
+variable "db_subnet" {
+  description = "db_subnet of the RDS instance"
+  type        = string
+}
+
+variable "family" {
+  description = "db parameter of the RDS instance"
+  type        = string
+}
+
+
+=======
 variable "visibility" {
   description = "Visibility of the rds instance"
   type        = string
 }
 
+>>>>>>> c16062af375e9b908b542d25e2722ff48eb79425
 variable "vpc" {
   description = "All vpc info"
   type = object({
     name = string
+<<<<<<< HEAD
+    vpc_cidr_block = string
+    vpc_id = string
+    public_subnets = list(string)
+  })
+}
+=======
     id   = string
     public_subnets = list(string)
     private_subnets = list(string)
@@ -69,3 +89,4 @@ variable "vpc" {
     default_security_group_id = string
   })
 }
+>>>>>>> c16062af375e9b908b542d25e2722ff48eb79425

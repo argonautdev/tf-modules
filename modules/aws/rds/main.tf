@@ -64,7 +64,7 @@ module "db" {
   maintenance_window                    = "tue:08:29-tue:08:59"
   max_allocated_storage                 = 1000
   multi_az                              = false
-  option_group_name                     = "default:postgres-13"
+  option_group_name                     = "default:postgres-11"
   performance_insights_enabled          = true
   performance_insights_retention_period = 7
   port                                  = 5432

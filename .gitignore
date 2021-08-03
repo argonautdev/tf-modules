@@ -26,3 +26,7 @@ parsednew/
 .terragrunt.lock.hcl
 .terragrunt-cache/
 .terragrunt-cache
+
+parsedtiny
+parsednew
+parsed
