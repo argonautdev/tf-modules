@@ -94,3 +94,7 @@ variable "map_users" {
   #   },
   # ]
 }
+
+variable "env" {
+  description = "environment name"
+}

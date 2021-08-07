@@ -27,3 +27,16 @@ output "node_groups" {
   description = "Outputs from node groups"
   value       = module.eks.node_groups
 }
+
+output "cluster_id" {
+  value = module.eks.cluster_id
+}
+
+output "role_arn" {
+  value = module.iam_assumable_role_admin.iam_role_arn
+}
+
+output "service_account_name" {
+  value = local.k8s_service_account_name
+}
+

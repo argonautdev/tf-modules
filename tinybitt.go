@@ -2,7 +2,7 @@ package main
 
 import (
 	"bytes"
-	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -104,31 +104,46 @@ type AwsS3Bucket struct {
 }
 
 type Config struct {
-	Environment     *Environment
-	Cluster         *Cluster
-	NodeGroup       *NodeGroup
-	RDS             *RDS
-	AWS             *AWS
-	AwsS3Bucket     *AwsS3Bucket
-	AwsS3StaticSite *AwsS3StaticSite
-	BackendData     *BackendData
-	Organization    *Organization
+	Environment     Environment
+	Cluster         Cluster
+	NodeGroup       NodeGroup
+	RDS             RDS
+	AWS             AWS
+	AwsS3Bucket     AwsS3Bucket
+	AwsS3StaticSite AwsS3StaticSite
+	BackendData     BackendData
+	Organization    Organization
 	RefVersion      string
+	Spec            Spec
+}
+
+// type node_group struct {
+// 	name                   string
+// 	number_of_instance     uint
+// 	number_of_instance_max uint
+// 	number_of_instance_min uint
+// 	disk_size              uint
+// 	instance_type          string
+// 	spot                   bool
+// }
+
+type Spec struct {
+	name string
 }
 
 func getConfig() *Config {
-	awsArn := "arn:aws:iam::054565121117:user/surya"
+	awsArn := "arn:aws:iam::054565121117:user/akash"
 	splitted := strings.Split(awsArn, "/")
 	return &Config{
-		Environment: &Environment{
-			Name:   "bheem",
-			Region: "us-east-1",
+		Environment: Environment{
+			Name:   "eks-mouse",
+			Region: "ap-south-1",
 		},
-		Cluster: &Cluster{
-			Name: "bheem",
+		Cluster: Cluster{
+			Name: "eks-mouse",
 		},
-		NodeGroup: &NodeGroup{
-			Name:                "bheem",
+		NodeGroup: NodeGroup{
+			Name:                "eks-mouse",
 			InstanceType:        "t3.medium",
 			Spot:                true,
 			AutoScale:           false,
@@ -137,53 +152,53 @@ func getConfig() *Config {
 			NumberOfInstanceMin: 1,
 			DiskSize:            20,
 		},
-		RDS: &RDS{
-			Name:          "bheempostgres",
-			Visibility:    VisibilityTypePrivate,
-			Identifier:    "bheempostgres",
-			Engine:        "postgres",
-			Family:        "postgres11",
-			EngineVersion: "11.10",
-			InstanceClass: "db.t3.small",
-			Storage:       10,
-			Username:      "god",
-			Password:      "admin123456",
+		Spec: Spec{
+			name: "eks-mouse",
 		},
-		AWS: &AWS{
+		RDS: RDS{
+			Name:          "ligmapostgres",
+			Visibility:    VisibilityTypePrivate,
+			Identifier:    "ligmapostgres",
+			Engine:        "postgres",
+			EngineVersion: "11.10",
+			InstanceClass: "db.t3.micro",
+			Storage:       10,
+			Username:      "admin",
+			Password:      "admin",
+			Family:        "postgres11",
+		},
+		AWS: AWS{
 			AWSArn:       awsArn,
 			Username:     splitted[len(splitted)-1],
 			AWSAccountID: "54565121117",
 		},
-		AwsS3Bucket: &AwsS3Bucket{
-			Name:       "bheembucket",
+		AwsS3Bucket: AwsS3Bucket{
+			Name:       "ligmabucket",
 			Visibility: VisibilityTypePrivate,
 		},
-		AwsS3StaticSite: &AwsS3StaticSite{
-			Name:          "bheemstaticsite",
+		AwsS3StaticSite: AwsS3StaticSite{
+			Name:          "ligmastaticsite",
 			Visibility:    VisibilityTypePrivate,
 			Website:       "website",
-			LogBucketName: "bheembucketlog",
+			LogBucketName: "ligmabucketlog",
 			IndexDocument: "index.html",
 			ErrorDocument: "",
 		},
-		BackendData: &BackendData{
+		BackendData: BackendData{
 			Username: "postgres",
 			Password: "PUXYfakq3r5es6NwNfMG",
 			Host:     "tiny-postgres-tf-backend.crwimw7tbng8.ap-south-1.rds.amazonaws.com",
 		},
-		Organization: &Organization{
+		Organization: Organization{
 			Name: "tinybitt",
 		},
-		RefVersion: "v0.3.1",
+		RefVersion: "v0.3.0",
 	}
 }
 
 func main() {
 	InitZap()
 	conf := getConfig()
-	bytesData, _ := json.Marshal(conf)
-	ioutil.WriteFile("out.json", bytesData, os.ModePerm)
-	return
 
 	// tml, err := template.ParseGlob("infrastructure/account-non-prod/qa/us-east-1/*.hcl")
 	// if err != nil {
@@ -194,15 +209,16 @@ func main() {
 	// return
 
 	for _, module := range []string{
-		"infrastructure/account",
+		"infrastructure/",
 	} {
-		data, err := ParseNestedFiles(module, conf)
+		location := fmt.Sprintf("%s", module)
+		data, err := ParseNestedFiles(location, conf)
 		if err != nil {
 			return
 		}
 		zap.S().Info(data)
 		for fileName, fileVal := range data {
-			fileName = replaceEnvironmentAndRegion(filepath.Join("parsedtiny", fileName), conf.Environment)
+			fileName = filepath.Join("parsednew", fileName)
 			zap.S().Infof("writing file %s", fileName)
 			err = os.MkdirAll(getFolderPath(fileName), os.ModePerm)
 			if err != nil {
@@ -219,20 +235,57 @@ func main() {
 
 }
 
-var TfEnvironment = Environment{
-	Name:   "tfEnvironment",
-	Region: "tfRegion",
-}
-
-func replaceEnvironmentAndRegion(f string, env *Environment) string {
-	f = strings.ReplaceAll(f, TfEnvironment.Name, env.Name)
-	f = strings.ReplaceAll(f, TfEnvironment.Region, env.Region)
-	return f
-}
-
 func getFolderPath(f string) string {
 	s := strings.Split(f, "/")
 	return strings.Join(s[0:len(s)-1], "/")
+}
+func ExtractConfig(folderPath string, values interface{}) (map[string]string, error) {
+
+	data := make(map[string]string)
+	fp := fmt.Sprintf("%s/*.hcl", folderPath)
+	var files []string
+	tpl, err := template.ParseGlob(fp)
+	if err != nil {
+		zap.S().Infof("failed to parse %s: %s", fp, err)
+		return nil, err
+	}
+
+	err = filepath.Walk(folderPath, func(path string, info os.FileInfo, err error) error {
+		if !info.IsDir() {
+			files = append(files, filepath.Base(path))
+		}
+		return nil
+	})
+	if err != nil {
+		zap.S().Errorf("Could not walk folder. Err: %v", err)
+		return nil, err
+	}
+
+	zap.S().Info("files", files)
+
+	if err != nil {
+		zap.S().Errorf("failed to read file names inside folder %s: %s", folderPath, err)
+		return nil, err
+	}
+
+	for _, val := range files {
+		buf := &bytes.Buffer{}
+
+		err = tpl.ExecuteTemplate(buf, val, values)
+		if err != nil {
+			zap.S().Infof("failed to execute template %s: %s", val, err)
+			return nil, err
+		}
+
+		nameAndExtension := strings.Split(val, ".")
+		// if the extension is tpl replace with tf
+		if len(nameAndExtension) > 0 && nameAndExtension[len(nameAndExtension)-1] == "tpl" {
+			nameAndExtension[len(nameAndExtension)-1] = "tf"
+		}
+		file := strings.Join(nameAndExtension, ".")
+		data[filepath.Base(file)] = buf.String()
+	}
+	return data, nil
 }
 
 //initZap : initialize zap suger logger
