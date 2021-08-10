@@ -83,13 +83,15 @@ inputs = {
   env = "${local.env}"
   vpc = {
     name    = "${local.env}"
-    vpc_id      = dependency.vpc.outputs.vpc_id
-    private_subnets = dependency.vpc.outputs.private_subnets
+    id      = dependency.vpc.outputs.vpc_id
+    subnets = dependency.vpc.outputs.private_subnets
   }
 
   cluster = {
     name = "{{.Cluster.Name}}"
   }
+
+  k8s_service_account_name = "{{.Cluster.Name}}-autoscaler-chart"
 
   node_group = {
     name = "{{.NodeGroup.Name}}"
