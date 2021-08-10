@@ -1,9 +1,19 @@
-variable "region" {
+variable "aws_region" {
   default = "us-west-2"
 }
 
 variable "default_tags" {
   description = "Default Tags for Auto Scaling Group"
+  type        = map(string)
+}
+
+variable "spot_tags" {
+  description = "Spot tags"
+  type        = map(string)
+}
+
+variable "on_demand_tags" {
+  description = "On demand tags"
   type        = map(string)
 }
 
@@ -97,4 +107,8 @@ variable "map_users" {
 
 variable "env" {
   description = "environment name"
+}
+
+variable "k8s_service_account_name" {
+  type = string
 }

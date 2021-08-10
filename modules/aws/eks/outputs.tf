@@ -18,11 +18,6 @@ output "config_map_aws_auth" {
   value       = module.eks.config_map_aws_auth
 }
 
-output "region" {
-  description = "AWS region."
-  value       = var.region
-}
-
 output "node_groups" {
   description = "Outputs from node groups"
   value       = module.eks.node_groups
@@ -33,10 +28,10 @@ output "cluster_id" {
 }
 
 output "role_arn" {
-  value = module.iam_assumable_role_admin.iam_role_arn
+  value = module.iam_assumable_role_admin.this_iam_role_arn
 }
 
 output "service_account_name" {
-  value = local.k8s_service_account_name
+  value = var.k8s_service_account_name
 }
 

@@ -10,7 +10,7 @@ provider "kubernetes" {
   host                   = data.aws_eks_cluster.cluster.endpoint
   cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority.0.data)
   token                  = data.aws_eks_cluster_auth.cluster.token
-  load_config_file       = false
+  # load_config_file       = false
 }
 
 data "aws_availability_zones" "available" {
@@ -21,7 +21,7 @@ module "eks" {
   cluster_name    = var.cluster.name
   cluster_version = "1.21"
   wait_for_cluster_timeout = 900
-  subnets         = var.vpc.private_subnets
+  subnets         = var.vpc.subnets
 
   tags = var.default_tags
 
@@ -80,7 +80,7 @@ module "iam_assumable_role_admin" {
   role_name                     = "${data.aws_eks_cluster.cluster.name}-role"
   provider_url                  = replace(module.eks.cluster_oidc_issuer_url, "https://", "")
   role_policy_arns              = [aws_iam_policy.cluster_autoscaler.arn]
-  oidc_fully_qualified_subjects = ["system:serviceaccount:${local.k8s_service_account_namespace}:${local.k8s_service_account_name}"]
+  oidc_fully_qualified_subjects = ["system:serviceaccount:${local.k8s_service_account_namespace}:${var.k8s_service_account_name}"]
 }
 
 resource "aws_iam_policy" "cluster_autoscaler" {
