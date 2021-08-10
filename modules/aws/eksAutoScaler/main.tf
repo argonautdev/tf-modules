@@ -1,11 +1,3 @@
-data "aws_eks_cluster" "cluster" {
-  name = var.eks.id
-}
-
-data "aws_eks_cluster_auth" "cluster" {
-  name = var.eks.id
-}
-
 resource "helm_release" "cluster_autoscaler" {
   name       = "autoscaler"
   repository = "https://kubernetes.github.io/autoscaler"
@@ -17,7 +9,7 @@ resource "helm_release" "cluster_autoscaler" {
     yamlencode({
       "awsRegion" : var.aws_region,
       "autoDiscovery" : {
-        "clusterName" : data.aws_eks_cluster.cluster.name,
+        "clusterName" : var.eks.id,
         "enabled" : true
       },
       "rbac" : {

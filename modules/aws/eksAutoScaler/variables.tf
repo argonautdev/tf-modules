@@ -9,7 +9,9 @@ variable "aws_account_id" {
 variable "eks" {
   description = "All cluster info (singular)"
   type = object({
-    id = string
+    id                         = string
+    endpoint                   = string
+    certificate_authority_data = string
   })
 }
 

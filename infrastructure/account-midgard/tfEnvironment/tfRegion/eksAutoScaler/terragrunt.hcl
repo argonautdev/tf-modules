@@ -46,6 +46,8 @@ dependency "eks" {
   config_path = "../eks"
    mock_outputs = {
     cluster_id = "1234"
+    cluster_endpoint = "abcd.com"
+    certificate_authority_data = "temp_cert_data"
   }
 }
 
@@ -62,6 +64,8 @@ inputs = {
 
   eks = {
     id = dependency.eks.outputs.cluster_id
+    endpoint = dependency.eks.outputs.cluster_endpoint
+    certificate_authority_data = dependency.eks.outputs.certificate_authority_data
   }
 
   role_arn = dependency.eks.outputs.role_arn

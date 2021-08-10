@@ -35,3 +35,6 @@ output "service_account_name" {
   value = var.k8s_service_account_name
 }
 
+output "certificate_authority_data" {
+  value = data.aws_eks_cluster.cluster.certificate_authority.0.data
+}
