@@ -1,8 +1,3 @@
-variable "default_tags" {
-  description = "Default tags attached to all the resources"
-  type        = map(string)
-}
-
 variable "aws_region" {
   description = "provider region"
 }
