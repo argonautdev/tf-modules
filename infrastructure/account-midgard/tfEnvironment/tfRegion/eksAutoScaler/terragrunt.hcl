@@ -22,9 +22,9 @@ locals {
 terraform {
 
   # the below config is an example of what the config should like
-  # source = "github.com/argonautdev/tf-modules.git//modules/aws/eks?ref={{.RefVersion}}"
+  source = "github.com/argonautdev/tf-modules.git//modules/aws/eksAutoScaler?ref={{.RefVersion}}"
 
-  source = "/Users/akash.patro/Code/argonaut/tf-modules//modules/aws/eksAutoScaler"
+  # source = "/home/ubuntu/argonaut/tf-modules//modules/aws/eksAutoScaler"
 }
 
 # include {
@@ -47,7 +47,9 @@ dependency "eks" {
    mock_outputs = {
     cluster_id = "1234"
     cluster_endpoint = "abcd.com"
-    certificate_authority_data = "temp_cert_data"
+    certificate_authority_data = "dGVtcF9jZXJ0X2RhdGE="
+    role_arn = "arn"
+    service_account_name = "service_account"
   }
 }
 

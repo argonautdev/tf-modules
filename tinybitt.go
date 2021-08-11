@@ -132,18 +132,18 @@ type Spec struct {
 }
 
 func getConfig() *Config {
-	awsArn := "arn:aws:iam::054565121117:user/akash"
+	awsArn := "arn:aws:iam::054565121117:user/surya"
 	splitted := strings.Split(awsArn, "/")
 	return &Config{
 		Environment: Environment{
-			Name:   "eks-mouse",
+			Name:   "tinybitt-github",
 			Region: "ap-south-1",
 		},
 		Cluster: Cluster{
-			Name: "eks-mouse",
+			Name: "tinybitt-github",
 		},
 		NodeGroup: NodeGroup{
-			Name:                "eks-mouse",
+			Name:                "tinybitt-github",
 			InstanceType:        "t3.medium",
 			Spot:                true,
 			AutoScale:           false,
@@ -153,7 +153,7 @@ func getConfig() *Config {
 			DiskSize:            20,
 		},
 		Spec: Spec{
-			name: "eks-mouse",
+			name: "tinybitt-github",
 		},
 		RDS: RDS{
 			Name:          "ligmapostgres",
@@ -192,7 +192,7 @@ func getConfig() *Config {
 		Organization: Organization{
 			Name: "tinybitt",
 		},
-		RefVersion: "v0.3.0",
+		RefVersion: "v0.5.3",
 	}
 }
 
