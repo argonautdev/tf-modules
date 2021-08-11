@@ -6,7 +6,7 @@ module "security_group" {
 
   name        = var.identifier
   description = "Complete PostgreSQL example security group"
-  vpc_id      = var.vpc.id
+  vpc_id      = var.vpc.vpc_id
 
   # ingress
   ingress_with_cidr_blocks = [
@@ -15,7 +15,7 @@ module "security_group" {
       to_port     = 5432
       protocol    = "tcp"
       description = "PostgreSQL access from within VPC"
-      cidr_blocks = var.vpc.database_subnets_cidr_blocks
+      vpc_cidr_block = var.vpc.vpc_cidr_block
     },
   ]
 
@@ -25,15 +25,9 @@ module "security_group" {
 module "rds_db_subnet_group" {
   source     = "terraform-aws-modules/rds/aws//modules/db_subnet_group"
   name       = var.db_subnet_group_name
-  // TODO: remove non-existing field subnet_id. Don't know how right now
   subnet_ids = var.visibility == "public" ? var.vpc.public_subnets : var.vpc.private_subnets
   version    = "3.3.0"
 }
-
-# resource "aws_db_subnet_group" "{{ .RDS.Name }}-db-subnet" {
-#   name       = "${var.name} db subnet group"
-#   subnet_ids = data.terraform_remote_state.environment.outputs.subnet_id
-# }
 
 module "db" {
   source  = "terraform-aws-modules/rds/aws"
@@ -74,6 +68,3 @@ module "db" {
   vpc_security_group_ids                = [var.vpc.default_security_group_id]
 }
 
-# resource "aws_db_instance" "{{ .RDS.Name }}" {
-#   security_group_names                  = []
-# }

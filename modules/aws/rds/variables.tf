@@ -61,10 +61,11 @@ variable "vpc" {
   description = "All vpc info"
   type = object({
     name = string
-    id   = string
+    vpc_id   = string
     public_subnets = list(string)
     private_subnets = list(string)
-    database_subnets_cidr_blocks = list(string)
+    database_subnets = list(string)
     default_security_group_id = string
+    vpc_cidr_block = string
   })
 }
