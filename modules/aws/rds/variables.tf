@@ -13,8 +13,18 @@ variable "storage" {
   type        = number
 }
 
+variable "family" {
+  description = "The database family to use"
+  type        = string
+}
+
 variable "engine" {
   description = "The database engine to use"
+  type        = string
+}
+
+variable "major_engine_version" {
+  description = "The major engine version to use"
   type        = string
 }
 
@@ -40,6 +50,7 @@ variable "password" {
 
 variable "default_tags" {
   description = "Default Tags"
+  type = map(string)
 }
 
 variable "name" {
