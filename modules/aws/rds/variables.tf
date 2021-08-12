@@ -15,21 +15,25 @@ variable "storage" {
 
 variable "family" {
   description = "The database family to use"
+  default = "postgres13"
   type        = string
 }
 
 variable "engine" {
   description = "The database engine to use"
+  default = "postgres"
   type        = string
 }
 
 variable "major_engine_version" {
   description = "The major engine version to use"
+  default = "postgres13"
   type        = string
 }
 
 variable "engine_version" {
   description = "The engine version to use"
+  default = "13.3"
   type        = string
 }
 
@@ -40,6 +44,7 @@ variable "instance_class" {
 
 variable "username" {
   description = "Username for the master DB user"
+  default = "postgres"
   type        = string
 }
 
@@ -65,6 +70,7 @@ variable "identifier" {
 
 variable "visibility" {
   description = "Visibility of the rds instance"
+  default = "private"
   type        = string
 }
 

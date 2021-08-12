@@ -76,6 +76,6 @@ vpc_security_group_ids = [module.security_group.security_group_id]
 
   performance_insights_enabled          = true
   performance_insights_retention_period = 7
-  enabled_cloudwatch_logs_exports = ["postgresql", "upgrade"]
+  enabled_cloudwatch_logs_exports = ["${var.engine}", "upgrade"]
 }
 
