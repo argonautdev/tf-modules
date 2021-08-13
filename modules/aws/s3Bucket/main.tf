@@ -14,5 +14,4 @@ module "s3_bucket" {
     enabled = true
   }
 
-  tags = var.default_tags
 }
