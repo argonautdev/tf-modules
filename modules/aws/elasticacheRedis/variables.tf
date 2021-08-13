@@ -31,5 +31,6 @@ variable "num_cache_nodes" {
 
 variable "parameter_group_name" {
   description = "Parameter group"
+  default     = "default.redis6.x"
   type        = string
 }

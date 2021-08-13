@@ -6,7 +6,7 @@ module "security_group" {
 
   name        = var.identifier
   description = "Complete PostgreSQL example security group"
-  vpc_id      = var.vpc.id
+  vpc_id      = var.vpc.vpc_id
 
   # ingress
   ingress_with_cidr_blocks = [
@@ -15,25 +15,19 @@ module "security_group" {
       to_port     = 5432
       protocol    = "tcp"
       description = "PostgreSQL access from within VPC"
-      cidr_blocks = var.vpc.database_subnets_cidr_blocks
+      cidr_blocks = var.vpc.vpc_cidr_block
     },
   ]
 
   tags = var.default_tags
 }
 
-module "rds_db_subnet_group" {
-  source     = "terraform-aws-modules/rds/aws//modules/db_subnet_group"
-  name       = var.db_subnet_group_name
-  // TODO: remove non-existing field subnet_id. Don't know how right now
-  subnet_ids = var.visibility == "public" ? var.vpc.public_subnets : var.vpc.private_subnets
-  version    = "3.3.0"
-}
-
-# resource "aws_db_subnet_group" "{{ .RDS.Name }}-db-subnet" {
-#   name       = "${var.name} db subnet group"
-#   subnet_ids = data.terraform_remote_state.environment.outputs.subnet_id
-# }
+// module "rds_db_subnet_group" {
+//   source     = "terraform-aws-modules/rds/aws//modules/db_subnet_group"
+//   name       = var.db_subnet_group_name
+//   subnet_ids = var.visibility == "public" ? var.vpc.public_subnets : var.vpc.private_subnets
+//   version    = "3.3.0"
+// }
 
 module "db" {
   source  = "terraform-aws-modules/rds/aws"
@@ -45,35 +39,43 @@ module "db" {
   allocated_storage                     = var.storage
   engine                                = var.engine
   engine_version                        = var.engine_version
+  major_engine_version                  = var.major_engine_version
+  family                                = var.family
+
   instance_class                        = var.instance_class
   username                              = var.username
   password                              = var.password
-  parameter_group_name                  = "default.${var.engine}${var.engine_version}"
-  db_subnet_group_name                  = "${var.db_subnet_group_name}"
+
+  // parameter_group_name                  = "default-${var.engine}"
+  // db_subnet_group_name                  = "${var.db_subnet_group_name}"
+  // option_group_name                     = "default-${var.major_engine_version}"
+
+  subnet_ids = var.visibility == "public" ? var.vpc.public_subnets : var.vpc.private_subnets
+vpc_security_group_ids = [module.security_group.security_group_id]
+
   apply_immediately                     = true
   skip_final_snapshot                   = false
   auto_minor_version_upgrade            = true
   backup_retention_period               = 7
-  backup_window                         = "07:21-07:51"
+  backup_window                         = "02:21-02:51"
   copy_tags_to_snapshot                 = true
-  delete_automated_backups              = true
-  deletion_protection                   = true
+  delete_automated_backups              = false
+  deletion_protection                   = false
   iam_database_authentication_enabled   = false
-  iops                                  = 0
   license_model                         = "postgresql-license"
-  maintenance_window                    = "tue:08:29-tue:08:59"
+  maintenance_window                    = "tue:04:29-tue:04:59"
+  
+  iops                                  = 0
   max_allocated_storage                 = 1000
   multi_az                              = false
-  option_group_name                     = "default:postgres-11"
-  performance_insights_enabled          = true
-  performance_insights_retention_period = 7
+
   port                                  = 5432
   publicly_accessible                   = true
   storage_encrypted                     = true
   storage_type                          = "gp2"
-  vpc_security_group_ids                = [var.vpc.default_security_group_id]
+
+  performance_insights_enabled          = true
+  performance_insights_retention_period = 7
+  enabled_cloudwatch_logs_exports = ["postgresql", "upgrade"]
 }
 
-# resource "aws_db_instance" "{{ .RDS.Name }}" {
-#   security_group_names                  = []
-# }

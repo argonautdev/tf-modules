@@ -13,13 +13,27 @@ variable "storage" {
   type        = number
 }
 
+variable "family" {
+  description = "The database family to use"
+  default = "postgres13"
+  type        = string
+}
+
 variable "engine" {
   description = "The database engine to use"
+  default = "postgres"
+  type        = string
+}
+
+variable "major_engine_version" {
+  description = "The major engine version to use"
+  default = "postgres13"
   type        = string
 }
 
 variable "engine_version" {
   description = "The engine version to use"
+  default = "13.3"
   type        = string
 }
 
@@ -30,6 +44,7 @@ variable "instance_class" {
 
 variable "username" {
   description = "Username for the master DB user"
+  default = "postgres"
   type        = string
 }
 
@@ -40,6 +55,7 @@ variable "password" {
 
 variable "default_tags" {
   description = "Default Tags"
+  type = map(string)
 }
 
 variable "name" {
@@ -54,6 +70,7 @@ variable "identifier" {
 
 variable "visibility" {
   description = "Visibility of the rds instance"
+  default = "private"
   type        = string
 }
 
@@ -61,10 +78,11 @@ variable "vpc" {
   description = "All vpc info"
   type = object({
     name = string
-    id   = string
+    vpc_id   = string
     public_subnets = list(string)
     private_subnets = list(string)
-    database_subnets_cidr_blocks = list(string)
+    database_subnets = list(string)
     default_security_group_id = string
+    vpc_cidr_block = string
   })
 }
