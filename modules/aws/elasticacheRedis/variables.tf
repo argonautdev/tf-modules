@@ -15,7 +15,7 @@ variable "parameter_group_name" {
   type        = string
 }
 
-variable "region" {
+variable "aws_region" {
   type        = string
   description = "AWS region"
 }
