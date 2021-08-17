@@ -1,5 +1,6 @@
 module "redis" {
-  source = "github.com/cloudposse/terraform-aws-elasticache-redis.git"
+  source = "cloudposse/elasticache-redis/aws"
+  version = "v0.40.0"
 
   // availability_zones               = var.availability_zones
   // zone_id                          = var.zone_id
