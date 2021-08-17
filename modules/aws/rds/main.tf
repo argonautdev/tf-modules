@@ -5,7 +5,7 @@ module "security_group" {
   version = "~> 4"
 
   name        = var.identifier
-  description = "Complete PostgreSQL example security group"
+  description = "Complete PostgreSQL security group"
   vpc_id      = var.vpc.vpc_id
 
   # ingress
