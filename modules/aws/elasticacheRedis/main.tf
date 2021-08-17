@@ -1,36 +1,3 @@
-// resource "aws_elasticache_cluster" "my_cluster" {
-//   cluster_id           = var.name
-//   engine               = "redis"
-//   node_type            = var.node_type
-//   num_cache_nodes      = var.num_cache_nodes
-//   parameter_group_name = var.parameter_group_name
-//   engine_version       = var.engine_version
-//   port                 = 6379
-// }
-
-// module "vpc" {
-//   source  = "cloudposse/vpc/aws"
-//   version = "0.18.1"
-
-//   cidr_block = "172.16.0.0/16"
-
-//   context = module.this.context
-// }
-
-// module "subnets" {
-//   source  = "cloudposse/dynamic-subnets/aws"
-//   version = "0.33.0"
-
-//   // availability_zones   = var.availability_zones
-//   vpc_id               = module.vpc.vpc_id
-//   igw_id               = module.vpc.igw_id
-//   cidr_block           = module.vpc.vpc_cidr_block
-//   nat_gateway_enabled  = false
-//   nat_instance_enabled = false
-
-//   context = module.this.context
-// }
-
 module "redis" {
   source = "github.com/cloudposse/terraform-aws-elasticache-redis.git"
 
@@ -66,6 +33,16 @@ module "redis" {
       cidr_blocks              = []
       source_security_group_id = var.vpc.default_security_group_id
       description              = "Allow all inbound traffic from trusted Security Groups"
+    },
+    {
+      type        = "ingress"
+      from_port   = 0
+      to_port     = 6379
+      protocol    = "-1"
+      cidr_blocks = ["10.0.0.0/8"]
+      source_security_group_id = null
+      // self        = null
+      description = "Allow connections from within the VPC"
     },
   ]
 
