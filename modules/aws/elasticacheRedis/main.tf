@@ -39,7 +39,7 @@ module "redis" {
       from_port   = 0
       to_port     = 6379
       protocol    = "-1"
-      cidr_blocks = ["10.0.0.0/8"]
+      cidr_blocks = ["10.0.0.0/8", "172.0.0.0/8", "192.0.0.0/8"]
       source_security_group_id = null
       // self        = null
       description = "Allow connections from within the VPC"
