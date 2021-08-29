@@ -18,6 +18,7 @@ data "aws_availability_zones" "available" {
 
 module "eks" {
   source          = "terraform-aws-modules/eks/aws"
+  version = "v17.4.0"
   cluster_name    = var.cluster.name
   cluster_version = var.cluster.version
   wait_for_cluster_timeout = 900
