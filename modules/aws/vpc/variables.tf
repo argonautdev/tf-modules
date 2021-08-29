@@ -32,7 +32,32 @@ variable "enable_nat_gateway" {
   type        = bool
 }
 
+variable "create_database_subnet_group" {
+  description = "Controls if database subnet group should be created (n.b. database_subnets must also be set)	"
+  type        = bool
+}
+
+variable "create_database_subnet_route_table" {
+  description = "Controls if separate route table for database should be created"
+  type        = bool
+}
+
 variable "single_nat_gateway" {
+  description = "To provision a single shared NAT Gateway across all of your private networks."
+  type        = bool
+}
+
+variable "enable_dns_support" {
+  description = "Whether or not the VPC has DNS support"
+  type        = bool
+}
+
+variable "create_database_internet_gateway_route" {
+  description = "Should be false if you do not want to auto-assign public IP on launch"
+  type        = bool
+}
+
+variable "map_public_ip_on_launch" {
   description = "To provision a single shared NAT Gateway across all of your private networks."
   type        = bool
 }
@@ -54,5 +79,15 @@ variable "public_subnet_cidr_blocks" {
 
 variable "private_subnet_cidr_blocks" {
   description = "Available cidr blocks for private subnets."
+  type        = list(string)
+}
+
+variable "database_subnet_cidr_blocks" {
+  description = "Available cidr blocks for database subnets."
+  type        = list(string)
+}
+
+variable "elasticache_subnet_cidr_blocks" {
+  description = "Available cidr blocks for elasticache subnets."
   type        = list(string)
 }

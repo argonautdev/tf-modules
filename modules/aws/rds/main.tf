@@ -9,7 +9,23 @@ module "security_group" {
   vpc_id      = var.vpc.vpc_id
 
   # ingress
-  ingress_with_cidr_blocks = [
+  
+  ingress_with_cidr_blocks = var.visibility == "public" ? [
+    {
+      from_port   = 5432
+      to_port     = 5432
+      protocol    = "tcp"
+      description = "PostgreSQL access from within VPC"
+      cidr_blocks = var.vpc.vpc_cidr_block
+    },
+    {
+      from_port   = 5432
+      to_port     = 5432
+      protocol    = "tcp"
+      description = "Public PostgreSQL access"
+      cidr_blocks = "0.0.0.0/0"
+    },
+  ] : [
     {
       from_port   = 5432
       to_port     = 5432
@@ -21,13 +37,6 @@ module "security_group" {
 
   tags = var.default_tags
 }
-
-// module "rds_db_subnet_group" {
-//   source     = "terraform-aws-modules/rds/aws//modules/db_subnet_group"
-//   name       = var.db_subnet_group_name
-//   subnet_ids = var.visibility == "public" ? var.vpc.public_subnets : var.vpc.private_subnets
-//   version    = "3.3.0"
-// }
 
 module "db" {
   source  = "terraform-aws-modules/rds/aws"
@@ -46,12 +55,8 @@ module "db" {
   username                              = var.username
   password                              = var.password
 
-  // parameter_group_name                  = "default-${var.engine}"
-  // db_subnet_group_name                  = "${var.db_subnet_group_name}"
-  // option_group_name                     = "default-${var.major_engine_version}"
-
-  subnet_ids = var.visibility == "public" ? var.vpc.public_subnets : var.vpc.private_subnets
-vpc_security_group_ids = [module.security_group.security_group_id]
+  subnet_ids = var.vpc.database_subnets
+  vpc_security_group_ids = [module.security_group.security_group_id]
 
   apply_immediately                     = true
   skip_final_snapshot                   = false
@@ -70,7 +75,7 @@ vpc_security_group_ids = [module.security_group.security_group_id]
   multi_az                              = false
 
   port                                  = 5432
-  publicly_accessible                   = true
+  publicly_accessible                   = var.visibility == "public" ? "true" : "false"
   storage_encrypted                     = true
   storage_type                          = "gp2"
 
