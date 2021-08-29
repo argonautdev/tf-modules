@@ -40,7 +40,7 @@ module "security_group" {
 
 module "db" {
   source  = "terraform-aws-modules/rds/aws"
-  version = "~> 3.0"
+  version = "v3.3.0"
 
   identifier = var.identifier
 
