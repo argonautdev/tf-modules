@@ -31,7 +31,12 @@ variable "cluster" {
   description = "All cluster info (singular)"
   type = object({
     name = string
+    version = string
   })
+  default = {
+    name = "argonaut"
+    version = "1.21"
+  }
 }
 
 variable "vpc" {
@@ -46,7 +51,7 @@ variable "vpc" {
 variable "node_group" {
   description = "All node_group info (singular)"
   type = object({
-    name = string 
+    name_prefix = string 
     desired_capacity = number
     max_capacity = number
     min_capacity = number

@@ -19,7 +19,7 @@ data "aws_availability_zones" "available" {
 module "eks" {
   source          = "terraform-aws-modules/eks/aws"
   cluster_name    = var.cluster.name
-  cluster_version = "1.21"
+  cluster_version = var.cluster.version
   wait_for_cluster_timeout = 900
   subnets         = var.vpc.subnets
 
@@ -31,8 +31,8 @@ module "eks" {
   }
 
   node_groups = {
-    "${var.node_group.name}" = {
-      name = var.node_group.name
+    "${var.cluster.name}" = {
+      name_prefix = var.cluster.name
       desired_capacity = var.node_group.desired_capacity
       max_capacity     = var.node_group.max_capacity
       min_capacity     = var.node_group.min_capacity
