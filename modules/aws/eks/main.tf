@@ -32,7 +32,7 @@ module "eks" {
 
   node_groups = {
     "${var.cluster.name}" = {
-      name_prefix = var.cluster.name
+      name_prefix = "${var.cluster.name}-art-"
       desired_capacity = var.node_group.desired_capacity
       max_capacity     = var.node_group.max_capacity
       min_capacity     = var.node_group.min_capacity
