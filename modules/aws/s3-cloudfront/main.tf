@@ -288,7 +288,7 @@ resource "aws_s3_bucket_policy" "bucket_policy" {
 ########
 
 resource "random_pet" "this" {
-  length = 2
+  length = 3
 }
 
 // resource "aws_cloudfront_function" "example" {
