@@ -95,18 +95,18 @@ module "cloudfront" {
     compress        = true
     query_string    = true
 
-    // lambda_function_association = {
+    lambda_function_association = {
 
-    //   # Valid keys: viewer-request, origin-request, viewer-response, origin-response
-    //   viewer-request = {
-    //     lambda_arn   = module.lambda_function.lambda_function_qualified_arn
-    //     include_body = true
-    //   }
+      # Valid keys: viewer-request, origin-request, viewer-response, origin-response
+      viewer-request = {
+        lambda_arn   = module.lambda_function.lambda_function_qualified_arn
+        include_body = true
+      }
 
-    //   origin-request = {
-    //     lambda_arn = module.lambda_function.lambda_function_qualified_arn
-    //   }
-    // }
+      origin-request = {
+        lambda_arn = module.lambda_function.lambda_function_qualified_arn
+      }
+    }
   }
 
   ordered_cache_behavior = [
@@ -120,16 +120,16 @@ module "cloudfront" {
       compress        = true
       query_string    = true
 
-    //   function_association = {
-    //     # Valid keys: viewer-request, viewer-response
-    //     viewer-request = {
-    //       function_arn = aws_cloudfront_function.example.arn
-    //     }
+      function_association = {
+        # Valid keys: viewer-request, viewer-response
+        viewer-request = {
+          function_arn = aws_cloudfront_function.example.arn
+        }
 
-    //     viewer-response = {
-    //       function_arn = aws_cloudfront_function.example.arn
-    //     }
-    //   }
+        viewer-response = {
+          function_arn = aws_cloudfront_function.example.arn
+        }
+      }
     }
   ]
 
@@ -197,49 +197,49 @@ module "log_bucket" {
   force_destroy = true
 }
 
-// #############################################
-// # Using packaged function from Lambda module
-// #############################################
+#############################################
+# Using packaged function from Lambda module
+#############################################
 
-// locals {
-//   package_url = "https://raw.githubusercontent.com/terraform-aws-modules/terraform-aws-lambda/master/examples/fixtures/python3.8-zip/existing_package.zip"
-//   downloaded  = "downloaded_package_${md5(local.package_url)}.zip"
-// }
+locals {
+  package_url = "https://raw.githubusercontent.com/terraform-aws-modules/terraform-aws-lambda/master/examples/fixtures/python3.8-zip/existing_package.zip"
+  downloaded  = "downloaded_package_${md5(local.package_url)}.zip"
+}
 
-// resource "null_resource" "download_package" {
-//   triggers = {
-//     downloaded = local.downloaded
-//   }
+resource "null_resource" "download_package" {
+  triggers = {
+    downloaded = local.downloaded
+  }
 
-//   provisioner "local-exec" {
-//     command = "curl -L -o ${local.downloaded} ${local.package_url}"
-//   }
-// }
+  provisioner "local-exec" {
+    command = "curl -L -o ${local.downloaded} ${local.package_url}"
+  }
+}
 
-// module "lambda_function" {
-//   source  = "terraform-aws-modules/lambda/aws"
-//   version = "~> 2.0"
+module "lambda_function" {
+  source  = "terraform-aws-modules/lambda/aws"
+  version = "~> 2.0"
 
-//   function_name = "${local.app_name}-${random_pet.this.id}-lambda"
-//   description   = "My awesome lambda function"
-//   handler       = "index.lambda_handler"
-//   runtime       = "python3.8"
+  function_name = "${local.app_name}-${random_pet.this.id}-lambda"
+  description   = "My awesome lambda function"
+  handler       = "index.lambda_handler"
+  runtime       = "python3.8"
 
-//   publish        = true
-//   lambda_at_edge = true
+  publish        = true
+  lambda_at_edge = true
 
-//   create_package         = false
-//   local_existing_package = local.downloaded
+  create_package         = false
+  local_existing_package = local.downloaded
 
-//   # @todo: Missing CloudFront as allowed_triggers?
+  # @todo: Missing CloudFront as allowed_triggers?
 
-//   #    allowed_triggers = {
-//   #      AllowExecutionFromAPIGateway = {
-//   #        service = "apigateway"
-//   #        arn     = module.api_gateway.apigatewayv2_api_execution_arn
-//   #      }
-//   #    }
-// }
+  #    allowed_triggers = {
+  #      AllowExecutionFromAPIGateway = {
+  #        service = "apigateway"
+  #        arn     = module.api_gateway.apigatewayv2_api_execution_arn
+  #      }
+  #    }
+}
 
 ##########
 # Route53
@@ -288,11 +288,11 @@ resource "aws_s3_bucket_policy" "bucket_policy" {
 ########
 
 resource "random_pet" "this" {
-  length = 3
+  length = 2
 }
 
-// resource "aws_cloudfront_function" "example" {
-//   name    = "${local.app_name}-example-${random_pet.this.id}"
-//   runtime = "cloudfront-js-1.0"
-//   code    = file("example-function.js")
-// }
+resource "aws_cloudfront_function" "example" {
+  name    = "${local.app_name}-example-${random_pet.this.id}"
+  runtime = "cloudfront-js-1.0"
+  code    = file("example-function.js")
+}
