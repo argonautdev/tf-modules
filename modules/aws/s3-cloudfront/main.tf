@@ -28,7 +28,7 @@ module "cloudfront" {
   enabled             = true
   is_ipv6_enabled     = true
   price_class         = "PriceClass_All"
-  retain_on_delete    = true
+  retain_on_delete    = false
   wait_for_deployment = false
 
   create_origin_access_identity = true
