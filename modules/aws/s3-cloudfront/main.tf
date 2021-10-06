@@ -291,8 +291,8 @@ resource "random_pet" "this" {
   length = 2
 }
 
-// resource "aws_cloudfront_function" "example" {
-//   name    = "${local.app_name}-example-${random_pet.this.id}"
-//   runtime = "cloudfront-js-1.0"
-//   code    = file("example-function.js")
+resource "aws_cloudfront_function" "example" {
+  name    = "${local.app_name}-example-${random_pet.this.id}"
+  runtime = "cloudfront-js-1.0"
+  code    = file("example-function.js")
 }
