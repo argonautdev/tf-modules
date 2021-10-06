@@ -1,3 +1,5 @@
+// TODO: ADD TAGS
+
 provider "aws" {
   region = "us-east-1" # CloudFront expects ACM resources in us-east-1 region only
 
@@ -17,14 +19,32 @@ locals {
   app_name    = "myapp"
 }
 
+data "aws_cloudfront_origin_request_policy" "cors_s3origin" {
+  name = "Managed-CORS-S3Origin"
+}
+
+data "aws_cloudfront_origin_request_policy" "cors_customorigin" {
+  name = "Managed-Custom-Origin"
+}
+
+data "aws_cloudfront_cache_policy" "caching_optimized" {
+  name = "Managed-CachingOptimized"
+}
+
 module "cloudfront" {
   source  = "terraform-aws-modules/cloudfront/aws"
   version = "2.7.0"
   # insert the 9 required variables here
 
+  depends_on = [
+    data.aws_cloudfront_origin_request_policy.cors_s3origin,
+    data.aws_cloudfront_origin_request_policy.cors_customorigin,
+    data.aws_cloudfront_cache_policy.caching_optimized
+  ]
+
   aliases = ["${local.subdomain}.${local.domain_name}"]
 
-  comment             = "CloudFront via Argonaut"
+  comment             = "${local.app_name} via Argonaut"
   enabled             = true
   is_ipv6_enabled     = true
   price_class         = "PriceClass_All"
@@ -60,38 +80,15 @@ module "cloudfront" {
       }
     }
 
-    // appsync = {
-    //   domain_name = "appsync.${local.domain_name}"
-    //   # "
-    //   custom_origin_config = {
-    //     http_port              = 80
-    //     https_port             = 443
-    //     origin_protocol_policy = "match-viewer"
-    //     origin_ssl_protocols   = ["TLSv1.2"]
-    //   }
-
-    //   custom_header = [
-    //     {
-    //       name  = "X-Forwarded-Scheme"
-    //       value = "https"
-    //     },
-    //     {
-    //       name  = "X-Frame-Options"
-    //       value = "SAMEORIGIN"
-    //     }
-    //   ]
-
-    //   origin_shield = {
-    //     enabled              = true
-    //     origin_shield_region = "us-east-1"
-    //   }
-    // }
-
   s3_one = {
       domain_name = module.s3_one.s3_bucket_bucket_regional_domain_name
       s3_origin_config = {
         origin_access_identity = "s3_bucket_one" # key in `origin_access_identities`
         # cloudfront_access_identity_path = "origin-access-identity/cloudfront/E5IGQAA1QO48Z" # external OAI resource
+      }
+      origin_shield = {
+        enabled              = true
+        origin_shield_region = "us-east-1"
       }
     }
   }
@@ -100,8 +97,7 @@ module "cloudfront" {
     group_one = {
       failover_status_codes      = [403, 404, 500, 502]
       primary_member_origin_id   = "ingress-nlb"
-      secondary_member_origin_id = "s3_one"
-      // primary_member_origin_id   = "appsync"      
+      secondary_member_origin_id = "s3_one"  
     }
   }
 
@@ -112,61 +108,23 @@ module "cloudfront" {
     allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
     cached_methods   = ["GET", "HEAD"]
     compress                = true
-    forwarded_values = {
-      cookies = {
-        forward = "all"
-      }
-      query_string            = true
-      query_string_cache_keys = []
-      headers                 = ["*"]
-    }
+    
     min_ttl                = 0
     default_ttl            = 300
     max_ttl                = 1200
+
+    origin_request_policy_id = data.aws_cloudfront_origin_request_policy.cors_customorigin.id
+    cache_policy_id          = data.aws_cloudfront_cache_policy.caching_optimized.id
+    
+    // forwarded_values = {
+    //   cookies = {
+    //     forward = "all"
+    //   }
+    //   query_string            = true
+    //   query_string_cache_keys = []
+    //   headers                 = ["*"]
+    // }
   }
-
-  // default_cache_behavior = {
-  //   target_origin_id       = "appsync"
-  //   viewer_protocol_policy = "redirect-to-https"
-
-  //   allowed_methods = ["GET", "HEAD", "OPTIONS"]
-  //   cached_methods  = ["GET", "HEAD"]
-  //   compress        = true
-  //   query_string    = true
-
-  //   lambda_function_association = {
-
-  //     # Valid keys: viewer-request, origin-request, viewer-response, origin-response
-  //     viewer-request = {
-  //       lambda_arn   = module.lambda_function.lambda_function_qualified_arn
-  //       include_body = true
-  //     }
-
-  //     origin-request = {
-  //       lambda_arn = module.lambda_function.lambda_function_qualified_arn
-  //     }
-  //   }
-  // }
-
-  // ordered_cache_behavior {
-  //   allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
-  //   cached_methods   = ["GET", "HEAD"]
-  //   target_origin_id = "ingress-nlb"
-  //   forwarded_values {
-  //     cookies {
-  //       forward = "all"
-  //     }
-  //     compress        = true
-  //     query_string    = true
-      // headers                 = ["*"]
-  //   }
-  //   viewer_protocol_policy = "redirect-to-https"
-  //   min_ttl                = 0
-  //   default_ttl            = 300
-  //   max_ttl                = 1200
-  //   path_pattern           = "/errors/*.html"
-  // }
-
 
   ordered_cache_behavior = [
     {
@@ -178,17 +136,6 @@ module "cloudfront" {
       cached_methods  = ["GET", "HEAD"]
       compress        = true
       query_string    = true
-
-      function_association = {
-        # Valid keys: viewer-request, viewer-response
-        viewer-request = {
-          function_arn = aws_cloudfront_function.example.arn
-        }
-
-        viewer-response = {
-          function_arn = aws_cloudfront_function.example.arn
-        }
-      }
     }
   ]
 
@@ -228,6 +175,7 @@ module "acm" {
 #############
 
 data "aws_canonical_user_id" "current" {}
+// data "aws_cloudfront_canonical_user_id" "current" {}
 
 module "s3_one" {
   source  = "terraform-aws-modules/s3-bucket/aws"
@@ -257,61 +205,16 @@ module "log_bucket" {
     permissions = ["FULL_CONTROL"]
     id          = data.aws_canonical_user_id.current.id
     },
-  //   {
-  //   type        = "CanonicalUser"
-  //   permissions = ["FULL_CONTROL"]
-  //   id          = "c4c1ede66af53448b93c283ce9448c4ba468c9432aa01d700d3878632f77d2d0"
-  //   # Ref. https://github.com/terraform-providers/terraform-provider-aws/issues/12512
-  //   # Ref. https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/AccessLogs.html
-  // }
+    {
+    type        = "CanonicalUser"
+    permissions = ["FULL_CONTROL"]
+    // id          = data.aws_cloudfront_canonical_user_id.current.id
+    id          = "c4c1ede66af53448b93c283ce9448c4ba468c9432aa01d700d3878632f77d2d0"
+    # Ref. https://github.com/terraform-providers/terraform-provider-aws/issues/12512
+    # Ref. https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/AccessLogs.html
+  }
   ]
   force_destroy = true
-}
-
-#############################################
-# Using packaged function from Lambda module
-#############################################
-
-locals {
-  package_url = "https://raw.githubusercontent.com/terraform-aws-modules/terraform-aws-lambda/master/examples/fixtures/python3.8-zip/existing_package.zip"
-  downloaded  = "downloaded_package_${md5(local.package_url)}.zip"
-}
-
-resource "null_resource" "download_package" {
-  triggers = {
-    downloaded = local.downloaded
-  }
-
-  provisioner "local-exec" {
-    command = "curl -L -o ${local.downloaded} ${local.package_url}"
-  }
-}
-
-module "lambda_function" {
-  source  = "terraform-aws-modules/lambda/aws"
-  version = "~> 2.0"
-
-  function_name = "${local.app_name}-${random_pet.this.id}-lambda"
-  description   = "My awesome lambda function"
-  handler       = "index.lambda_handler"
-  runtime       = "python3.8"
-
-  publish        = false
-  lambda_at_edge = false 
-  // publish        = true
-  // lambda_at_edge = true
-
-  create_package         = false
-  local_existing_package = local.downloaded
-
-  # @todo: Missing CloudFront as allowed_triggers?
-
-  #    allowed_triggers = {
-  #      AllowExecutionFromAPIGateway = {
-  #        service = "apigateway"
-  #        arn     = module.api_gateway.apigatewayv2_api_execution_arn
-  #      }
-  #    }
 }
 
 ##########
@@ -362,10 +265,4 @@ resource "aws_s3_bucket_policy" "bucket_policy" {
 
 resource "random_pet" "this" {
   length = 2
-}
-
-resource "aws_cloudfront_function" "example" {
-  name    = "${local.app_name}-example-${random_pet.this.id}"
-  runtime = "cloudfront-js-1.0"
-  code    = file("example-function.js")
 }
