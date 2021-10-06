@@ -151,7 +151,7 @@ module "cloudfront" {
 ######
 
 data "aws_route53_zone" "this" {
-  name = "${local.app_name}-${local.domain_name}"
+  name = "${local.domain_name}"
 }
 
 module "acm" {
