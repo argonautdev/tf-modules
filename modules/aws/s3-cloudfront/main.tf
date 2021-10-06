@@ -12,7 +12,7 @@ provider "aws" {
 }
 
 locals {
-  domain_name = "previewapp.live" # trimsuffix(data.aws_route53_zone.this.name, ".")
+  domain_name = "argonaut.live" # trimsuffix(data.aws_route53_zone.this.name, ".")
   subdomain   = "cdn"
   app_name    = "myapp"
 }
