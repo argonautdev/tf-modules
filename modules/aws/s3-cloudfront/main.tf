@@ -12,7 +12,7 @@ provider "aws" {
 }
 
 locals {
-  domain_name = "argonaut.live" # trimsuffix(data.aws_route53_zone.this.name, ".")
+  domain_name = "previewapp.live" # trimsuffix(data.aws_route53_zone.this.name, ".")
   subdomain   = "cdn"
   app_name    = "myapp"
 }
@@ -247,7 +247,7 @@ module "lambda_function" {
 
 module "records" {
   source  = "terraform-aws-modules/route53/aws//modules/records"
-  version = "~>2.0" 
+  version = "2.0.0" # @todo: revert to "~> 2.0" once 2.1.0 is fixed properly
 
   zone_id = data.aws_route53_zone.this.zone_id
 
