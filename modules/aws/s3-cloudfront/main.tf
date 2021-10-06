@@ -113,17 +113,17 @@ module "cloudfront" {
     default_ttl            = 300
     max_ttl                = 1200
 
-    origin_request_policy_id = data.aws_cloudfront_origin_request_policy.cors_customorigin.id
-    cache_policy_id          = data.aws_cloudfront_cache_policy.caching_optimized.id
+    // origin_request_policy_id = data.aws_cloudfront_origin_request_policy.cors_customorigin.id
+    // cache_policy_id          = data.aws_cloudfront_cache_policy.caching_optimized.id
     
-    // forwarded_values = {
-    //   cookies = {
-    //     forward = "all"
-    //   }
-    //   query_string            = true
-    //   query_string_cache_keys = []
-    //   headers                 = ["*"]
-    // }
+    forwarded_values = {
+      cookies = {
+        forward = "all"
+      }
+      query_string            = true
+      query_string_cache_keys = []
+      headers                 = ["*"]
+    }
   }
 
   ordered_cache_behavior = [
@@ -182,6 +182,7 @@ module "s3_one" {
   version = "~> 2.0"
 
   bucket        = "s3-one-${random_pet.this.id}"
+  
   force_destroy = true
   block_public_acls = true
   block_public_policy = true
