@@ -42,7 +42,7 @@ module "cloudfront" {
     data.aws_cloudfront_cache_policy.caching_optimized
   ]
 
-  aliases = ["${local.subdomain}.${local.domain_name}"]
+  aliases = ["${local.subdomain}.${local.domain_name}", "bs-prod.violet.argonaut.live"]
 
   comment             = "${local.app_name} via Argonaut"
   enabled             = true
@@ -54,7 +54,7 @@ module "cloudfront" {
   create_origin_access_identity = true
   origin_access_identities = {
     s3_bucket_one = "My awesome CloudFront can access"
-    ingress-nlb = "Ingress nlb for the k8s cluster"
+    ingress_nlb = "Ingress nlb for the k8s cluster"
   }
 
   logging_config = {
@@ -63,16 +63,15 @@ module "cloudfront" {
   }
 
   origin = {
-    ingress-nlb = {
-      domain_name = "${local.subdomain}.${local.domain_name}" #"
-      origin_id   = "ingress-nlb"
+    ingress_nlb = {
+      // domain_name = "${local.subdomain}.${local.domain_name}" #"
+      domain_name = "a8cdd7c38e0c843d08c2cd309ec286f3-c6e29e9322c0415c.elb.us-east-1.amazonaws.com"
+      origin_id   = "ingress_nlb"
       custom_origin_config = {
         http_port = 80
         https_port = 443
         origin_protocol_policy = "match-viewer"
         origin_ssl_protocols = ["TLSv1.2"]
-        // origin_read_timeout = 30
-        // origin_keepalive_timeout = 5
       }
       origin_shield = {
         enabled              = true
@@ -96,13 +95,13 @@ module "cloudfront" {
   origin_group = {
     group_one = {
       failover_status_codes      = [403, 404, 500, 502]
-      primary_member_origin_id   = "ingress-nlb"
+      primary_member_origin_id   = "ingress_nlb"
       secondary_member_origin_id = "s3_one"  
     }
   }
 
   default_cache_behavior = {
-    target_origin_id = "ingress-nlb"
+    target_origin_id = "ingress_nlb"
     viewer_protocol_policy = "redirect-to-https"
 
     allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
@@ -147,9 +146,17 @@ module "cloudfront" {
 
   geo_restriction = {
     restriction_type = "none"
-    // restriction_type = "whitelist"
-    // locations        = ["NO", "UA", "US", "GB"]
   }
+
+  // custom_error_response = {
+  //   error_code = "404"
+  //   error_caching_min_ttl = 0
+  // }
+
+  // custom_error_responses = {
+  //   error_code = "403"
+  //   error_caching_min_ttl = 0
+  // }
 
 }
 
@@ -167,7 +174,7 @@ module "acm" {
 
   domain_name               = local.domain_name
   zone_id                   = data.aws_route53_zone.this.id
-  subject_alternative_names = ["${local.subdomain}.${local.domain_name}"]
+  subject_alternative_names = ["${local.subdomain}.${local.domain_name}", "bs-prod.violet.argonaut.live"]
 }
 
 #############
@@ -267,3 +274,22 @@ resource "aws_s3_bucket_policy" "bucket_policy" {
 resource "random_pet" "this" {
   length = 2
 }
+
+// ##########
+// # WAF
+// ##########
+
+// module "cloudfront_waf" {
+//   source = "coresolutions-ltd/wafv2/aws"
+
+//   name_prefix      = "Cloudfront"
+//   default_action   = "allow"
+//   scope                = "CLOUDFRONT"
+//   rate_limit          = 1000
+//   managed_rules = ["AWSManagedRulesCommonRuleSet",
+//                                 "AWSManagedRulesAmazonIpReputationList",
+//                                 "AWSManagedRulesAdminProtectionRuleSet",
+//                                 "AWSManagedRulesKnownBadInputsRuleSet",
+//                                 "AWSManagedRulesLinuxRuleSet",
+//                                 "AWSManagedRulesUnixRuleSet"]
+// }
