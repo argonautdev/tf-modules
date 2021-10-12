@@ -70,4 +70,3 @@ module "elasticsearch" {
 
 
   context = module.this.context
-}
