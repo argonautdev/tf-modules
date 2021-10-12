@@ -8,9 +8,9 @@ variable "region" {}
 variable "vpc" {
   description = "All vpc info"
   type = object({
-    name = string
-    id   = string
-    subnets = list(string)
+    name                      = string
+    id                        = string
+    subnets                   = list(string)
     default_security_group_id = string
   })
 }
@@ -18,8 +18,8 @@ variable "vpc" {
 
 variable "instances_per_az" {
   description = "Number of elasticsearch nodes per az"
-  type = number
-  default = 1
+  type        = number
+  default     = 1
 }
 
 #################
