@@ -15,6 +15,7 @@ module "elasticsearch" {
   subnet_ids                     = var.is_public == true ? slice(var.vpc.public_subnets, 0, var.az_count) : slice(var.vpc.private_subnets, 0, var.az_count)
 
   zone_awareness_enabled         = var.zone_awareness_enabled
+  availability_zone_count        = var.az_count
   elasticsearch_version          = var.elasticsearch_version
 
   instance_type                  = var.instance_type
