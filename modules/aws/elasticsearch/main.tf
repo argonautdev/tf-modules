@@ -46,6 +46,10 @@ module "elasticsearch" {
 
   node_to_node_encryption_enabled = var.node_to_node_encryption_enabled
   domain_endpoint_options_enforce_https = var.domain_endpoint_options_enforce_https
+  domain_endpoint_options_tls_security_policy = var.domain_endpoint_options_tls_security_policy
+
+  iam_role_arns = var.iam_role_arns
+  iam_authorizing_role_arns = var.iam_authorizing_role_arns
 
   log_publishing_index_enabled = var.log_publishing_index_enabled
   log_publishing_search_enabled = var.log_publishing_search_enabled
@@ -70,6 +74,9 @@ module "elasticsearch" {
   cognito_user_pool_id = var.cognito_user_pool_id
   cognito_iam_role_arn = var.cognito_iam_role_arn
 
+  warm_count = var.warm_count
+  warm_enabled = var.warm_enabled
+  warm_type = var.warm_type
 
   context = module.this.context
 }
