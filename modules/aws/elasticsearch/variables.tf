@@ -17,11 +17,11 @@ variable "is_public" {
 variable "vpc" {
   description = "All vpc info"
   type = object({
-    name = string
-    id   = string
-    public_subnets = list(string)
-    private_subnets = list(string)
-    vpc_cidr_block = string
+    name                      = string
+    id                        = string
+    public_subnets            = list(string)
+    private_subnets           = list(string)
+    vpc_cidr_block            = string
     default_security_group_id = string
   })
 }
@@ -257,7 +257,7 @@ variable "dedicated_master_type" {
 
 variable "advanced_options" {
   type        = map(string)
-  default     = {"rest.action.multi.allow_explicit_index" = "true"}
+  default     = { "rest.action.multi.allow_explicit_index" = "true" }
   description = "Key-value string pairs to specify advanced configuration options"
 }
 
