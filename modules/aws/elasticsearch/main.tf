@@ -1,6 +1,7 @@
 provider "aws" {
   region = var.region
 }
+
 module "elasticsearch" {
   source  = "cloudposse/elasticsearch/aws"
   version = "0.33.1"
@@ -70,3 +71,4 @@ module "elasticsearch" {
 
 
   context = module.this.context
+}
