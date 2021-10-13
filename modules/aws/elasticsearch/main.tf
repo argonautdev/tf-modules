@@ -24,16 +24,16 @@ module "kibana_label" {
 //   tags        = module.this.tags
 // }
 
-resource "aws_security_group_rule" "ingress_security_groups" {
-  count                    = module.this.enabled && var.vpc_enabled ? 1 : 0
-  description              = "Allow inbound traffic from Security Groups"
-  type                     = "ingress"
-  from_port                = var.ingress_port_range_start
-  to_port                  = var.ingress_port_range_end
-  protocol                 = "tcp"
-  source_security_group_id = var.security_groups[count.index]
-  security_group_id        = [var.vpc.default_security_group_id]
-}
+// resource "aws_security_group_rule" "ingress_security_groups" {
+//   count                    = module.this.enabled && var.vpc_enabled ? 1 : 0
+//   description              = "Allow inbound traffic from Security Groups"
+//   type                     = "ingress"
+//   from_port                = var.ingress_port_range_start
+//   to_port                  = var.ingress_port_range_end
+//   protocol                 = "tcp"
+//   source_security_group_id = var.security_groups[count.index]
+//   security_group_id        = [var.vpc.default_security_group_id]
+// }
 
 // resource "aws_security_group_rule" "ingress_cidr_blocks" {
 //   count             = module.this.enabled && var.vpc_enabled && length(var.allowed_cidr_blocks) > 0 ? 1 : 0
