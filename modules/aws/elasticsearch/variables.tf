@@ -3,11 +3,6 @@ variable "region" {
   description = "AWS region"
 }
 
-variable "az_count" {
-  type        = number
-  description = "Number of availability zones"
-}
-
 variable "is_public" {
   type        = bool
   default     = false
