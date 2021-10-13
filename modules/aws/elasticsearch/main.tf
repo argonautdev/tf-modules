@@ -16,46 +16,46 @@ module "kibana_label" {
   context = module.this.context
 }
 
-// resource "aws_security_group" "default" {
-//   count       = module.this.enabled && var.vpc_enabled ? 1 : 0
-//   vpc_id      = var.vpc.id
-//   name        = module.this.id
-//   description = "Allow inbound traffic from Security Groups and CIDRs. Allow all outbound traffic"
-//   tags        = module.this.tags
-// }
+resource "aws_security_group" "default" {
+  count       = module.this.enabled && var.vpc_enabled ? 1 : 0
+  vpc_id      = var.vpc.id
+  name        = module.this.id
+  description = "Allow inbound traffic from Security Groups and CIDRs. Allow all outbound traffic"
+  tags        = module.this.tags
+}
 
-// resource "aws_security_group_rule" "ingress_security_groups" {
-//   count                    = module.this.enabled && var.vpc_enabled ? 1 : 0
-//   description              = "Allow inbound traffic from Security Groups"
-//   type                     = "ingress"
-//   from_port                = var.ingress_port_range_start
-//   to_port                  = var.ingress_port_range_end
-//   protocol                 = "tcp"
-//   source_security_group_id = var.security_groups[count.index]
-//   security_group_id        = [var.vpc.default_security_group_id]
-// }
+resource "aws_security_group_rule" "ingress_security_groups" {
+  count                    = module.this.enabled && var.vpc_enabled ? length(var.security_groups) : 0
+  description              = "Allow inbound traffic from Security Groups"
+  type                     = "ingress"
+  from_port                = var.ingress_port_range_start
+  to_port                  = var.ingress_port_range_end
+  protocol                 = "tcp"
+  source_security_group_id = var.security_groups[count.index]
+  security_group_id        = join("", aws_security_group.default.*.id)
+}
 
-// resource "aws_security_group_rule" "ingress_cidr_blocks" {
-//   count             = module.this.enabled && var.vpc_enabled && length(var.allowed_cidr_blocks) > 0 ? 1 : 0
-//   description       = "Allow inbound traffic from CIDR blocks"
-//   type              = "ingress"
-//   from_port         = var.ingress_port_range_start
-//   to_port           = var.ingress_port_range_end
-//   protocol          = "tcp"
-//   cidr_blocks       = var.allowed_cidr_blocks
-//   security_group_id = join("", aws_security_group.default.*.id)
-// }
+ resource "aws_security_group_rule" "ingress_cidr_blocks" {
+  count             = module.this.enabled && var.vpc_enabled && length(var.allowed_cidr_blocks) > 0 ? 1 : 0
+  description       = "Allow inbound traffic from CIDR blocks"
+  type              = "ingress"
+  from_port         = var.ingress_port_range_start
+  to_port           = var.ingress_port_range_end
+  protocol          = "tcp"
+  cidr_blocks       = var.allowed_cidr_blocks
+  security_group_id = join("", aws_security_group.default.*.id)
+}
 
-// resource "aws_security_group_rule" "egress" {
-//   count             = module.this.enabled && var.vpc_enabled ? 1 : 0
-//   description       = "Allow all egress traffic"
-//   type              = "egress"
-//   from_port         = 0
-//   to_port           = 65535
-//   protocol          = "tcp"
-//   cidr_blocks       = ["0.0.0.0/0"]
-//   security_group_id = join("", aws_security_group.default.*.id)
-// }
+resource "aws_security_group_rule" "egress" {
+  count             = module.this.enabled && var.vpc_enabled ? 1 : 0
+  description       = "Allow all egress traffic"
+  type              = "egress"
+  from_port         = 0
+  to_port           = 65535
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = join("", aws_security_group.default.*.id)
+}
 
 # https://github.com/terraform-providers/terraform-provider-aws/issues/5218
 resource "aws_iam_service_linked_role" "default" {
@@ -161,7 +161,8 @@ resource "aws_elasticsearch_domain" "default" {
     for_each = var.vpc_enabled ? [true] : []
 
     content {
-      security_group_ids = [var.vpc.default_security_group_id]
+      security_group_ids = [join("", aws_security_group.default.*.id)]
+      // security_group_ids = [var.vpc.default_security_group_id]
       subnet_ids         = (var.vpc_enabled == true && length(var.subnet_ids) > 0) ? slice(var.vpc.public_subnets, 0, var.availability_zone_count) : slice(var.vpc.private_subnets, 0, var.availability_zone_count)
     }
   }
@@ -216,50 +217,50 @@ data "aws_iam_policy_document" "default" {
   statement {
     effect = "Allow"
 
-    actions = distinct(compact(var.iam_actions))
+    actions = ["es*"]
 
     resources = [
-      join("", aws_elasticsearch_domain.default.*.arn),
       "${join("", aws_elasticsearch_domain.default.*.arn)}/*"
     ]
 
     principals {
       type        = "AWS"
-      identifiers = distinct(compact(concat(var.iam_role_arns, aws_iam_role.elasticsearch_user.*.arn)))
+      identifiers = ["*"]
     }
   }
 
-  # This statement is for non VPC ES to allow anonymous access from whitelisted IP ranges without requests signing
-  # https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/es-ac.html#es-ac-types-ip
-  # https://aws.amazon.com/premiumsupport/knowledge-center/anonymous-not-authorized-elasticsearch/
-  dynamic "statement" {
-    for_each = length(var.allowed_cidr_blocks) > 0 && ! var.vpc_enabled ? [true] : []
-    content {
-      effect = "Allow"
+  // # This statement is for non VPC ES to allow anonymous access from whitelisted IP ranges without requests signing
+  // # https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/es-ac.html#es-ac-types-ip
+  // # https://aws.amazon.com/premiumsupport/knowledge-center/anonymous-not-authorized-elasticsearch/
+  // dynamic "statement" {
+  //   for_each = length(var.allowed_cidr_blocks) > 0 && ! var.vpc_enabled ? [true] : []
+  //   content {
+  //     effect = "Allow"
 
-      actions = distinct(compact(var.iam_actions))
+  //     actions = distinct(compact(var.iam_actions))
 
-      resources = [
-        join("", aws_elasticsearch_domain.default.*.arn),
-        "${join("", aws_elasticsearch_domain.default.*.arn)}/*"
-      ]
+  //     resources = [
+  //       join("", aws_elasticsearch_domain.default.*.arn),
+  //       "${join("", aws_elasticsearch_domain.default.*.arn)}/*"
+  //     ]
 
-      principals {
-        type        = "AWS"
-        identifiers = ["*"]
-      }
+  //     principals {
+  //       type        = "AWS"
+  //       identifiers = ["*"]
+  //     }
 
-      condition {
-        test     = "IpAddress"
-        values   = var.allowed_cidr_blocks
-        variable = "aws:SourceIp"
-      }
-    }
-  }
+  //     condition {
+  //       test     = "IpAddress"
+  //       values   = var.allowed_cidr_blocks
+  //       variable = "aws:SourceIp"
+  //     }
+  //   }
+  // }
 }
 
 resource "aws_elasticsearch_domain_policy" "default" {
-  count           = module.this.enabled && (length(var.iam_authorizing_role_arns) > 0 || length(var.iam_role_arns) > 0) ? 1 : 0
+  // count           = module.this.enabled && (length(var.iam_authorizing_role_arns) > 0 || length(var.iam_role_arns) > 0) ? 1 : 0
+  count           = 1
   domain_name     = module.this.id
   access_policies = join("", data.aws_iam_policy_document.default.*.json)
 }
