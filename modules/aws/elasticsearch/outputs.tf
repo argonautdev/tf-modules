@@ -1,5 +1,5 @@
 output "security_group_id" {
-  value       = var.vpc.default_security_group_id
+  value       = aws_security_group.default.*.name
   description = "Security Group ID to control access to the Elasticsearch domain"
 }
 

@@ -20,7 +20,7 @@ resource "aws_security_group" "default" {
   count       = module.this.enabled && var.vpc_enabled ? 1 : 0
   vpc_id      = var.vpc.id
   name        = module.this.id
-  description = "Allow inbound traffic from Security Groups and CIDRs. Allow all outbound traffic"
+  description = "Elasticsearch - Allow inbound traffic from Security Groups and CIDRs. Allow all outbound traffic"
   tags        = module.this.tags
 }
 
@@ -162,7 +162,6 @@ resource "aws_elasticsearch_domain" "default" {
 
     content {
       security_group_ids = [join("", aws_security_group.default.*.id)]
-      // security_group_ids = [var.vpc.default_security_group_id]
       subnet_ids         = (var.vpc_enabled == true && length(var.subnet_ids) > 0) ? slice(var.vpc.public_subnets, 0, var.availability_zone_count) : slice(var.vpc.private_subnets, 0, var.availability_zone_count)
     }
   }
