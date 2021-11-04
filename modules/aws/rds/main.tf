@@ -55,6 +55,8 @@ module "db" {
   username                              = var.username
   password                              = var.password
 
+  snapshot_identifier                   = var.snapshot_identifier
+
   subnet_ids = var.vpc.database_subnets
   vpc_security_group_ids = [module.security_group.security_group_id]
 
@@ -70,14 +72,14 @@ module "db" {
   license_model                         = "postgresql-license"
   maintenance_window                    = "tue:04:29-tue:04:59"
   
-  iops                                  = 0
-  max_allocated_storage                 = 1000
-  multi_az                              = false
+  iops                                  = var.iops
+  max_allocated_storage                 = var.max_allocated_storage
+  multi_az                              = var.multi_az
 
   port                                  = 5432
   publicly_accessible                   = var.visibility == "public" ? "true" : "false"
-  storage_encrypted                     = true
-  storage_type                          = "gp2"
+  storage_encrypted                     = var.storage_encrypted
+  storage_type                          = var.storage_type
 
   performance_insights_enabled          = true
   performance_insights_retention_period = 7
