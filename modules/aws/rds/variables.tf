@@ -3,11 +3,6 @@ variable "aws_region" {
   type        = string
 }
 
-variable "db_subnet_group_name" {
-  description = "Name for the db subnet group"
-  type        = string
-}
-
 variable "storage" {
   description = "Storage capacity in GB"
   type        = number
@@ -72,6 +67,42 @@ variable "visibility" {
   description = "Visibility of the rds instance"
   default = "private"
   type        = string
+}
+
+variable "snapshot_identifier" {
+  description = "Specifies whether or not to create this database from a snapshot. This correlates to the snapshot ID you'd find in the RDS console, e.g: rds:production-2015-06-26-06-05."
+  type        = string
+  default     = null
+}
+
+variable "storage_encrypted" {
+  description = "Encrypt data at rest"
+  type        = bool
+  default     = true
+}
+
+variable "storage_type" {
+  description = "Storage type"
+  type        = string
+  default     = "gp2"
+}
+
+variable "multi_az" {
+  description = "Enable multi az"
+  type        = bool
+  default     = false
+}
+
+variable "max_allocated_storage" {
+  description = "Max allocated storage for db, in GB"
+  type        = number
+  default     = 1000
+}
+
+variable "iops" {
+  description = "Provisioned IOPS"
+  type        = number
+  default     = 0
 }
 
 variable "vpc" {
