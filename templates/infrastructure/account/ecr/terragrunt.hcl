@@ -1,14 +1,4 @@
 
-locals {
-  # Automatically load environment-level variables
-  account_vars     = read_terragrunt_config(find_in_parent_folders("account.hcl"))
-
-  # Extract out common variables for reuse
-  map_users    = local.account_vars.locals.map_users
-  map_accounts = local.account_vars.locals.map_accounts
-
-}
-
 remote_state {
   backend = "pg" 
   config = {
