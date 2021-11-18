@@ -36,7 +36,7 @@ inputs = {
     },
     {{end}}
   ]
-  aws_region                 = "us-east-1"
+  aws_region                 = "{{ .Ecr.Region }}"
   cross_replication = [
     {{ range $e := .Ecr.Replication }}{
       region = "{{$e.Region}}"
