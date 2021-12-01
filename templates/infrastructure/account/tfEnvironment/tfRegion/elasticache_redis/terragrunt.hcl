@@ -50,7 +50,7 @@ inputs = {
 
   name = "{{.Spec.name}}"
 
-  engine_version = "{{.Spec.engine_version}}"
+  {{if .Spec.engine_version}}engine_version = "{{.Spec.engine_version}}"{{end}}
   family = "redis{{.Spec.engine_version}}"
   parameter_group_name = "default.redis{{.Spec.engine_version}}"
 
