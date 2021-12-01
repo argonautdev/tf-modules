@@ -51,8 +51,8 @@ inputs = {
   name = "{{.Spec.name}}"
 
   {{if .Spec.engine_version}}engine_version = "{{.Spec.engine_version}}"{{end}}
-  family = "redis{{.Spec.engine_version}}"
-  parameter_group_name = "default.redis{{.Spec.engine_version}}"
+  {{if .Spec.engine_version}}family = "redis{{.Spec.engine_version}}"{{end}}
+  {{if .Spec.engine_version}}parameter_group_name = "default.redis{{.Spec.engine_version}}"{{end}}
 
   instance_type = "{{.Spec.node_type}}"
   cluster_size = {{.Spec.num_cache_nodes}}
