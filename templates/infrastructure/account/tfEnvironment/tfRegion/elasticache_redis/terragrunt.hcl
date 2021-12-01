@@ -62,8 +62,8 @@ inputs = {
 
   parameter=[{{ range $p := .Spec.parameter }}
     {
-      name  = {{$p.key}}
-      value = {{$p.value}}
+      name  = "{{$p.key}}"
+      value = "{{$p.value}}"
     },
   {{ end }}
   ]
