@@ -48,12 +48,7 @@ module "redis" {
     },
   ]
 
-  parameter = [{{ range $p:=var.parameter }}
-    {
-      name = {{$p.key}}
-    },
-  {{end}}]
-  
+  parameter = var.parameter
 
   context = module.this.context
 }
