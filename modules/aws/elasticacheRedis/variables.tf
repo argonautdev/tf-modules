@@ -78,3 +78,12 @@ variable "vpc" {
     vpc_cidr_block = string
   })
 }
+
+variable "parameter" {
+  type = list(object({
+    name  = string
+    value = string
+  }))
+  default     = []
+  description = "A list of Redis parameters to apply. Note that parameters may differ from one Redis family to another"
+}
