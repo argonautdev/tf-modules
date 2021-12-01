@@ -60,6 +60,8 @@ inputs = {
   transit_encryption_enabled = false
   cloudwatch_metric_alarms_enabled = true
 
+  parameter={{.Spec.parameter}}
+
   vpc = {
     name    = "${local.env}"
     vpc_id      = dependency.vpc.outputs.vpc_id
