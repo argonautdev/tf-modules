@@ -60,7 +60,13 @@ inputs = {
   transit_encryption_enabled = false
   cloudwatch_metric_alarms_enabled = true
 
-  parameter={{.Spec.parameter}}
+  parameter=[{{ range $p := .Spec.parameter }}
+    {
+      name  = {{$p.key}}
+      value = {{$p.value}}
+    },
+  {{ end }}
+  ]
 
   vpc = {
     name    = "${local.env}"
