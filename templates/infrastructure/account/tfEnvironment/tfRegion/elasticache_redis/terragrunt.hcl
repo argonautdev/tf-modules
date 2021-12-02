@@ -50,15 +50,23 @@ inputs = {
 
   name = "{{.Spec.name}}"
 
-  engine_version = "{{.Spec.engine_version}}"
-  family = "redis{{.Spec.engine_version}}"
-  parameter_group_name = "default.redis{{.Spec.engine_version}}"
+  {{if .Spec.engine_version}}engine_version = "{{.Spec.engine_version}}"{{end}}
+  {{if .Spec.engine_version}}family = "redis{{.Spec.engine_version}}"{{end}}
+  {{if .Spec.engine_version}}parameter_group_name = "default.redis{{.Spec.engine_version}}"{{end}}
 
   instance_type = "{{.Spec.node_type}}"
   cluster_size = {{.Spec.num_cache_nodes}}
   at_rest_encryption_enabled = true
   transit_encryption_enabled = false
   cloudwatch_metric_alarms_enabled = true
+
+  parameter=[{{ range $p := .Spec.parameter }}
+    {
+      name  = "{{$p.key}}"
+      value = "{{$p.value}}"
+    },
+  {{ end }}
+  ]
 
   vpc = {
     name    = "${local.env}"

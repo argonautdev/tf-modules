@@ -1,6 +1,7 @@
 module "redis" {
   source = "cloudposse/elasticache-redis/aws"
   version = "v0.40.0"
+  // version = "v0.41.2"
 
   // availability_zones               = var.availability_zones
   // zone_id                          = var.zone_id
@@ -47,12 +48,7 @@ module "redis" {
     },
   ]
 
-  // parameter = [
-  //   {
-  //     name  = "notify-keyspace-events"
-  //     value = "lK"
-  //   }
-  // ]
+  parameter = var.parameter
 
   context = module.this.context
 }
