@@ -1,4 +1,4 @@
-module "documentdb-cluster" {
+module "documentdb_cluster" {
   source  = "cloudposse/documentdb-cluster/aws"
   version = "0.14.1"
   name                            = var.name
