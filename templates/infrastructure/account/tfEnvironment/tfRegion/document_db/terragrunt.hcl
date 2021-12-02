@@ -21,7 +21,7 @@ locals {
 # working directory, into a temporary folder, and execute your Terraform commands in that folder.
 terraform {
   # the below config is an example of what the config should like
-  source = "github.com/argonautdev/tf-modules.git//modules/aws/documentdb?ref={{.RefVersion}}"
+  source = "github.com/argonautdev/tf-modules.git//modules/aws/document_db?ref={{.RefVersion}}"
 }
 
 dependency "vpc" {
