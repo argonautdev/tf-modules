@@ -57,16 +57,16 @@ inputs = {
   {{if .Spec.cluster_size}}cluster_size={{.Spec.cluster_size}}{{end}}
   {{if .Spec.snapshot_identifier}}snapshot_identifier={{.Spec.snapshot_identifier}}{{end}}
   {{if .Spec.db_port}}db_port={{.Spec.db_port}}{{end}}
-  master_username={{.Spec.master_username}}
-  master_password={{.Spec.master_password}}
+  master_username="{{.Spec.master_username}}"
+  master_password="{{.Spec.master_password}}"
   {{if .Spec.retention_period}}retention_period={{.Spec.retention_period}}{{end}}
   {{if .Spec.preferred_backup_window}}preferred_backup_window="{{.Spec.preferred_backup_window}}"{{end}}
   {{if .Spec.preferred_maintenance_window}}preferred_maintenance_window="{{.Spec.preferred_maintenance_window}}"{{end}}
   {{if .Spec.cluster_parameters}}cluster_parameters=[{{range $p := .Spec.cluster_parameters}}
     {
-      apply_method = {{$p.apply_method}}
-      name = {{$p.name}}
-      value = {{$p.value}}
+      apply_method = "{{$p.apply_method}}"
+      name = "{{$p.name}}"
+      value = "{{$p.value}}"
     },
     {{end}}]
   {{end}}
@@ -80,8 +80,8 @@ inputs = {
   {{if .Spec.apply_immediately}}apply_immediately={{.Spec.apply_immediately}}{{end}}
   {{if .Spec.auto_minor_version_upgrade}}auto_minor_version_upgrade={{.Spec.auto_minor_version_upgrade}}{{end}}
   {{if .Spec.enabled_cloudwatch_logs_exports}}enabled_cloudwatch_logs_exports={{.Spec.enabled_cloudwatch_logs_exports}}{{end}}
-  {{if .Spec.cluster_dns_name}}cluster_dns_name={{.Spec.cluster_dns_name}}{{end}}
-  {{if .Spec.reader_dns_name}}reader_dns_name={{.Spec.reader_dns_name}}{{end}}
+  {{if .Spec.cluster_dns_name}}cluster_dns_name="{{.Spec.cluster_dns_name}}"{{end}}
+  {{if .Spec.reader_dns_name}}reader_dns_name="{{.Spec.reader_dns_name}}"{{end}}
 
   vpc_id = dependency.vpc.outputs.vpc_id
   private_subnet_ids = dependency.vpc.outputs.private_subnets
