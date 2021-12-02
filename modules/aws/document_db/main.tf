@@ -29,5 +29,4 @@ module "documentdb_cluster" {
   cluster_dns_name                = var.cluster_dns_name
   reader_dns_name                 = var.reader_dns_name
 
-  context = module.this.context
 }
