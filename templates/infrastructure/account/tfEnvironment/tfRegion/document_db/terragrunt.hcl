@@ -86,7 +86,14 @@ inputs = {
   {{if .Spec.cluster_dns_name}}cluster_dns_name="{{.Spec.cluster_dns_name}}"{{end}}
   {{if .Spec.reader_dns_name}}reader_dns_name="{{.Spec.reader_dns_name}}"{{end}}
 
-  vpc_id = dependency.vpc.outputs.vpc_id
-  private_subnet_ids = dependency.vpc.outputs.private_subnets
+  vpc = {
+    name    = "${local.env}"
+    vpc_id      = dependency.vpc.outputs.vpc_id
+    vpc_cidr_block = dependency.vpc.outputs.vpc_cidr_block
+    public_subnets = dependency.vpc.outputs.public_subnets
+    private_subnets = dependency.vpc.outputs.private_subnets
+    database_subnets = dependency.vpc.outputs.database_subnets
+    default_security_group_id = dependency.vpc.outputs.default_security_group_id
+  }
 }
 

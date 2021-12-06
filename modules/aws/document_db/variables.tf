@@ -31,17 +31,6 @@ variable "allowed_cidr_blocks" {
   description = "List of CIDR blocks to be allowed to connect to the DocumentDB cluster"
 }
 
-variable "vpc_id" {
-  type        = string
-  description = "VPC ID to create the cluster in (e.g. `vpc-a22222ee`)"
-}
-
-variable "private_subnet_ids" {
-  description = "Private subnet ids"
-  type        = list(string)
-}
-
-
 # https://docs.aws.amazon.com/documentdb/latest/developerguide/limits.html#suported-instance-types
 variable "instance_class" {
   type        = string
@@ -175,4 +164,23 @@ variable "reader_dns_name" {
   type        = string
   description = "Name of the reader endpoint CNAME record to create in the parent DNS zone specified by `zone_id`. If left empty, the name will be auto-asigned using the format `replicas.var.name`"
   default     = ""
+}
+
+variable "vpc" {
+  description = "All vpc info"
+  type = object({
+    name = string
+    vpc_id   = string
+    public_subnets = list(string)
+    private_subnets = list(string)
+    database_subnets = list(string)
+    default_security_group_id = string
+    vpc_cidr_block = string
+  })
+}
+
+variable "visibility" {
+  description = "Visibility of the cluster"
+  type = string
+  default = "private"
 }

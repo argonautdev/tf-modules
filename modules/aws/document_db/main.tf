@@ -1,8 +1,39 @@
-data "aws_security_groups" "security_group" {
-  filter {
-    name   = "vpc-id"
-    values = [var.vpc_id]
-  }
+module "security_group" {
+  source  = "terraform-aws-modules/security-group/aws"
+  version = "~> 4"
+
+  name        = var.name
+  description = "Complete DocumentDB security group"
+  vpc_id      = var.vpc.vpc_id
+
+  # ingress
+  
+  ingress_with_cidr_blocks = var.visibility == "public" ? [
+    {
+      from_port   = var.db_port 
+      to_port     = var.db_port
+      protocol    = "tcp"
+      description = "DocumentDB access from within VPC"
+      cidr_blocks = var.vpc.vpc_cidr_block
+    },
+    {
+      from_port   = var.db_port
+      to_port     = var.db_port
+      protocol    = "tcp"
+      description = "Public DocumentDB access"
+      cidr_blocks = "0.0.0.0/0"
+    },
+  ] : [
+    {
+      from_port   = var.db_port
+      to_port     = var.db_port
+      protocol    = "tcp"
+      description = "DocumentDB access from within VPC"
+      cidr_blocks = var.vpc.vpc_cidr_block
+    },
+  ]
+
+  tags = var.default_tags
 }
 
 module "documentdb_cluster" {
@@ -14,12 +45,12 @@ module "documentdb_cluster" {
   master_password                 = var.master_password
   instance_class                  = var.instance_class
   db_port                         = var.db_port
-  vpc_id                          = var.vpc_id
-  subnet_ids                      = var.private_subnet_ids
+  vpc_id                          = var.vpc.vpc_id
+  subnet_ids                      = var.vpc.database_subnets
   zone_id                         = var.zone_id
   apply_immediately               = var.apply_immediately
   auto_minor_version_upgrade      = var.auto_minor_version_upgrade
-  allowed_security_groups         = concat(data.aws_security_groups.security_group.ids, var.allowed_security_groups)
+  allowed_security_groups         = concat([module.security_group.security_group_id], var.allowed_security_groups)
   allowed_cidr_blocks             = var.allowed_cidr_blocks
   snapshot_identifier             = var.snapshot_identifier
   retention_period                = var.retention_period
