@@ -1,3 +1,10 @@
+data "aws_security_groups" "security_group" {
+  filter {
+    name   = "vpc-id"
+    values = [var.vpc_id]
+  }
+}
+
 module "documentdb_cluster" {
   source                          = "cloudposse/documentdb-cluster/aws"
   version                         = "0.14.1"
@@ -12,7 +19,7 @@ module "documentdb_cluster" {
   zone_id                         = var.zone_id
   apply_immediately               = var.apply_immediately
   auto_minor_version_upgrade      = var.auto_minor_version_upgrade
-  allowed_security_groups         = var.allowed_security_groups
+  allowed_security_groups         = concat(data.aws_security_groups.security_group.ids, var.allowed_security_groups)
   allowed_cidr_blocks             = var.allowed_cidr_blocks
   snapshot_identifier             = var.snapshot_identifier
   retention_period                = var.retention_period

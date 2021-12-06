@@ -45,7 +45,7 @@ variable "private_subnet_ids" {
 # https://docs.aws.amazon.com/documentdb/latest/developerguide/limits.html#suported-instance-types
 variable "instance_class" {
   type        = string
-  default     = "db.r4.large"
+  default     = "db.r5.large"
   description = "The instance class to use. For more details, see https://docs.aws.amazon.com/documentdb/latest/developerguide/db-instance-classes.html#db-instance-class-specs"
 }
 
@@ -69,25 +69,23 @@ variable "db_port" {
 
 variable "master_username" {
   type        = string
-  default     = "admin1"
   description = "(Required unless a snapshot_identifier is provided) Username for the master DB user"
 }
 
 variable "master_password" {
   type        = string
-  default     = ""
   description = "(Required unless a snapshot_identifier is provided) Password for the master DB user. Note that this may show up in logs, and it will be stored in the state file. Please refer to the DocumentDB Naming Constraints"
 }
 
 variable "retention_period" {
   type        = number
-  default     = 5
+  default     = 14
   description = "Number of days to retain backups for"
 }
 
 variable "preferred_backup_window" {
   type        = string
-  default     = "07:00-09:00"
+  default     = "02:00-04:00"
   description = "Daily time range during which the backups happen"
 }
 
@@ -109,7 +107,7 @@ variable "cluster_parameters" {
 
 variable "cluster_family" {
   type        = string
-  default     = "docdb3.6"
+  default     = "docdb4.0"
   description = "The family of the DocumentDB cluster parameter group. For more details, see https://docs.aws.amazon.com/documentdb/latest/developerguide/db-cluster-parameter-group-create.html"
 }
 
@@ -121,7 +119,7 @@ variable "engine" {
 
 variable "engine_version" {
   type        = string
-  default     = "3.6.0"
+  default     = "4.0.0"
   description = "The version number of the database engine to use"
 }
 
@@ -140,7 +138,7 @@ variable "kms_key_id" {
 variable "skip_final_snapshot" {
   type        = bool
   description = "Determines whether a final DB snapshot is created before the DB cluster is deleted"
-  default     = true
+  default     = false
 }
 
 variable "deletion_protection" {
@@ -164,7 +162,7 @@ variable "auto_minor_version_upgrade" {
 variable "enabled_cloudwatch_logs_exports" {
   type        = list(string)
   description = "List of log types to export to cloudwatch. The following log types are supported: `audit`, `error`, `general`, `slowquery`"
-  default     = []
+  default     = ["error", "slowquery"]
 }
 
 variable "cluster_dns_name" {
