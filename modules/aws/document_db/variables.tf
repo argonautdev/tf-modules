@@ -169,18 +169,18 @@ variable "reader_dns_name" {
 variable "vpc" {
   description = "All vpc info"
   type = object({
-    name = string
-    vpc_id   = string
-    public_subnets = list(string)
-    private_subnets = list(string)
-    database_subnets = list(string)
+    name                      = string
+    vpc_id                    = string
+    public_subnets            = list(string)
+    private_subnets           = list(string)
+    database_subnets          = list(string)
     default_security_group_id = string
-    vpc_cidr_block = string
+    vpc_cidr_block            = string
   })
 }
 
 variable "visibility" {
   description = "Visibility of the cluster"
-  type = string
-  default = "private"
+  type        = string
+  default     = "private"
 }

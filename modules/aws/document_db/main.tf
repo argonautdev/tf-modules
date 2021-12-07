@@ -7,10 +7,10 @@ module "security_group" {
   vpc_id      = var.vpc.vpc_id
 
   # ingress
-  
+
   ingress_with_cidr_blocks = var.visibility == "public" ? [
     {
-      from_port   = var.db_port 
+      from_port   = var.db_port
       to_port     = var.db_port
       protocol    = "tcp"
       description = "DocumentDB access from within VPC"
@@ -23,7 +23,7 @@ module "security_group" {
       description = "Public DocumentDB access"
       cidr_blocks = "0.0.0.0/0"
     },
-  ] : [
+    ] : [
     {
       from_port   = var.db_port
       to_port     = var.db_port
