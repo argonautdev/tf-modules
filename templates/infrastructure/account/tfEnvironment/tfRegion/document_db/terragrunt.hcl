@@ -36,10 +36,6 @@ dependency "vpc" {
   }
 }
 
-dependencies {
-  paths = [{{range $eks := .Complete.Eks }}"../eks_{{$eks.Name}}",{{end}}]
-}
-
 # These are the variables we have to pass in to use the module specified in the terragrunt configuration above
 inputs = {
   default_tags = {
