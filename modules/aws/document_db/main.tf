@@ -51,9 +51,7 @@ module "documentdb_cluster" {
   apply_immediately               = var.apply_immediately
   auto_minor_version_upgrade      = var.auto_minor_version_upgrade
   allowed_security_groups         = concat([module.security_group.security_group_id], var.allowed_security_groups)
-  allowed_cidr_blocks             = var.visibility == "public" ? 
-                                      concat([var.vpc.vpc_cidr_block, "0.0.0.0/0"], var.allowed_cidr_blocks)
-                                      : concat([var.vpc.vpc_cidr_block], var.allowed_cidr_blocks)
+  allowed_cidr_blocks             = var.visibility == "public" ? concat([var.vpc.vpc_cidr_block, "0.0.0.0/0"], var.allowed_cidr_blocks) : concat([var.vpc.vpc_cidr_block], var.allowed_cidr_blocks)
   snapshot_identifier             = var.snapshot_identifier
   retention_period                = var.retention_period
   preferred_backup_window         = var.preferred_backup_window
