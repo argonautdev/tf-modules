@@ -53,6 +53,7 @@ inputs = {
 
   name = "{{.Spec.name}}"
 
+  {{if .Spec.visibility}}visibility= "{{.Spec.visibility}}"{{end}}
   {{if .Spec.zone_id}}zone_id= "{{.Spec.zone_id}}"{{end}}
   {{if .Spec.allowed_security_groups}}allowed_security_groups={{.Spec.allowed_security_groups}}{{end}}
   {{if .Spec.allowed_cidr_blocks}}allowed_cidr_blocks= {{.Spec.allowed_cidr_blocks}}{{end}}
