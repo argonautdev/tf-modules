@@ -84,7 +84,7 @@ module "db" {
   storage_encrypted                     = var.storage_encrypted
   storage_type                          = var.storage_type
 
-  performance_insights_enabled          = true
+  performance_insights_enabled          = var.performance_insights_enabled
   performance_insights_retention_period = 7
   enabled_cloudwatch_logs_exports = var.engine == "postgres" ? ["postgresql", "upgrade"] :  ["general"]
 

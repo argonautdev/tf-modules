@@ -74,6 +74,7 @@ inputs = {
   {{if .Spec.engine_version}}engine_version = "{{ .Spec.engine_version }}"{{else}}engine_version = "8.0.26"{{end}}
   {{if .Spec.family}}family       = "{{ .Spec.family }}"{{else}}family       = "mysql8.0"{{end}}
   {{if .Spec.major_engine_version}}major_engine_version       = "{{ .Spec.major_engine_version }}"{{else}}major_engine_version       = "8.0"{{end}}
+  {{if and (ne .Spec.instance_class "db.t2.micro") (ne .Spec.instance_class "db.t2.small") (ne .Spec.instance_class "db.t3.micro") (ne .Spec.instance_class "db.t3.small")}}performance_insights_enabled=false{{else}}performance_insights_enabled=true{{end}}
   {{end}}
 
   storage        = {{ .Spec.storage }}
