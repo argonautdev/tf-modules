@@ -73,3 +73,8 @@ variable "env" {
 variable "k8s_service_account_name" {
   type = string
 }
+
+variable "ami_type" {
+  default = "AL2_x86_64"
+  type = string
+}
