@@ -151,7 +151,7 @@ variable "auto_minor_version_upgrade" {
 variable "enabled_cloudwatch_logs_exports" {
   type        = list(string)
   description = "List of log types to export to cloudwatch. The following log types are supported: `audit`, `profiler`"
-  default     = []
+  default     = ["audit", "profiler"]
 }
 
 variable "cluster_dns_name" {
