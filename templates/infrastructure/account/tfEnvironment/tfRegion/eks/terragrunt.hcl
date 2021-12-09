@@ -67,7 +67,7 @@ inputs = {
     "aws.amazon.com/spot": "true"
   }
 
-  {{if .Spec.ami_type}}ami_type = {{.Spec.ami_type}}{{end}}
+  {{if .Spec.ami_type}}ami_type = "{{.Spec.ami_type}}"{{end}}
 
   env = "${local.env}"
   vpc = {
