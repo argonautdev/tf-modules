@@ -27,7 +27,7 @@ module "eks" {
   vpc_id = var.vpc.id
 
   node_groups_defaults = {
-    ami_type  = "AL2_x86_64"
+    ami_type  = var.ami_type
     disk_size = var.node_group.disk_size
   }
 
