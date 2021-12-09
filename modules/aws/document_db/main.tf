@@ -8,22 +8,7 @@ module "security_group" {
 
   # ingress
 
-  ingress_with_cidr_blocks = var.visibility == "public" ? [
-    {
-      from_port   = var.db_port
-      to_port     = var.db_port
-      protocol    = "tcp"
-      description = "DocumentDB access from within VPC"
-      cidr_blocks = var.vpc.vpc_cidr_block
-    },
-    {
-      from_port   = var.db_port
-      to_port     = var.db_port
-      protocol    = "tcp"
-      description = "Public DocumentDB access"
-      cidr_blocks = "0.0.0.0/0"
-    },
-    ] : [
+  ingress_with_cidr_blocks = [
     {
       from_port   = var.db_port
       to_port     = var.db_port
@@ -51,7 +36,7 @@ module "documentdb_cluster" {
   apply_immediately               = var.apply_immediately
   auto_minor_version_upgrade      = var.auto_minor_version_upgrade
   allowed_security_groups         = concat([module.security_group.security_group_id], var.allowed_security_groups)
-  allowed_cidr_blocks             = var.visibility == "public" ? concat([var.vpc.vpc_cidr_block, "0.0.0.0/0"], var.allowed_cidr_blocks) : concat([var.vpc.vpc_cidr_block], var.allowed_cidr_blocks)
+  allowed_cidr_blocks             = concat([var.vpc.vpc_cidr_block], var.allowed_cidr_blocks)
   snapshot_identifier             = var.snapshot_identifier
   retention_period                = var.retention_period
   preferred_backup_window         = var.preferred_backup_window

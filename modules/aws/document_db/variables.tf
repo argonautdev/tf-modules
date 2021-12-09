@@ -179,8 +179,3 @@ variable "vpc" {
   })
 }
 
-variable "visibility" {
-  description = "Visibility of the cluster"
-  type        = string
-  default     = "private"
-}
