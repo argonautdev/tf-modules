@@ -61,7 +61,7 @@ inputs = {
   name           = "{{ .Spec.name }}"
 
   {{if eq .Spec.engine "postgres"}}
-  // all values correspond to postgres defaults
+  // all values correspond to postgres
   engine         = "{{ .Spec.engine }}"
   {{if .Spec.engine_version}}engine_version = "{{ .Spec.engine_version }}"{{end}}
   {{if .Spec.family}}family       = "{{ .Spec.family }}"{{end}}
@@ -69,7 +69,7 @@ inputs = {
   {{end}}
 
   {{if eq .Spec.engine "mysql"}}
-  // all values correspond to mysql defaults
+  // all values correspond to mysql
   engine         = "{{ .Spec.engine }}"
   {{if .Spec.engine_version}}engine_version = "{{ .Spec.engine_version }}"{{else}}engine_version = "8.0.26"{{end}}
   {{if .Spec.family}}family       = "{{ .Spec.family }}"{{else}}family       = "mysql8.0"{{end}}
