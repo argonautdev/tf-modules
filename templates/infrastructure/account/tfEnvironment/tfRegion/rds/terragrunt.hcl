@@ -50,6 +50,7 @@ inputs = {
     "argonaut.dev/name"        = "{{ .Spec.name }}"
     "argonaut.dev/type"        = "RDS"
     "argonaut.dev/manager"     = "argonaut.dev"
+    "argonaut.dev/rds-engine"  = "{{ .Spec.engine }}"
     "argonaut.dev/env/${local.env}" = "true"
   }
   aws_region = "${local.region}"
@@ -58,15 +59,28 @@ inputs = {
 
   identifier     = "{{ .Spec.identifier }}"
   name           = "{{ .Spec.name }}"
+
+  {{if eq .Spec.engine "postgres"}}
+  // all values correspond to postgres
   engine         = "{{ .Spec.engine }}"
-  engine_version = "{{ .Spec.engine_version }}"
+  {{if .Spec.engine_version}}engine_version = "{{ .Spec.engine_version }}"{{end}}
+  {{if .Spec.family}}family       = "{{ .Spec.family }}"{{end}}
+  {{if .Spec.major_engine_version}}major_engine_version       = "{{ .Spec.major_engine_version}}"{{end}}
+  {{end}}
+
+  {{if eq .Spec.engine "mysql"}}
+  // all values correspond to mysql
+  engine         = "{{ .Spec.engine }}"
+  {{if .Spec.engine_version}}engine_version = "{{ .Spec.engine_version }}"{{else}}engine_version = "8.0.26"{{end}}
+  {{if .Spec.family}}family       = "{{ .Spec.family }}"{{else}}family       = "mysql8.0"{{end}}
+  {{if .Spec.major_engine_version}}major_engine_version       = "{{ .Spec.major_engine_version }}"{{else}}major_engine_version       = "8.0"{{end}}
+  {{if or (eq .Spec.instance_class "db.t2.micro") (eq .Spec.instance_class "db.t2.small") (eq .Spec.instance_class "db.t3.micro") (eq .Spec.instance_class "db.t3.small")}}performance_insights_enabled=false{{else}}performance_insights_enabled=true{{end}}
+  {{end}}
 
   storage        = {{ .Spec.storage }}
   instance_class = "{{ .Spec.instance_class }}"
   username       = "{{ .Spec.username }}"
   password       = "{{ .Spec.password }}"
-  family       = "{{ .Spec.family }}"
-  major_engine_version       = "postgres13"
   db_subnet_group_name = "{{ .Spec.name }}-db-subnet"
 
   vpc = {

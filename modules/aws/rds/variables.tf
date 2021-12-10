@@ -105,6 +105,12 @@ variable "iops" {
   default     = 0
 }
 
+variable "performance_insights_enabled" {
+  description = "Enable Performance Insights"
+  type        = bool
+  default     = true
+}
+
 variable "vpc" {
   description = "All vpc info"
   type = object({
