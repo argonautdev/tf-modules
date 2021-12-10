@@ -63,9 +63,9 @@ inputs = {
   {{if eq .Spec.engine "postgres"}}
   // all values correspond to postgres defaults
   engine         = "{{ .Spec.engine }}"
-  engine_version = "{{ .Spec.engine_version }}"
-  family       = "{{ .Spec.family }}"
-  major_engine_version       = "postgres13"
+  {{if .Spec.engine_version}}engine_version = "{{ .Spec.engine_version }}"{{end}}
+  {{if .Spec.family}}family       = "{{ .Spec.family }}"{{end}}
+  {{if .Spec.major_engine_version}}major_engine_version       = "{{ .Spec.major_engine_version}}"{{end}}
   {{end}}
 
   {{if eq .Spec.engine "mysql"}}
