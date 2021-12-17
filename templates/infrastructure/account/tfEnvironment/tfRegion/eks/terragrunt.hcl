@@ -26,7 +26,11 @@ locals {
 terraform {
 
   # the below config is an example of what the config should like
+  {{ if .Spec.source }}
+  source = "{{ .Spec.source }}"
+  {{ else }}
   source = "github.com/argonautdev/tf-modules.git//modules/aws/eks?ref={{.RefVersion}}"
+  {{ end }}
 }
 
 dependency "vpc" {

@@ -17,8 +17,11 @@ terraform {
 
   # the below config is an example of what the config should like
   # source = "./"
+  {{ if .Spec.source }}
+  source = "{{ .Spec.source }}"
+  {{ else }}
   source = "github.com/argonautdev/tf-modules.git//modules/aws/elasticsearch?ref={{.RefVersion}}"
-
+  {{ end }}
 }
 
 dependency "vpc" {

@@ -23,8 +23,11 @@ locals {
 terraform {
 
   # the below config is an example of what the config should like
+  {{ if .Spec.source }}
+  source = "{{ .Spec.source }}"
+  {{ else }}
   source = "github.com/argonautdev/tf-modules.git//modules/aws/s3Bucket?ref={{.RefVersion}}"
-
+  {{ end }}
 }
 
 # These are the variables we have to pass in to use the module specified in the terragrunt configuration above

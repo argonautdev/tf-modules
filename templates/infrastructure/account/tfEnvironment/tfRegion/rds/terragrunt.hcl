@@ -28,7 +28,11 @@ locals {
 terraform {
 
   # the below config is an example of what the config should like
-  source = "github.com/argonautdev/tf-modules.git//modules/aws/rds?ref={{.RefVersion}}"
+  {{ if .Spec.source }}
+  source = "{{ .Spec.source }}"
+  {{ else }}
+    source = "github.com/argonautdev/tf-modules.git//modules/aws/rds?ref={{.RefVersion}}"
+  {{ end }}
 }
 
 dependency "vpc" {

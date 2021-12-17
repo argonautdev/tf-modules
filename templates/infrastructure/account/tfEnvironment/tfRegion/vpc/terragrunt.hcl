@@ -21,7 +21,11 @@ locals {
 
 terraform {
   # the below config is an example of what the config should like
+  {{ if .VpcSource }}
+  source = "{{ .VpcSource }}"
+  {{ else }}
   source = "github.com/argonautdev/tf-modules.git//modules/aws/vpc?ref={{.RefVersion}}"
+  {{ end }}
 }
 
 # These are the variables we have to pass in to use the module specified in the terragrunt configuration above

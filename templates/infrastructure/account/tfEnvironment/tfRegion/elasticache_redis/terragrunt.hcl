@@ -21,7 +21,11 @@ locals {
 # working directory, into a temporary folder, and execute your Terraform commands in that folder.
 terraform {
   # the below config is an example of what the config should like
+  {{ if .Spec.source }}
+  source = "{{ .Spec.source }}"
+  {{ else }}
   source = "github.com/argonautdev/tf-modules.git//modules/aws/elasticacheRedis?ref={{.RefVersion}}"
+  {{ end }}
 }
 
 dependency "vpc" {
