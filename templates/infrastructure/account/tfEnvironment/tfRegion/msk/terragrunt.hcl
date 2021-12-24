@@ -53,7 +53,7 @@ inputs = {
   {{if .Spec.broker_instance_type}}broker_instance_type = "{{.Spec.broker_instance_type}}"{{end}}
   {{if .Spec.broker_volume_size}}broker_volume_size = {{.Spec.broker_volume_size}}{{end}}
   {{if .Spec.zone_id}}zone_id = "{{.Spec.zone_id}}"{{end}}
-  {{if .Spec.allowed_cidr_blocks}}allowed_cidr_blocks = [{{ range cidr_block := .Spec.allowed_cidr_blocks}}"{{$cidr_block}}", {{end}}]{{end}}
+  {{if .Spec.allowed_cidr_blocks}}allowed_cidr_blocks = [{{ range .Spec.cidr_block := .Spec.allowed_cidr_blocks}}"{{$cidr_block}}", {{end}}]{{end}}
   {{if .Spec.client_broker}}client_broker = "{{.Spec.client_broker}}"{{end}}
   {{if .Spec.encryption_in_cluster}}encryption_in_cluster= {{.Spec.encryption_in_cluster}}{{end}}
   {{if .Spec.encryption_at_rest_kms_key_arn}}encryption_at_rest_kms_key_arn = "{{.Spec.encryption_at_rest_kms_key_arn}}"{{end}}
