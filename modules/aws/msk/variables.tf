@@ -10,7 +10,7 @@ variable "aws_region" {
 
 variable "number_of_broker_nodes" {
   type        = number
-  default     = 4
+  default     = 3
   description = "The desired total number of broker nodes in the kafka cluster. It must be a multiple of the number of specified client subnets."
 }
 
