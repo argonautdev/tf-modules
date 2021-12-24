@@ -10,10 +10,17 @@ module "security_group" {
 
   ingress_with_cidr_blocks = [
     {
-      from_port   = 9094
-      to_port     = 9094
+      from_port   = 2181
+      to_port     = 2181
       protocol    = "tcp"
-      description = "msk access from within VPC"
+      description = "Allow inbound Zookeeper plaintext traffic"
+      cidr_blocks = var.vpc.vpc_cidr_block
+    },
+    {
+      from_port   = 2182
+      to_port     = 2182
+      protocol    = "tcp"
+      description = "Allow inbound Zookeeper tls traffic"
       cidr_blocks = var.vpc.vpc_cidr_block
     },
   ]
