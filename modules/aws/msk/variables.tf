@@ -23,7 +23,7 @@ variable "kafka_version" {
 
 variable "broker_instance_type" {
   type        = string
-  default     = "kafka.t3.medium"
+  default     = "kafka.t3.small"
   description = "The instance type to use for the Kafka brokers"
 }
 
