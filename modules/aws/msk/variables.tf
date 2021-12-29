@@ -8,16 +8,35 @@ variable "aws_region" {
   description = "AWS region"
 }
 
-variable "number_of_broker_nodes" {
+variable "number_of_broker_nodes_per_zone" {
+  type        = number
+  default     = 1
+  description = "The desired total number of broker nodes in the kafka cluster per zone."
+  validation {
+    condition = (
+      var.number_of_broker_nodes_per_zone >= 1
+    )
+    error_message = "Number of broker nodes per zone must be greater than or equal to 1."
+  }
+}
+
+variable "number_of_zones" {
   type        = number
   default     = 3
-  description = "The desired total number of broker nodes in the kafka cluster. It must be a multiple of the number of specified client subnets."
+  description = "The desired total number of availability zones in the kafka cluster."
+  validation {
+    condition = (
+      var.number_of_zones >= 1 &&
+      var.number_of_zones <= 3
+    )
+    error_message = "Number of zones must be between 1 and 3, inclusive."
+  }
 }
 
 variable "kafka_version" {
-  type        = string
+  type = string
   # this is the recommended version
-  default     = "2.6.2" 
+  default     = "2.6.2"
   description = "The desired Kafka software version"
 }
 
