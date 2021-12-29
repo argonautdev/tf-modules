@@ -48,7 +48,8 @@ inputs = {
 
   name = "{{.Spec.name}}"
 
-  {{if .Spec.number_of_broker_nodes}}number_of_broker_nodes = {{.Spec.number_of_broker_nodes}}{{end}}
+  {{if .Spec.number_of_broker_nodes_per_zone}}number_of_broker_nodes_per_zone = {{.Spec.number_of_broker_nodes_per_zone}}{{end}}
+  {{if .Spec.number_of_zones}}number_of_zones = {{.Spec.number_of_zones}}{{end}}
   {{if .Spec.kafka_version}}kafka_version = "{{.Spec.kafka_version}}"{{end}}
   {{if .Spec.broker_instance_type}}broker_instance_type = "{{.Spec.broker_instance_type}}"{{end}}
   {{if .Spec.broker_volume_size}}broker_volume_size = {{.Spec.broker_volume_size}}{{end}}
