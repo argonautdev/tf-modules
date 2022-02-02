@@ -42,7 +42,6 @@ inputs = {
   atlas_project_name="{{.Spec.atlas_project_name}}"
 
   default_tags = {
-    "argonaut.dev/name" = "{{.Spec.name}}"
     "argonaut.dev/manager" = "argonaut.dev"
     "argonaut.dev/type" = "MongoDB-Atlas-VPC-Peering"
     "argonaut.dev/env/${local.env}" = "true"
