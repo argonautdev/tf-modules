@@ -37,11 +37,11 @@ inputs = {
   atlas_public_key="{{.Spec.atlas_public_key}}"
   atlas_private_key="{{.Spec.atlas_private_key}}"
   atlas_region="{{.Spec.atlas_region}}"
-  atlas_org_id="{{.Spec.atlas_org_id}}"
+  atlas_project_id="{{.Spec.atlas_project_id}}"
   atlas_vpc_cidr="{{.Spec.atlas_vpc_cidr}}"
-  atlas_project_name="{{.Spec.atlas_project_name}}"
 
   default_tags = {
+    "argonaut.dev/name" = "{{.Spec.name}}"
     "argonaut.dev/manager" = "argonaut.dev"
     "argonaut.dev/type" = "MongoDB-Atlas-VPC-Peering"
     "argonaut.dev/env/${local.env}" = "true"

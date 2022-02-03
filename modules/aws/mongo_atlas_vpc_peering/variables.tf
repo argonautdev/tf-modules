@@ -26,18 +26,13 @@ variable "atlas_region" {
   description = "Atlas Region"
 }
 
-variable "atlas_org_id" {
-  description = "Atlas Org ID"
-  type = string
-}
-
 variable "atlas_vpc_cidr" {
   description = "Atlas CIDR"
   type = string
 }
 
-variable "atlas_project_name" {
-  description = "MongoDB Atlas project name"
+variable "atlas_project_id" {
+  description = "MongoDB Atlas project id"
   type        = string
 }
 

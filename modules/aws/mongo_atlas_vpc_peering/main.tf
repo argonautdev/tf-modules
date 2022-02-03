@@ -1,12 +1,11 @@
 data "aws_caller_identity" "account" {}
 
 data "aws_vpc" "primary" {
-  id    = var.vpc.vpc_id
+  id = var.vpc.vpc_id
 }
 
 data "mongodbatlas_project" "aws_atlas" {
-  name   = var.atlas_project_name
-  org_id = var.atlas_org_id
+  project_id = var.atlas_project_id
 }
 
 resource "mongodbatlas_network_container" "atlas_container" {
