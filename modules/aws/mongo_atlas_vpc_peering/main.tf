@@ -4,26 +4,26 @@ data "aws_vpc" "primary" {
   id    = var.vpc.vpc_id
 }
 
-resource "mongodbatlas_project" "aws_atlas" {
+data "mongodbatlas_project" "aws_atlas" {
   name   = var.atlas_project_name
   org_id = var.atlas_org_id
 }
 
 resource "mongodbatlas_network_container" "atlas_container" {
   atlas_cidr_block = var.atlas_vpc_cidr
-  project_id       = mongodbatlas_project.aws_atlas.id
+  project_id       = data.mongodbatlas_project.aws_atlas.id
   provider_name    = "AWS"
   region_name      = var.atlas_region
 }
 
 data "mongodbatlas_network_container" "atlas_container" {
   container_id = mongodbatlas_network_container.atlas_container.container_id
-  project_id   = mongodbatlas_project.aws_atlas.id
+  project_id   = data.mongodbatlas_project.aws_atlas.id
 }
 
 resource "mongodbatlas_network_peering" "aws-atlas" {
   accepter_region_name   = var.aws_region
-  project_id             = mongodbatlas_project.aws_atlas.id
+  project_id             = data.mongodbatlas_project.aws_atlas.id
   container_id           = mongodbatlas_network_container.atlas_container.container_id
   provider_name          = "AWS"
   route_table_cidr_block = data.aws_vpc.primary.cidr_block
