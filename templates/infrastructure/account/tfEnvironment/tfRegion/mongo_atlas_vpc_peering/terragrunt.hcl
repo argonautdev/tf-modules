@@ -5,9 +5,9 @@ include {
 locals {
   # Automatically load environment-level variables
   environment_vars = read_terragrunt_config(find_in_parent_folders("env.hcl"))
-  region_vars = read_terragrunt_config(find_in_parent_folders("region.hcl"))
+  region_vars      = read_terragrunt_config(find_in_parent_folders("region.hcl"))
 
-  env = local.environment_vars.locals.environment
+  env    = local.environment_vars.locals.environment
   region = local.region_vars.locals.aws_region
 }
 
@@ -19,8 +19,8 @@ terraform {
 }
 
 dependency "vpc" {
-  config_path = "../vpc"
-   mock_outputs = {
+  config_path  = "../vpc"
+  mock_outputs = {
     vpc_id = "temporary-dummy-id",
   }
 }
@@ -30,21 +30,22 @@ inputs = {
   aws_region = "${local.region}"
 
   vpc = {
-    name    = "${local.env}"
-    vpc_id      = dependency.vpc.outputs.vpc_id
+    name   = "${local.env}"
+    vpc_id = dependency.vpc.outputs.vpc_id
   }
 
-  atlas_public_key="{{.Spec.atlas_public_key}}"
-  atlas_private_key="{{.Spec.atlas_private_key}}"
-  atlas_region="{{.Spec.atlas_region}}"
-  atlas_org_id="{{.Spec.atlas_org_id}}"
-  atlas_vpc_cidr="{{.Spec.atlas_vpc_cidr}}"
-  atlas_project_name="{{.Spec.atlas_project_name}}"
+  atlas_public_key   = "{{.Spec.atlas_public_key}}"
+  atlas_private_key  = "{{.Spec.atlas_private_key}}"
+  atlas_region       = "{{.Spec.atlas_region}}"
+  atlas_org_id       = "{{.Spec.atlas_org_id}}"
+  atlas_vpc_cidr     = "{{.Spec.atlas_vpc_cidr}}"
+  atlas_project_name = "{{.Spec.atlas_project_name}}"
+  atlas_container_id = "{{.Spec.atlas_container_id}}"
 
   default_tags = {
-    "argonaut.dev/name" = "{{.Spec.name}}"
-    "argonaut.dev/manager" = "argonaut.dev"
-    "argonaut.dev/type" = "MongoDB-Atlas-VPC-Peering"
+    "argonaut.dev/name"             = "{{.Spec.name}}"
+    "argonaut.dev/manager"          = "argonaut.dev"
+    "argonaut.dev/type"             = "MongoDB-Atlas-VPC-Peering"
     "argonaut.dev/env/${local.env}" = "true"
   }
 }
