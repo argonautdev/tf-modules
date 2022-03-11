@@ -2,6 +2,13 @@
 # terragrunt.hcl configuration
 // account level specs kept here
 locals {
+  map_roles = [
+    {
+      rolearn = "{{.AWS.AWSRole}}"
+      username = "system:masters"
+      groups = ["system:masters"]
+    }
+  ]
   map_users = [
     {
       userarn = "{{.AWS.AWSArn}}"
