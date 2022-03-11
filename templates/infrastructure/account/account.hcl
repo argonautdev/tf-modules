@@ -4,7 +4,7 @@
 locals {
   map_roles = [
     {
-      rolearn = "{{.AWS.AWSRole}}"
+      rolearn = "{{.AWS.AWSArn}}"
       username = "system:masters"
       groups = ["system:masters"]
     }
