@@ -38,15 +38,3 @@ output "service_account_name" {
 output "certificate_authority_data" {
   value = data.aws_eks_cluster.cluster.certificate_authority.0.data
 }
-
-output "aws_iam_eks_admin_role_arn" {
-  value = aws_iam_role.eks_admin_role.arn
-}
-
-output "eks_admin_group_arn" {
-  value = aws_iam_group.eks_admin_group.arn
-}
-
-output "eks_admin_policy_arn" {
-  value = aws_iam_group_policy.eks_admin_group_policy.name
-}

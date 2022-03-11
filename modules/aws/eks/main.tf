@@ -68,17 +68,7 @@ module "eks" {
   #   }
   # ]
 
-  map_roles = [
-    {
-      rolearn  = aws_iam_role.eks_admin_role.arn
-      username = "aws_iam_auth_admin"
-      groups   = [
-        "system:masters",
-        "system:bootstrappers",
-        "system:nodes"
-      ]
-    }
-  ]
+  #   map_roles    = var.map_roles
   map_users    = var.map_users
   map_accounts = var.map_accounts
 }
@@ -140,45 +130,3 @@ data "aws_iam_policy_document" "cluster_autoscaler" {
     }
   }
 }
-
-data "aws_caller_identity" "account" {}
-
-resource "aws_iam_role" "eks_admin_role" {
-  name        = "${var.cluster.name}_eks_admin_role"
-  description = "Kubernetes administrator role (for AWS IAM Group based Auth for Kubernetes)"
-
-  assume_role_policy = jsonencode({
-    Version   = "2012-10-17"
-    Statement = [
-      {
-        Action    = "sts:AssumeRole"
-        Effect    = "Allow"
-        Sid       = ""
-        Principal = {
-          AWS = "arn:aws:iam::${data.aws_caller_identity.account.account_id}:root"
-        }
-      },
-    ]
-  })
-}
-
-resource "aws_iam_group" "eks_admin_group" {
-  name = "${var.cluster.name}_eks_admin_group"
-}
-
-resource "aws_iam_group_policy" "eks_admin_group_policy" {
-  name  = "${var.cluster.name}_eks_admin_group_policy"
-  group = aws_iam_group.eks_admin_group.name
-
-  policy = jsonencode({
-    Version   = "2012-10-17"
-    Statement = [
-      {
-        Action   = "sts:AssumeRole"
-        Effect   = "Allow"
-        Resource = aws_iam_role.eks_admin_role.arn
-      },
-    ]
-  })
-}
-
