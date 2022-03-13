@@ -87,7 +87,7 @@ variable "ami_type" {
   type    = string
 }
 
-variables "k8s_service_account_namespace" {
+variable "k8s_service_account_namespace" {
   default = "tools"
   type    = string
 }
