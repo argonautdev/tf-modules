@@ -86,3 +86,8 @@ variable "ami_type" {
   default = "AL2_x86_64"
   type    = string
 }
+
+variables "k8s_service_account_namespace" {
+  default = "tools"
+  type    = string
+}
