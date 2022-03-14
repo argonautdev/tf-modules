@@ -17,12 +17,12 @@ data "aws_availability_zones" "available" {
 }
 
 module "eks" {
-  source          = "terraform-aws-modules/eks/aws"
-  version = "v17.4.0"
-  cluster_name    = var.cluster.name
-  cluster_version = var.cluster.version
+  source                   = "terraform-aws-modules/eks/aws"
+  version                  = "v17.4.0"
+  cluster_name             = var.cluster.name
+  cluster_version          = var.cluster.version
   wait_for_cluster_timeout = 900
-  subnets         = var.vpc.subnets
+  subnets                  = var.vpc.subnets
 
   vpc_id = var.vpc.id
 
@@ -34,7 +34,7 @@ module "eks" {
   node_groups = {
     "${var.cluster.name}" = {
       # "
-      name_prefix = "${var.cluster.name}-art-"
+      name_prefix      = "${var.cluster.name}-art-"
       desired_capacity = var.node_group.desired_capacity
       max_capacity     = var.node_group.max_capacity
       min_capacity     = var.node_group.min_capacity
@@ -47,7 +47,7 @@ module "eks" {
       }
 
       additional_tags = var.node_group.spot ? merge(var.default_tags, var.spot_tags) : merge(var.default_tags, var.on_demand_tags)
-      taints = []
+      taints          = []
     }
   }
 
@@ -68,17 +68,17 @@ module "eks" {
   #   }
   # ]
 
-  map_roles = [
+  map_roles = concat(var.map_roles, [
     {
       rolearn  = aws_iam_role.eks_admin_role.arn
       username = "aws_iam_auth_admin"
-      groups   = [
+      groups = [
         "system:masters",
         "system:bootstrappers",
         "system:nodes"
       ]
     }
-  ]
+  ])
   map_users    = var.map_users
   map_accounts = var.map_accounts
 }
@@ -90,7 +90,7 @@ module "iam_assumable_role_admin" {
   role_name                     = "${data.aws_eks_cluster.cluster.name}-role"
   provider_url                  = replace(module.eks.cluster_oidc_issuer_url, "https://", "")
   role_policy_arns              = [aws_iam_policy.cluster_autoscaler.arn]
-  oidc_fully_qualified_subjects = ["system:serviceaccount:${local.k8s_service_account_namespace}:${var.k8s_service_account_name}"]
+  oidc_fully_qualified_subjects = ["system:serviceaccount:${var.k8s_service_account_namespace}:${var.k8s_service_account_name}"]
 }
 
 resource "aws_iam_policy" "cluster_autoscaler" {
@@ -148,12 +148,12 @@ resource "aws_iam_role" "eks_admin_role" {
   description = "Kubernetes administrator role (for AWS IAM Group based Auth for Kubernetes)"
 
   assume_role_policy = jsonencode({
-    Version   = "2012-10-17"
+    Version = "2012-10-17"
     Statement = [
       {
-        Action    = "sts:AssumeRole"
-        Effect    = "Allow"
-        Sid       = ""
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Sid    = ""
         Principal = {
           AWS = "arn:aws:iam::${data.aws_caller_identity.account.account_id}:root"
         }
@@ -171,7 +171,7 @@ resource "aws_iam_group_policy" "eks_admin_group_policy" {
   group = aws_iam_group.eks_admin_group.name
 
   policy = jsonencode({
-    Version   = "2012-10-17"
+    Version = "2012-10-17"
     Statement = [
       {
         Action   = "sts:AssumeRole"

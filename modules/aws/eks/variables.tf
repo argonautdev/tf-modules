@@ -25,11 +25,11 @@ variable "map_accounts" {
 variable "cluster" {
   description = "All cluster info (singular)"
   type = object({
-    name = string
+    name    = string
     version = string
   })
   default = {
-    name = "argonaut"
+    name    = "argonaut"
     version = "1.21"
   }
 }
@@ -37,8 +37,8 @@ variable "cluster" {
 variable "vpc" {
   description = "All vpc info"
   type = object({
-    name = string
-    id   = string
+    name    = string
+    id      = string
     subnets = list(string)
   })
 }
@@ -46,13 +46,13 @@ variable "vpc" {
 variable "node_group" {
   description = "All node_group info (singular)"
   type = object({
-    name_prefix = string 
+    name_prefix      = string
     desired_capacity = number
-    max_capacity = number
-    min_capacity = number
-    disk_size = number
-    instance_type = string
-    spot = bool
+    max_capacity     = number
+    min_capacity     = number
+    disk_size        = number
+    instance_type    = string
+    spot             = bool
   })
 }
 
@@ -63,7 +63,15 @@ variable "map_users" {
     username = string
     groups   = list(string)
   }))
+}
 
+variable "map_roles" {
+  description = "Additional IAM roles to add to the aws-auth configmap."
+  type = list(object({
+    rolearn  = string
+    username = string
+    groups   = list(string)
+  }))
 }
 
 variable "env" {
@@ -76,5 +84,10 @@ variable "k8s_service_account_name" {
 
 variable "ami_type" {
   default = "AL2_x86_64"
-  type = string
+  type    = string
+}
+
+variable "k8s_service_account_namespace" {
+  default = "tools"
+  type    = string
 }

@@ -11,6 +11,7 @@ locals {
   # Extract out common variables for reuse
   map_users = local.account_vars.locals.map_users
   map_accounts = local.account_vars.locals.map_accounts
+  map_roles = local.account_vars.locals.map_roles
 
   env = local.environment_vars.locals.environment
 
@@ -96,6 +97,7 @@ inputs = {
   # account level spec kept at account level
   map_users = local.map_users
   map_accounts = local.map_accounts
+  map_roles = local.map_roles
 
   aws_region = "${local.region}"
 }
