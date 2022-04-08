@@ -23,3 +23,37 @@ terraform {
     execute  = ["curl", "--fail-with-body", "-X", "DELETE", "${get_env("MIDGARD_HOST_URL")}/api/v1/environment/github/delete/${get_env("ENVIRONMENT")}/${get_env("REGION")}/${basename(get_terragrunt_dir())}", "-H", "Content-Type: application/json", "-H", "Authorization: ${get_env("AUTHORIZATION")}" ]
   }
 }
+
+# a hook which sends request to Midgard to process custom logic before applying or destroying resources
+terraform {
+  before_hook "before_hook" {
+    commands = ["apply", "destroy"]
+    execute  = [
+      "curl",
+      "--fail-with-body",
+      "-X", "POST",
+      "-H", "Content-Type: application/json",
+      "-H", "Authorization: ${get_env("AUTHORIZATION")}",
+      "-H", "X-Midgard-Terrafrom-Cmd: ${get_terraform_command()}",
+      "-H", "X-Midgard-Terrafrom-Args: ${get_terraform_cli_args()}",
+      "${get_env("MIDGARD_HOST_URL")}/api/v1/environment/infras/posthook/${get_env("ENVIRONMENT")}/${get_env("REGION")}/${basename(get_terragrunt_dir())}",
+    ]
+  }
+}
+
+# a hook which sends request to Midgard to process custom logic after applying or destroying resources
+terraform {
+  after_hook "after_hook" {
+    commands = ["apply", "destroy"]
+    execute  = [
+      "curl",
+      "--fail-with-body",
+      "-X", "POST",
+      "-H", "Content-Type: application/json",
+      "-H", "Authorization: ${get_env("AUTHORIZATION")}",
+      "-H", "X-Midgard-Terrafrom-Cmd: ${get_terraform_command()}",
+      "-H", "X-Midgard-Terrafrom-Args: ${get_terraform_cli_args()}",
+      "${get_env("MIDGARD_HOST_URL")}/api/v1/environment/infras/prehook/${get_env("ENVIRONMENT")}/${get_env("REGION")}/${basename(get_terragrunt_dir())}",
+    ]
+  }
+}
