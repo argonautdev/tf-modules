@@ -1,0 +1,32 @@
+default_tags = {
+    "argonaut.dev/name"        = "test"
+    "argonaut.dev/type"        = "Aurora"
+    "argonaut.dev/manager"     = "argonaut.dev"
+    "argonaut.dev/rds-engine"  = "aurora-postgres"
+    "argonaut.dev/env/dev" = "true"
+}
+aws_region = "ap-south-1"
+storage_encrypted = true
+cluster_engine = "aurora-postgresql"
+cluster_name = "aurora-serverless-provisioned-cluster"
+
+database_name = "test"
+master_username = "<USERNAME>"
+master_password = "<PASSWORD>"
+backup_retention_period = 7
+create_db_subnet_group = true
+vpc = {
+    name                      = "vpc-2"
+    vpc_id                    = "vpc-0cc8aef73faf7dca1"
+    public_subnets            = ["subnet-035a9151c22cf0885", "subnet-0a729083e569a8f35", "subnet-04909bcad8cf2e186"]
+    private_subnets           = ["subnet-035a9151c22cf0885", "subnet-0a729083e569a8f35", "subnet-04909bcad8cf2e186"]
+    database_subnets          = ["subnet-035a9151c22cf0885", "subnet-0a729083e569a8f35", "subnet-04909bcad8cf2e186"]
+    default_security_group_id = "sg-044e1488c9c3efd94"
+    vpc_cidr_block            = "10.1.0.0/16"
+}
+skip_final_snapshot = false
+engine_version = "13.3" ## read README.md to find the command that gives available version
+db_instance_class = "db.t3.medium" ## read README.md to find the command that gives instancestypes supported for passed version above
+instances = {
+    masterdb = {}
+}

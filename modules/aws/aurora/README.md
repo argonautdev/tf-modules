@@ -66,9 +66,9 @@ https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Concepts.DBInstance
 
 IMP Points:
 ```
-Any time if you would want to test locally ( meaning deploying cluster resources ), then checkout to examples folder for terraform.tfvars in it's respective engine folder and move to root level
+Any time if you would want to test locally ( meaning deploying cluster resources ), then checkout to examples folder for terraform.defaults in it's respective engine folder and move to root level
 for ex: 
-cp examples/aurora-mysql/terraform.tfvars .
+cp examples/aurora-mysql/terraform.defaults terraform.tfvars
 ```
 
 
