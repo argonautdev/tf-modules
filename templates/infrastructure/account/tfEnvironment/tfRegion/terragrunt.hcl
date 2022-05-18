@@ -4,16 +4,16 @@
 #  parse this go template before push
 #  this creates a "backend.tf" file
 remote_state {
-  backend = "s3" 
+  backend = "pg" 
   config = {
-    conn_str = "postgres://{{.BackendData.Username}}:{{.BackendData.Password}}@{{.BackendData.Host}}/{{.BackendData.DatabaseName}}"
-    schema_name = "tf_{{ .Environment.Name }}_${replace(replace(path_relative_to_include(), "/", "__"), "..", "")}"
     bucket = "terragrunt-remote-state123"
 
     key = "${path_relative_to_include()}/terraform.tfstate"
     region         = "us-east-1"
     encrypt        = true
     dynamodb_table = "my-lock-table"
+    conn_str = "postgres://{{.BackendData.Username}}:{{.BackendData.Password}}@{{.BackendData.Host}}/{{.Organization.Name}}"
+    schema_name = "tf_{{.Organization.OrganizationID}}_{{ .Environment.Name }}_${replace(replace(path_relative_to_include(), "/", "__"), "..", "")}"
   }
   generate = {
     path      = "backend.tf"
