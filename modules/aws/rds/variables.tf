@@ -111,13 +111,6 @@ variable "performance_insights_enabled" {
   default     = true
 }
 
-variable "monitoring_interval" {
-  description = "The interval, in seconds, between points when Enhanced Monitoring metrics are collected for instances. Set to `0` to disble. Default is `0`"
-  type        = number
-  default     = 0
-}
-
-
 variable "vpc" {
   description = "All vpc info"
   type = object({
@@ -129,14 +122,4 @@ variable "vpc" {
     default_security_group_id = string
     vpc_cidr_block = string
   })
-}
-
-variable "cluster_min_capacity" {
-  description = "Minimum Aurora capacity unit ( ACU )"
-  type = number
-}
-
-variable "cluster_max_capacity" {
-  description = "Maximum Aurora capacity unit ( ACU )"
-  type = number
 }
