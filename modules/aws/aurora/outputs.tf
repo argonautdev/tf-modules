@@ -27,5 +27,9 @@ output "cluster_master_password" {
 output "cluster_master_username" {
   description = "The database master username"
   value       = module.aurora.cluster_master_username
-  sensitive   = true
+}
+
+output "security_group_id" {
+  description = "The security group ID of the cluster"
+  value = module.aurora.security_group_id
 }

@@ -46,9 +46,9 @@ variable "master_password" {
 }
 
 variable "backup_retention_period" {
-  description = "The days to retain backups for. Default `7`"
+  description = "The days to retain backups for. Default `9`"
   type        = number
-  default     = 7
+  default     = 9
 }
 
 # aws_db_subnet_group
@@ -57,7 +57,6 @@ variable "create_db_subnet_group" {
   type        = bool
   default     = true
 }
-
 
 variable "security_group_egress_rules" {
   description = "A map of security group egress rule defintions to add to the security group created"
@@ -81,13 +80,13 @@ variable "vpc" {
 variable "apply_immediately" {
   description = "Specifies whether any cluster modifications are applied immediately, or during the next maintenance window. Default is `false`"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "skip_final_snapshot" {
   description = "Determines whether a final snapshot is created before the cluster is deleted. If true is specified, no snapshot is created"
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "deletion_protection" {
@@ -105,7 +104,7 @@ variable "copy_tags_to_snapshot" {
 variable "monitoring_interval" {
   description = "The interval, in seconds, between points when Enhanced Monitoring metrics are collected for instances. Set to `0` to disble. Default is `0`"
   type        = number
-  default     = 0
+  default     = 60
 }
 
 # aws_rds_cluster_instances
