@@ -9,7 +9,7 @@
 
 module "aurora_cluster" {
   source = "terraform-aws-modules/rds-aurora/aws"
-
+  version = "7.1.0"
   name                    = var.cluster_name
   engine                  = var.cluster_engine
   engine_mode             = "serverless"
