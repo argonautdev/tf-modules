@@ -3,7 +3,7 @@ remote_state {
   backend = "pg" 
   config = {
     conn_str = "postgres://{{.BackendData.Username}}:{{.BackendData.Password}}@{{.BackendData.Host}}/{{.Organization.Name}}"
-    schema_name = "tf_{{.Organization.OrganizationID}}_ecr"
+    schema_name = "tf_ecr"
   }
   generate = {
     path      = "backend.tf"
