@@ -1,0 +1,27 @@
+aws_region = "ap-south-1"
+default_tags = {
+    "argonaut.dev/env"        = "dev"
+    "env" = "dev"
+}
+create_origin_access_identity = true
+origin_access_identities = {
+    s3_bucket_one = "testing with cloudfront"
+}
+##S3Origin
+origin = {
+    s3_one = {
+      domain_name = "BUCKET_DNS_NAME"
+      s3_origin_config = {
+        origin_access_identity = "s3_bucket_one"
+      }
+    }
+}
+default_cache_behavior = {
+    target_origin_id           = "s3_one"
+    viewer_protocol_policy     = "allow-all"
+
+    allowed_methods = ["GET", "HEAD", "OPTIONS"]
+    cached_methods  = ["GET", "HEAD"]
+    compress        = true
+    query_string    = true
+}
