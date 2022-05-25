@@ -1,0 +1,8 @@
+aws_region = "ap-south-1"
+default_tags = {
+    "argonaut.dev/env"        = "dev"
+    "env" = "dev"
+}
+##S3Origin
+comment = "cloudfront with s3 as origin"
+s3_bucket_dns_name = "S3_REGION_BUCKET_DNS_NAME"

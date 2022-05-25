@@ -8,22 +8,10 @@ variable "aws_region" {
   type        = string
 }
 
-variable "create_distribution" {
-  description = "Controls if CloudFront distribution should be created"
-  type        = bool
-  default     = true
-}
-
 variable "create_origin_access_identity" {
   description = "Controls if CloudFront origin access identity should be created"
   type        = bool
-  default     = false
-}
-
-variable "origin_access_identities" {
-  description = "Map of CloudFront origin access identities (value as a comment)"
-  type        = map(string)
-  default     = {}
+  default     = true
 }
 
 variable "aliases" {
@@ -38,22 +26,16 @@ variable "comment" {
   default     = "Cloudfront deployed by argonaut dev team"
 }
 
+variable "s3_bucket_dns_name" {
+  description = "The DNS domain name of s3 bucket."
+  type        = string
+}
+
+
 variable "default_root_object" {
   description = "The object that you want CloudFront to return (for example, index.html) when an end user requests the root URL."
   type        = string
   default     = null
-}
-
-variable "enabled" {
-  description = "Whether the distribution is enabled to accept end user requests for content."
-  type        = bool
-  default     = true
-}
-
-variable "http_version" {
-  description = "The maximum HTTP version to support on the distribution. Allowed values are http1.1 and http2. The default is http2."
-  type        = string
-  default     = "http2"
 }
 
 variable "is_ipv6_enabled" {
@@ -80,6 +62,28 @@ variable "wait_for_deployment" {
   default     = true
 }
 
+
+variable "origin_protocol_policy" {
+  description = "Protocol that cloudfront to use when connecting to the origin. Supported values (http-only, https-only, or match-viewer)"
+  type        = string
+  default = "http-only"
+}
+
+
+##Cache Behavior Arguments###
+variable "allowed_methods" {
+  description = "Controls which HTTP methods CloudFront processes and forwards to your custom origin"
+  type        = list(any)
+  default = ["GET", "HEAD"]
+}
+
+variable "cached_methods" {
+  description = "Controls whether CloudFront caches the response to requests using the specified HTTP methods"
+  type        = list(any)
+  default = ["GET", "HEAD"]
+}
+
+
 variable "web_acl_id" {
   description = "If you're using AWS WAF to filter CloudFront requests, the Id of the AWS WAF web ACL that is associated with the distribution. The WAF Web ACL must exist in the WAF Global (CloudFront) region and the credentials configuring this argument must have waf:GetWebACL permissions assigned. If using WAFv2, provide the ARN of the web ACL."
   type        = string
@@ -90,18 +94,6 @@ variable "tags" {
   description = "A map of tags to assign to the resource."
   type        = map(string)
   default     = null
-}
-
-variable "origin" {
-  description = "One or more origins for this distribution (multiples allowed)."
-  type        = any
-  default     = null
-}
-
-variable "origin_group" {
-  description = "One or more origin_group for this distribution (multiples allowed)."
-  type        = any
-  default     = {}
 }
 
 variable "viewer_certificate" {
@@ -123,22 +115,4 @@ variable "logging_config" {
   description = "The logging configuration that controls how logs are written to your distribution (maximum one)."
   type        = any
   default     = {}
-}
-
-variable "custom_error_response" {
-  description = "One or more custom error response elements"
-  type        = any
-  default     = {}
-}
-
-variable "default_cache_behavior" {
-  description = "The default cache behavior for this distribution"
-  type        = any
-  default     = null
-}
-
-variable "ordered_cache_behavior" {
-  description = "An ordered list of cache behaviors resource for this distribution. List from top to bottom in order of precedence. The topmost cache behavior will have precedence 0."
-  type        = any
-  default     = []
 }
