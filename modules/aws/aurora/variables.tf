@@ -53,6 +53,7 @@ variable "backup_retention_period" {
 
 # aws_db_subnet_group
 variable "create_db_subnet_group" {
+  # TODO
   description = "Determines whether to create the database subnet group or use existing"
   type        = bool
   default     = true
@@ -111,7 +112,8 @@ variable "monitoring_interval" {
 variable "enabled_cloudwatch_logs_exports" {
   description = "Set of log types to export to cloudwatch. If omitted, no logs will be exported. The following log types are supported: `audit`, `error`, `general`, `slowquery`, `postgresql`"
   type        = list(string)
-  default     = ["audit", "error", "general", "slowquery"]
+  default     = ["postgresql"]
+  # default     = ["audit", "error", "general", "slowquery"]
 }
 
 # aws_rds_cluster_instances
@@ -135,7 +137,7 @@ variable "preferred_backup_window" {
 variable "preferred_maintenance_window" {
   description = "The weekly time range during which system maintenance can occur, in (UTC)"
   type        = string
-  default     = "sun:05:00-sun:06:00"
+  default     = "tue:05:00-tue:06:00"
 }
 
 variable "db_parameter_group_name" {
@@ -144,11 +146,47 @@ variable "db_parameter_group_name" {
   default     = null
 }
 
+variable "db_parameter_group_family" {
+  description = "The parameter group family to associate with the DB parameter group"
+  type        = string
+  default     = "aurora-postgresql13"
+}
+
+variable "db_parameter_group_parameters" {
+  description = "The parameters associated with the DB parameter group"
+  type = list(object({
+    name  = string
+    value = string
+  }))
+  default     = []
+}
+
+variable "visibility" {
+  description = "Visibility of the rds instance"
+  default = "private"
+  type        = string
+}
+
+variable "db_cluster_parameter_group_name" {
+  description = "The name of the DB parameter group to associate with the cluster"
+  type        = string
+  default     = null
+}
+
+variable "db_cluster_parameter_group_parameters" {
+  description = "The parameters associated with the DB cluster parameter group"
+  type = list(object({
+    name  = string
+    value = string
+  }))
+  default     = []
+}
+
 # aws_appautoscaling_*
 variable "autoscaling_enabled" {
   description = "Determines whether autoscaling of the cluster read replicas is enabled"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "autoscaling_max_capacity" {
@@ -186,7 +224,7 @@ variable "autoscaling_scale_out_cooldown" {
 variable "autoscaling_target_cpu" {
   description = "CPU threshold which will initiate autoscaling"
   type        = number
-  default     = 50
+  default     = 70
 }
 
 variable "autoscaling_target_connections" {
@@ -199,7 +237,7 @@ variable "autoscaling_target_connections" {
 variable "performance_insights_enabled" {
   description = "Specifies whether Performance Insights is enabled or not"
   type        = bool
-  default     = null
+  default     = false
 }
 
 variable "performance_insights_kms_key_id" {

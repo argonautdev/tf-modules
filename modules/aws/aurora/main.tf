@@ -5,6 +5,10 @@
 ##Other Important Points to Note especially for serverless
 ##Read the README.md carefully before start working on module
 
+locals {
+  port = var.cluster_engine == "aurora-postgresql" ? 5432 : 3306
+  name = var.cluster_name
+}
 
 module "aurora" {
   source = "terraform-aws-modules/rds-aurora/aws"
@@ -25,7 +29,9 @@ module "aurora" {
   vpc_id                  = var.vpc.vpc_id
   subnets                 = var.vpc.database_subnets
   db_parameter_group_name = var.db_parameter_group_name ##Name of the parametergroup associated with DB Instances.
+  db_cluster_parameter_group_name = var.db_cluster_parameter_group_name ##Name of the parametergroup associated with DB Instances.
   create_security_group = true
+  vpc_security_group_ids = [module.security_group.security_group_id]
   allowed_cidr_blocks   = [var.vpc.vpc_cidr_block]
   monitoring_interval   = var.monitoring_interval ##To enable enhanced monitoring for dbcluster default to "0". Meaning disabled 
   enabled_cloudwatch_logs_exports = var.enabled_cloudwatch_logs_exports
@@ -49,5 +55,83 @@ module "aurora" {
   performance_insights_enabled = var.performance_insights_enabled
   performance_insights_kms_key_id = var.performance_insights_kms_key_id
   performance_insights_retention_period = var.performance_insights_retention_period
+
+  publicly_accessible                   = var.visibility == "public" ? "true" : "false"
   
+}
+
+
+resource "aws_db_parameter_group" "auroradb" {
+  name        = var.db_parameter_group_name
+  family      = var.db_parameter_group_family
+  description = var.db_parameter_group_name
+  # tags        = var.default_tags
+  dynamic "parameter" {
+    for_each = var.db_parameter_group_parameters
+    content {
+      name         = parameter.value.name
+      value        = parameter.value.value
+      apply_method = lookup(parameter.value, "apply_method", null)
+    }
+  }
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_rds_cluster_parameter_group" "auroradb-cluster" {
+  name        = var.db_cluster_parameter_group_name
+  family      = var.db_parameter_group_family
+  description = var.db_cluster_parameter_group_name
+  # tags        = var.default_tags
+  dynamic "parameter" {
+    for_each = var.db_cluster_parameter_group_parameters
+    content {
+      name         = parameter.value.name
+      value        = parameter.value.value
+      apply_method = lookup(parameter.value, "apply_method", null)
+    }
+  }
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+
+
+module "security_group" {
+  source  = "terraform-aws-modules/security-group/aws"
+  version = "~> 4"
+
+  name        = var.cluster_name
+  description = "Complete ${var.cluster_engine} security group"
+  vpc_id      = var.vpc.vpc_id
+
+  # ingress
+  ingress_with_cidr_blocks = var.visibility == "public" ? [
+    {
+      from_port   = local.port
+      to_port     = local.port
+      protocol    = "tcp"
+      description = "${var.cluster_engine} access from within VPC"
+      cidr_blocks = var.vpc.vpc_cidr_block
+    },
+    {
+      from_port   = local.port
+      to_port     = local.port
+      protocol    = "tcp"
+      description = "Public ${var.cluster_engine} access"
+      cidr_blocks = "0.0.0.0/0"
+    },
+  ] : [
+    {
+      from_port   = local.port
+      to_port     = local.port
+      protocol    = "tcp"
+      description = "${var.cluster_engine} access from within VPC"
+      cidr_blocks = var.vpc.vpc_cidr_block
+    },
+  ]
+
+  tags = var.default_tags
 }
