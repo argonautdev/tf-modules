@@ -101,10 +101,17 @@ variable "copy_tags_to_snapshot" {
   default     = true
 }
 
+/** Monitoring and logging **/
 variable "monitoring_interval" {
-  description = "The interval, in seconds, between points when Enhanced Monitoring metrics are collected for instances. Set to `0` to disble. Default is `0`"
+  description = "The interval, in seconds, between points when Enhanced Monitoring metrics are collected for instances. Set to `0` to disble. Default is `60`. Valid Values: 0, 1, 5, 10, 15, 30, 60"
   type        = number
   default     = 60
+}
+
+variable "enabled_cloudwatch_logs_exports" {
+  description = "Set of log types to export to cloudwatch. If omitted, no logs will be exported. The following log types are supported: `audit`, `error`, `general`, `slowquery`, `postgresql`"
+  type        = list(string)
+  default     = ["audit", "error", "general", "slowquery"]
 }
 
 # aws_rds_cluster_instances
@@ -129,4 +136,80 @@ variable "preferred_maintenance_window" {
   description = "The weekly time range during which system maintenance can occur, in (UTC)"
   type        = string
   default     = "sun:05:00-sun:06:00"
+}
+
+variable "db_parameter_group_name" {
+  description = "The name of the DB parameter group to associate with instances"
+  type        = string
+  default     = null
+}
+
+# aws_appautoscaling_*
+variable "autoscaling_enabled" {
+  description = "Determines whether autoscaling of the cluster read replicas is enabled"
+  type        = bool
+  default     = false
+}
+
+variable "autoscaling_max_capacity" {
+  description = "Maximum number of read replicas permitted when autoscaling is enabled. Value should not be greater than `15`"
+  type        = number
+  default     = 10
+}
+
+variable "autoscaling_min_capacity" {
+  description = "Minimum number of read replicas permitted when autoscaling is enabled"
+  type        = number
+  default     = 0
+}
+
+variable "predefined_metric_type" {
+  description = "The metric type to scale on. Valid values are `RDSReaderAverageCPUUtilization` and `RDSReaderAverageDatabaseConnections`"
+  type        = string
+  default     = "RDSReaderAverageCPUUtilization"
+}
+
+##Scalein: A scale-in activity reduces the number of Aurora Replicas in your Aurora DB cluster
+variable "autoscaling_scale_in_cooldown" {
+  description = "Cooldown in seconds before allowing further scaling operations after a scale in"
+  type        = number
+  default     = 300
+}
+
+##Scaleout: A scale-out activity increases the number of Aurora Replicas in your Aurora DB cluster.
+variable "autoscaling_scale_out_cooldown" {
+  description = "Cooldown in seconds before allowing further scaling operations after a scale out"
+  type        = number
+  default     = 300
+}
+
+variable "autoscaling_target_cpu" {
+  description = "CPU threshold which will initiate autoscaling"
+  type        = number
+  default     = 50
+}
+
+variable "autoscaling_target_connections" {
+  description = "Average number of connections threshold which will initiate autoscaling. Default value is 70% of db.r4/r5/r6g.large's default max_connections"
+  type        = number
+  default     = 700
+}
+
+/** Performance Insights **/
+variable "performance_insights_enabled" {
+  description = "Specifies whether Performance Insights is enabled or not"
+  type        = bool
+  default     = null
+}
+
+variable "performance_insights_kms_key_id" {
+  description = "The ARN for the KMS key to encrypt Performance Insights data"
+  type        = string
+  default     = null
+}
+
+variable "performance_insights_retention_period" {
+  description = "Amount of time in days to retain Performance Insights data. Either 7 (7 days) or 731 (2 years)"
+  type        = number
+  default     = null
 }

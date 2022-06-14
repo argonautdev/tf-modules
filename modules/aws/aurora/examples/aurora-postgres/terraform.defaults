@@ -26,3 +26,10 @@ db_instance_class = "db.t3.medium" ## read README.md to find the command that gi
 instances = {
     masterdb = {}
 }
+/** Autoscaling **/
+autoscaling_enabled = true
+autoscaling_max_capacity = 10
+autoscaling_min_capacity = 0
+autoscaling_scale_in_cooldown = 300
+autoscaling_scale_out_cooldown = 300
+autoscaling_target_cpu = 5

@@ -24,9 +24,23 @@ output "cluster_master_password" {
   sensitive   = true
 }
 
+#####################################################
+# Error: Output refers to sensitive values
+# 
+#   on outputs.tf line 27:
+#   27: output "cluster_master_username" {
+# 
+# To reduce the risk of accidentally exporting sensitive data that was intended to be only internal, Terraform requires that any root module output containing sensitive data be
+# explicitly marked as sensitive, to confirm your intent.
+# 
+# If you do intend to export this data, annotate the output value as sensitive by adding the following argument:
+#     sensitive = true
+#########################################################
+
 output "cluster_master_username" {
   description = "The database master username"
   value       = module.aurora.cluster_master_username
+  sensitive   = true
 }
 
 output "security_group_id" {

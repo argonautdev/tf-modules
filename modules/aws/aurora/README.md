@@ -81,3 +81,22 @@ Error: error creating RDS cluster: InvalidParameterValue: MasterUsername admin c
 Don't pass multiple subnets from with in the same availabilityZone
 Error: doesn't support DB subnet groups with subnets in the same Availability Zone. Choose a DB subnet group with subnets in different Availability Zones.
 ```
+
+
+## Aurora Scaling: 
+```
+  Ref: https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.Integrating.AutoScaling.html
+  1. Although Aurora autoscaling manages the replicas you must first create an Aurora DB cluster with a primary instance and at least one Aurora Replica
+  2. When Aurora Auto Scaling adds a new Aurora Replica, the new Aurora Replica is the same DB instance class as the one used by the primary instance
+```
+
+## RDS Enhanced Monitoring
+```
+  Ref: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Monitoring.OS.overview.html
+  1. CloudWatch gathers metrics about CPU utilization from the hypervisor for a DB instance. In contrast, Enhanced Monitoring gathers its metrics from an agent on the DB instance.
+  2. Enhanced Monitoring metrics are stored in the CloudWatch Logs instead of in CloudWatch metrics.
+  3. By default, Enhanced Monitoring metrics are stored for 30 days in the CloudWatch Logs.
+```
+
+
+
