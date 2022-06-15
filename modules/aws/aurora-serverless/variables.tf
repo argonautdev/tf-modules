@@ -90,6 +90,14 @@ variable "db_cluster_parameter_group_parameters" {
   default     = []
 }
 
+
+/*IAM Authentication for DB*/
+variable "iam_database_authentication_enabled" {
+  description = "Specifies whether or mappings of AWS Identity and Access Management (IAM) accounts to database accounts is enabled"
+  type        = bool
+  default     = true
+}
+
 variable "db_parameter_group_family" {
   description = "The parameter group family to associate with the DB parameter group"
   type        = string

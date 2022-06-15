@@ -58,4 +58,5 @@ module "aurora_cluster" {
     timeout_action           = "ForceApplyCapacityChange"
   }
   db_cluster_parameter_group_name = aws_rds_cluster_parameter_group.auroradb-cluster.id
+  iam_database_authentication_enabled = var.iam_database_authentication_enabled
 }
