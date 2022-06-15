@@ -14,6 +14,14 @@ variable "storage_encrypted" {
   default     = true
 }
 
+/* If You want to Pass custom KMS key for storage encryption use the following Parameter */
+variable "kms_key_id" {
+  description = "The ARN for the KMS encryption key. When specifying `kms_key_id`, `storage_encrypted` needs to be set to `true`"
+  type        = string
+  default     = null
+}
+
+
 variable "cluster_engine" {
   description = "The name of the database engine to be used for this DB cluster. Valid Values: `aurora-mysql`, `aurora-postgresql`"
   type        = string
@@ -66,6 +74,28 @@ variable "vpc" {
   })
 }
 
+/* DBClusterParametergroup */
+variable "db_cluster_parameter_group_name" {
+  description = "The name of the DB parameter group to associate with the cluster"
+  type        = string
+  default     = null
+}
+
+variable "db_cluster_parameter_group_parameters" {
+  description = "The parameters associated with the DB cluster parameter group"
+  type = list(object({
+    name  = string
+    value = string
+  }))
+  default     = []
+}
+
+variable "db_parameter_group_family" {
+  description = "The parameter group family to associate with the DB parameter group"
+  type        = string
+  default     = "aurora-postgresql10"
+}
+
 variable "apply_immediately" {
   description = "Specifies whether any cluster modifications are applied immediately, or during the next maintenance window. Default is `false`"
   type        = bool
@@ -88,14 +118,6 @@ variable "copy_tags_to_snapshot" {
   description = "Copy all Cluster `tags` to snapshots"
   type        = bool
   default     = true
-}
-
-##Enhanced Monitoring:
-##CloudWatch gathers metrics about CPU utilization from the hypervisor for a DB instance. In contrast, Enhanced Monitoring gathers its metrics from an agent on the DB instance
-variable "monitoring_interval" {
-  description = "The interval, in seconds, between points when Enhanced Monitoring metrics are collected for instances. Set to `0` to disble. Default is `0`"
-  type        = number
-  default     = 60
 }
 
 variable "cluster_min_capacity" {
