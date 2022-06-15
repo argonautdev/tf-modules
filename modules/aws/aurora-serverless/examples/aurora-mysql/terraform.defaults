@@ -22,3 +22,5 @@ vpc = {
 }
 cluster_min_capacity = 2
 cluster_max_capacity = 4
+db_cluster_parameter_group_name = "aurora-cluster-db-param"
+db_parameter_group_family = "aurora-mysql5.7"

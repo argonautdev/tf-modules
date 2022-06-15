@@ -17,3 +17,48 @@ cp examples/aurora-mysql/terraform.defaults terraform.tfvars
 Don't pass multiple subnets from with in the same availabilityZone
 Error: doesn't support DB subnet groups with subnets in the same Availability Zone. Choose a DB subnet group with subnets in different Availability Zones.
 ```
+
+##IMP Points:
+```
+For aurora serverless these feature not present
+   1. No Maintaince window
+   2. No Backup Window
+   3. No Backtrack window
+   4. No Option for Public access or Not
+   5. No DB Instancelevel Parametergroup 
+   6. No Autoscaling ( Ref: https://blog.searce.com/amazon-aurora-serverless-features-limitations-glitches-d07f0374a2ab )
+   7. Aurora Cluster level Parameters ( https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/AuroraPostgreSQL.Reference.ParameterGroups.html )
+   
+   8. Aurora serverless currently doesn't support cloudwatch logs exports
+   9. No Enhanced Monitoring
+   ```
+   Error: error creating RDS cluster: InvalidParameterCombination: Aurora Serverless currently doesn't support CloudWatch Log Export.
+│       status code: 400, request id: 022ffe58-aa9e-4f5d-9928-bf2ffc87c56c
+│ 
+│   with module.aurora_cluster.aws_rds_cluster.this[0],
+│   on .terraform/modules/aurora_cluster/main.tf line 47, in resource "aws_rds_cluster" "this":
+│   47: resource "aws_rds_cluster" "this" {
+   ```
+│ 
+```
+
+##ParameterGroups
+```
+  1. When creating Parametergroups to list all of the available parameter group families, use the following command:
+  postgresql:
+  aws rds describe-db-engine-versions --engine aurora-postgresql --filters "Name=engine-mode,Values=serverless" --query "DBEngineVersions[].DBParameterGroupFamily" --region <REGION> --output text
+  mysql:
+  aws rds describe-db-engine-versions --engine aurora-mysql --filters "Name=engine-mode,Values=serverless" --query "DBEngineVersions[].DBParameterGroupFamily" --region <REGION> --output text
+```  
+
+##On which conditions aurora scalesin & out..The vaules are set by aws not us.
+```
+Ref: https://blog.searce.com/amazon-aurora-serverless-features-limitations-glitches-d07f0374a2ab
+Scale Up: scale-up is 3 minutes since the last scaling operation
+CPU > 70%
+Connections > 90%
+Scale Down: scale-down is 15 minutes since the last scaling operation
+CPU < 30%
+Connections < 40%
+
+```

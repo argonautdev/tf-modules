@@ -7,6 +7,25 @@
 ## 2. No Maintaince window.
 
 
+resource "aws_rds_cluster_parameter_group" "auroradb-cluster" {
+  name        = var.db_cluster_parameter_group_name
+  family      = var.db_parameter_group_family
+  description = var.db_cluster_parameter_group_name
+  # tags        = var.default_tags
+  dynamic "parameter" {
+    for_each = var.db_cluster_parameter_group_parameters
+    content {
+      name         = parameter.value.name
+      value        = parameter.value.value
+      apply_method = lookup(parameter.value, "apply_method", null)
+    }
+  }
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+
 module "aurora_cluster" {
   source = "terraform-aws-modules/rds-aurora/aws"
   version = "7.1.0"
@@ -26,7 +45,6 @@ module "aurora_cluster" {
 
   create_security_group = true
   allowed_cidr_blocks   = [var.vpc.vpc_cidr_block]
-  monitoring_interval   = var.monitoring_interval ##To enable enhanced monitoring for dbcluster default to "0". Meaning disabled 
 
   apply_immediately     = var.apply_immediately
   skip_final_snapshot   = var.skip_final_snapshot   ##By default no finalsnpshot should be taken when deleting the cluster
@@ -39,4 +57,5 @@ module "aurora_cluster" {
     seconds_until_auto_pause = 300
     timeout_action           = "ForceApplyCapacityChange"
   }
+  db_cluster_parameter_group_name = aws_rds_cluster_parameter_group.auroradb-cluster.id
 }
