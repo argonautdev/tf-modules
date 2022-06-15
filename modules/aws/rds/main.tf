@@ -46,47 +46,69 @@ module "db" {
   version = "v3.3.0"
 
   identifier = var.identifier
-
+  /* Subnets */
+  create_db_subnet_group                = var.create_db_subnet_group
+  db_subnet_group_name                  = var.db_subnet_group_name
+  db_subnet_group_description           = var.db_subnet_group_name
+  db_subnet_group_use_name_prefix       = var.db_subnet_group_use_name_prefix
+  subnet_ids = var.vpc.database_subnets
+  
+  vpc_security_group_ids = [module.security_group.security_group_id]
+  
   name                                  = var.name
-  allocated_storage                     = var.storage
   engine                                = var.engine
   engine_version                        = var.engine_version
-  major_engine_version                  = var.major_engine_version
-  family                                = var.family
-
+  
+  /*Storage*/
+  storage_encrypted                     = var.storage_encrypted
+  storage_type                          = var.storage_type
+  kms_key_id                            = var.kms_key_id
+  allocated_storage                     = var.storage
+  iops                                  = var.iops
+  max_allocated_storage                 = var.max_allocated_storage
+  /* DB */
   instance_class                        = var.instance_class
   username                              = var.username
   password                              = var.password
-
-  snapshot_identifier                   = var.snapshot_identifier
-
-  subnet_ids = var.vpc.database_subnets
-  vpc_security_group_ids = [module.security_group.security_group_id]
-
-  apply_immediately                     = true
-  skip_final_snapshot                   = false
-  auto_minor_version_upgrade            = true
-  backup_retention_period               = 7
-  backup_window                         = "02:21-02:51"
-  copy_tags_to_snapshot                 = true
-  delete_automated_backups              = false
-  deletion_protection                   = false
-  iam_database_authentication_enabled   = false
-  license_model                         = var.engine == "postgres" ? "postgresql-license" : ""
-  maintenance_window                    = "tue:04:29-tue:04:59"
-  
-  iops                                  = var.iops
-  max_allocated_storage                 = var.max_allocated_storage
   multi_az                              = var.multi_az
-
   port                                  = local.port
   publicly_accessible                   = var.visibility == "public" ? "true" : "false"
-  storage_encrypted                     = var.storage_encrypted
-  storage_type                          = var.storage_type
-
-  performance_insights_enabled          = var.performance_insights_enabled
-  performance_insights_retention_period = 7
+  
+  snapshot_identifier                   = var.snapshot_identifier
+  apply_immediately                     = var.apply_immediately
+  skip_final_snapshot                   = var.skip_final_snapshot
+  auto_minor_version_upgrade            = var.auto_minor_version_upgrade
+  backup_window                         = var.backup_window
+  backup_retention_period               = var.backup_retention_period
+  maintenance_window                    = var.maintenance_window
+  copy_tags_to_snapshot                 = var.copy_tags_to_snapshot
+  delete_automated_backups              = var.delete_automated_backups
+  deletion_protection                   = var.deletion_protection
+  iam_database_authentication_enabled   = var.iam_database_authentication_enabled
+  license_model                         = var.engine == "postgres" ? "postgresql-license" : ""
+  
+  /* Monitoring */
   enabled_cloudwatch_logs_exports = var.engine == "postgres" ? ["postgresql", "upgrade"] :  ["general"]
-
+  monitoring_interval                   = var.monitoring_interval
+  create_monitoring_role                = var.create_monitoring_role
+  monitoring_role_name                  = var.monitoring_role_name
+  
+  /* Parameter group */
+  parameter_group_name = var.parameter_group_name
+  parameter_group_description = var.parameter_group_description
+  parameters                  = var.parameters
+  family = var.family
+  
+  /* Options group */
+  create_db_option_group                = var.create_db_option_group
+  major_engine_version                  = var.major_engine_version
+  option_group_name                     = var.option_group_name
+  option_group_description              = var.option_group_description
+  options                               = var.options
+  
+  /* Performance Insights */
+  performance_insights_enabled          = var.performance_insights_enabled
+  performance_insights_retention_period = var.performance_insights_retention_period
+  performance_insights_kms_key_id       = var.performance_insights_kms_key_id
 }
 
