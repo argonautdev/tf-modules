@@ -35,7 +35,7 @@ variable "s3_bucket_dns_name" {
 variable "default_root_object" {
   description = "The object that you want CloudFront to return (for example, index.html) when an end user requests the root URL."
   type        = string
-  default     = null
+  default     = "index.html"
 }
 
 variable "is_ipv6_enabled" {
@@ -66,7 +66,7 @@ variable "wait_for_deployment" {
 variable "origin_protocol_policy" {
   description = "Protocol that cloudfront to use when connecting to the origin. Supported values (http-only, https-only, or match-viewer)"
   type        = string
-  default = "http-only"
+  default = "https-only"
 }
 
 
@@ -101,7 +101,7 @@ variable "viewer_certificate" {
   type        = any
   default = {
     cloudfront_default_certificate = true
-    minimum_protocol_version       = "TLSv1"
+    minimum_protocol_version       = "TLSv1.2"
   }
 }
 

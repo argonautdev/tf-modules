@@ -60,7 +60,7 @@ variable "custom_origin_dns_name" {
 variable "origin_protocol_policy" {
   description = "Protocol that cloudfront to use when connecting to the origin. Supported values (http-only, https-only, or match-viewer)"
   type        = string
-  default = "http-only"
+  default = "https-only"
 }
 
 

@@ -15,7 +15,7 @@ module "cloudfront" {
           http_port   = 80
           https_port  = 443
           origin_protocol_policy = var.origin_protocol_policy
-          origin_ssl_protocols   = ["TLSv1", "TLSv1.1", "TLSv1.2"]
+          origin_ssl_protocols   = ["TLSv1.2"]
         } 
      }
   }
