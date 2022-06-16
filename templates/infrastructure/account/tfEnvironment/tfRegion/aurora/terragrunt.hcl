@@ -46,9 +46,9 @@ dependency "vpc" {
 # These are the variables we have to pass in to use the module specified in the terragrunt configuration above
 inputs = {
   default_tags = {
-    "argonaut.dev/name"        = "{{ .Spec.name }}"
-    "argonaut.dev/type"        = "{{ .Spec.type }}"
-    "argonaut.dev/rds-engine"  = "{{ .Spec.engine }}"
+    "argonaut.dev/name"        = "{{ .Spec.name}}"
+    "argonaut.dev/type"        = "{{ .Spec.type}}"
+    "argonaut.dev/rds-engine"  = "{{ .Spec.engine}}"
     "argonaut.dev/manager"     = "argonaut.dev"
     "argonaut.dev/env/${local.env}" = "true"
     }
@@ -56,26 +56,25 @@ inputs = {
 
     visibility = "{{ .Spec.visibility}}"
 
-    cluster_name = "{{ .Spec.cluster_name}}"
     {{if .Spec.db_parameter_group_name}} db_parameter_group_name = "{{ .Spec.db_parameter_group_name}}"{{end}}
     db_parameter_group_family = "{{ .Spec.db_parameter_group_family}}"
     db_cluster_parameter_group_name = "{{ .Spec.db_cluster_parameter_group_name}}"
 
-    {{if .Spec.storage_encrypted}}storage_encrypted={{ .Spec.storage_encrypted}}{{end}}
+    cluster_name = "{{ .Spec.cluster_name}}"
     cluster_engine = "{{ .Spec.engine}}"
     engine_version = "{{ .Spec.engine_version}}"
-
-    database_name = "{{ .Spec.database_name}}"
-    master_username = "{{ .Spec.master_username}}"
-    master_password = "{{ .Spec.master_password}}"
-    {{if .Spec.backup_retention_period }}backup_retention_period={{ .Spec.backup_retention_period}}{{end}}
-    {{if .Spec.skip_final_snapshot}}skip_final_snapshot={{ .Spec.skip_final_snapshot}}{{end}}
-
-    db_instance_class = "{{ .Spec.db_instance_class }}"
+    db_instance_class = "{{ .Spec.db_instance_class}}"
     instances = {
         masterdb = {},
         primaryReplica = {}
     }
+    {{if .Spec.storage_encrypted}}storage_encrypted={{ .Spec.storage_encrypted}}{{end}}
+
+    database_name = "{{ .Spec.database_name}}"
+    master_username = "{{ .Spec.master_username}}"
+    master_password = "{{ .Spec.master_password}}"
+    {{if .Spec.backup_retention_period}}backup_retention_period={{ .Spec.backup_retention_period}}{{end}}
+    {{if .Spec.skip_final_snapshot}}skip_final_snapshot={{ .Spec.skip_final_snapshot}}{{end}}
 
     {{if eq .Spec.engine "aurora-mysql"}}
     performance_insights_enabled = false
