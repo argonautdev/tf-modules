@@ -8,27 +8,15 @@ variable "storage" {
   type        = number
 }
 
-variable "family" {
-  description = "The database family to use"
-  default = "postgres13"
-  type        = string
-}
-
 variable "engine" {
   description = "The database engine to use"
-  default = "postgres"
   type        = string
-}
-
-variable "major_engine_version" {
-  description = "The major engine version to use"
-  default = "postgres13"
-  type        = string
+  default     = ""
 }
 
 variable "engine_version" {
   description = "The engine version to use"
-  default = "13.3"
+  default = ""
   type        = string
 }
 
@@ -37,9 +25,34 @@ variable "instance_class" {
   type        = string
 }
 
+variable "auto_minor_version_upgrade" {
+  description = "Indicates that minor engine upgrades will be applied automatically to the DB instance during the maintenance window"
+  type        = bool
+  default     = true
+}
+
+variable "apply_immediately" {
+  description = "Specifies whether any database modifications are applied immediately, or during the next maintenance window. for instance: deletion_protection enabled to disabled or instancetype changes, etc..."
+  type        = bool
+  default     = true
+}
+
+
+variable "skip_final_snapshot" {
+  description = "Determines whether a final DB snapshot is created before the DB instance is deleted. If true is specified, no DBSnapshot is created. If false is specified, a DB snapshot is created before the DB instance is deleted"
+  type        = bool
+  default     = false
+}
+
+variable "copy_tags_to_snapshot" {
+  description = "On delete, copy all Instance tags to the final snapshot"
+  type        = bool
+  default     = true
+}
+
 variable "username" {
   description = "Username for the master DB user"
-  default = "postgres"
+  default = ""
   type        = string
 }
 
@@ -75,6 +88,42 @@ variable "snapshot_identifier" {
   default     = null
 }
 
+variable "maintenance_window" {
+  description = "The window to perform maintenance in. Syntax: 'ddd:hh24:mi-ddd:hh24:mi'. Eg: 'Mon:00:00-Mon:03:00'"
+  type        = string
+  default     = "tue:04:29-tue:04:59"
+}
+
+variable "backup_retention_period" {
+  description = "The days to retain backups for"
+  type        = number
+  default     = 7
+}
+
+variable "backup_window" {
+  description = "The daily time range (in UTC) during which automated backups are created if they are enabled. Example: '09:46-10:16'. Must not overlap with maintenance_window"
+  type        = string
+  default     = "02:21-02:51"
+}
+
+variable "delete_automated_backups" {
+  description = "Specifies whether to remove automated backups immediately after the DB instance is deleted"
+  type        = bool
+  default     = false
+}
+
+variable "deletion_protection" {
+  description = "The database can't be deleted when this value is set to true"
+  type        = bool
+  default     = false
+}
+
+variable "iam_database_authentication_enabled" {
+  description = "Specifies whether or not the mappings of AWS Identity and Access Management (IAM) accounts to database accounts are enabled"
+  type        = bool
+  default     = false
+}
+
 variable "storage_encrypted" {
   description = "Encrypt data at rest"
   type        = bool
@@ -85,6 +134,12 @@ variable "storage_type" {
   description = "Storage type"
   type        = string
   default     = "gp2"
+}
+
+variable "kms_key_id" {
+  description = "The ARN for the KMS encryption key. If creating an encrypted replica, set this to the destination KMS ARN. If storage_encrypted is set to true and kms_key_id is not specified the default KMS key created in your account will be used"
+  type        = string
+  default     = null
 }
 
 variable "multi_az" {
@@ -105,12 +160,6 @@ variable "iops" {
   default     = 0
 }
 
-variable "performance_insights_enabled" {
-  description = "Enable Performance Insights"
-  type        = bool
-  default     = true
-}
-
 variable "vpc" {
   description = "All vpc info"
   type = object({
@@ -123,3 +172,169 @@ variable "vpc" {
     vpc_cidr_block = string
   })
 }
+
+# DB subnet group
+variable "create_db_subnet_group" {
+  description = "Whether to create a database subnet group"
+  type        = bool
+  default     = true
+}
+
+variable "db_subnet_group_use_name_prefix" {
+  description = "Determines whether to use `subnet_group_name` as is or create a unique name beginning with the `subnet_group_name` as the prefix"
+  type        = bool
+  default     = false
+}
+
+variable "db_subnet_group_name" {
+  description = "Name of DB subnet group. DB instance will be created in the VPC associated with the DB subnet group. If unspecified, will be created in the default VPC"
+  type        = string
+  default     = null
+}
+
+variable "db_subnet_group_description" {
+  description = "Description of the DB subnet group to create"
+  type        = string
+  default     = null
+}
+
+variable "subnet_ids" {
+  description = "A list of VPC subnet IDs"
+  type        = list(string)
+  default     = []
+}
+
+/* RDS Enhanced Monitoring */
+variable "monitoring_interval" {
+  description = "The interval, in seconds, between points when Enhanced Monitoring metrics are collected for the DB instance. To disable collecting Enhanced Monitoring metrics, specify 0. The default is 0. Valid Values: 0, 1, 5, 10, 15, 30, 60"
+  type        = number
+  default     = 0
+}
+
+variable "create_monitoring_role" {
+  description = "Create IAM role with a defined name that permits RDS to send enhanced monitoring metrics to CloudWatch Logs"
+  type        = bool
+  default     = true
+}
+
+variable "monitoring_role_name" {
+  description = "Name of the IAM role which will be created when create_monitoring_role is enabled"
+  type        = string
+  default    = null
+}
+
+variable "monitoring_role_description" {
+  description = "Description of the monitoring IAM role"
+  type        = string
+  default     = null
+}
+
+variable "monitoring_role_arn" {
+  description = "The ARN for the IAM role that permits RDS to send enhanced monitoring metrics to CloudWatch Logs. Must be specified if monitoring_interval is non-zero"
+  type        = string
+  default     = null
+}
+
+
+variable "enabled_cloudwatch_logs_exports" {
+  description = "List of log types to enable for exporting to CloudWatch logs. If omitted, no logs will be exported. Valid values (depending on engine): alert, audit, error, general, listener, slowquery, trace, postgresql (PostgreSQL), upgrade (PostgreSQL)."
+  type        = list(string)
+  default     = ["general", "error", "slowquery"]
+}
+
+
+/* Performance Insights */
+variable "performance_insights_enabled" {
+  description = "Specifies whether Performance Insights are enabled"
+  type        = bool
+  default     = true
+}
+
+variable "performance_insights_retention_period" {
+  description = "The amount of time in days to retain Performance Insights data. Either 7 (7 days) or 731 (2 years)"
+  type        = number
+  default     = 7
+}
+
+variable "performance_insights_kms_key_id" {
+  description = "The ARN for the KMS key to encrypt Performance Insights data"
+  type        = string
+  default     = null
+}
+
+# DB parameter group
+variable "create_db_parameter_group" {
+  description = "Whether to create a database parameter group"
+  type        = bool
+  default     = true
+}
+
+variable "parameter_group_name" {
+  description = "Name of the DB parameter group to associate or create"
+  type        = string
+  default     = null
+}
+
+variable "parameter_group_use_name_prefix" {
+  description = "Determines whether to use `parameter_group_name` as is or create a unique name beginning with the `parameter_group_name` as the prefix"
+  type        = bool
+  default     = true
+}
+
+variable "parameter_group_description" {
+  description = "Description of the DB parameter group to create"
+  type        = string
+  default     = null
+}
+
+variable "family" {
+  description = "The family of the DB parameter group"
+  type        = string
+  default     = null
+}
+
+variable "parameters" {
+  description = "A list of DB parameters (map) to apply"
+  type        = list(map(string))
+  default     = []
+}
+
+
+# DB option group
+variable "create_db_option_group" {
+  description = "(Optional) Create a database option group"
+  type        = bool
+  default     = false
+}
+
+variable "option_group_name" {
+  description = "Name of the option group"
+  type        = string
+  default     = null
+}
+
+variable "option_group_use_name_prefix" {
+  description = "Determines whether to use `option_group_name` as is or create a unique name beginning with the `option_group_name` as the prefix"
+  type        = bool
+  default     = true
+}
+
+variable "option_group_description" {
+  description = "The description of the option group"
+  type        = string
+  default     = ""
+}
+
+variable "major_engine_version" {
+  description = "Specifies the major version of the engine that this option group should be associated with"
+  type        = string
+  default     = ""
+}
+
+variable "options" {
+  description = "A list of Options to apply."
+  type        = any
+  default     = []
+}
+
+
