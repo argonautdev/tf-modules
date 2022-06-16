@@ -47,7 +47,7 @@ dependency "vpc" {
 inputs = {
   default_tags = {
     "argonaut.dev/name"        = "{{ .Spec.name}}"
-    "argonaut.dev/type"        = "{{ .Spec.type}}"
+    "argonaut.dev/type"        = "RDS-aurora"
     "argonaut.dev/rds-engine"  = "{{ .Spec.engine}}"
     "argonaut.dev/manager"     = "argonaut.dev"
     "argonaut.dev/env/${local.env}" = "true"
@@ -70,7 +70,7 @@ inputs = {
     }
     {{if .Spec.storage_encrypted}}storage_encrypted={{ .Spec.storage_encrypted}}{{end}}
 
-    database_name = "{{ .Spec.database_name}}"
+    database_name = "{{ .Spec.name}}"
     master_username = "{{ .Spec.master_username}}"
     master_password = "{{ .Spec.master_password}}"
     {{if .Spec.backup_retention_period}}backup_retention_period={{ .Spec.backup_retention_period}}{{end}}
