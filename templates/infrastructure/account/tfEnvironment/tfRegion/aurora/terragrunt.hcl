@@ -58,7 +58,7 @@ inputs = {
 
     {{if .Spec.db_parameter_group_name}} db_parameter_group_name = "{{ .Spec.db_parameter_group_name}}"{{end}}
     db_parameter_group_family = "{{ .Spec.db_parameter_group_family}}"
-    db_cluster_parameter_group_name = "{{ .Spec.db_cluster_parameter_group_name}}"
+    {{if .Spec.db_cluster_parameter_group_name}} db_cluster_parameter_group_name = "{{ .Spec.db_cluster_parameter_group_name}}"{{end}}
 
     cluster_name = "{{ .Spec.cluster_name}}"
     cluster_engine = "{{ .Spec.engine}}"
