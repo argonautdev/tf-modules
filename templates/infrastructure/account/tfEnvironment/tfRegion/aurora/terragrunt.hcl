@@ -66,7 +66,7 @@ inputs = {
     db_instance_class = "{{ .Spec.db_instance_class}}"
     instances = {
         masterdb = {},
-        primaryReplica = {}
+        primaryreplica = {}
     }
     {{if .Spec.storage_encrypted}}storage_encrypted={{ .Spec.storage_encrypted}}{{end}}
 
