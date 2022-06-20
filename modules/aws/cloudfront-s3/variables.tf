@@ -103,7 +103,7 @@ variable "wait_for_deployment" {
 variable "origin_protocol_policy" {
   description = "Protocol that cloudfront to use when connecting to the origin. Supported values (http-only, https-only, or match-viewer)"
   type        = string
-  default = "http-only"
+  default = "https-only"
 }
 
 ##Cache Behavior Arguments###
@@ -136,7 +136,7 @@ variable "viewer_certificate" {
   type        = any
   default = {
     cloudfront_default_certificate = true
-    minimum_protocol_version       = "TLSv1"
+    minimum_protocol_version       = "TLSv1.2"
   }
 }
 
