@@ -8,16 +8,17 @@ variable "aws_region" {
   type        = string
 }
 
+variable "app_name" {
+  description = "argo app name"
+  type        = string
+}
+
+/* S3 Origin Parameters */
+
 variable "create_origin_access_identity" {
   description = "Controls if CloudFront origin access identity should be created"
   type        = bool
   default     = true
-}
-
-variable "aliases" {
-  description = "Extra CNAMEs (alternate domain names), if any, for this distribution."
-  type        = list(string)
-  default     = null
 }
 
 variable "comment" {
@@ -26,17 +27,54 @@ variable "comment" {
   default     = "Cloudfront deployed by argonaut dev team"
 }
 
-variable "s3_bucket_dns_name" {
-  description = "The DNS domain name of s3 bucket."
+/* CF Origin Bucket */
+
+variable "cf_origin_create_bucket" {
+  description = "Whether or not create cf origin bucket. If say 'true' bucket would be created with the name what ever you give in 'cf_origin_bucket_name'"
+  type        = bool
+}
+
+variable "cf_origin_bucket_name" {
+  description = "Name for cf origin bucket to while creating or Pass an existing bucket name when 'cf_origin_create_bucket' is set to false"
   type        = string
 }
 
+variable "attach_policy" {
+  description = "If your existing bucket has bucket policy and you want to append cf policy to s3 bucket say 'trre' else 'false'"
+  type        = bool
+  default     = false
+}
+
+variable "block_public_acls" {
+  description = "Whether Amazon S3 should block public ACLs for this bucket."
+  type        = bool
+  default     = true
+}
+
+variable "block_public_policy" {
+  description = "Whether Amazon S3 should block public bucket policies for this bucket."
+  type        = bool
+  default     = true
+}
+
+variable "ignore_public_acls" {
+  description = "Whether Amazon S3 should ignore public ACLs for this bucket."
+  type        = bool
+  default     = true
+}
 
 variable "default_root_object" {
   description = "The object that you want CloudFront to return (for example, index.html) when an end user requests the root URL."
   type        = string
-  default     = null
+  default     = "index.html"
 }
+
+variable "assets_dir_path" {
+  description = "Directory path where assets would be stored. The same path would be cached by cloudfront."
+  default = null
+  type        = string
+}
+
 
 variable "is_ipv6_enabled" {
   description = "Whether the IPv6 is enabled for the distribution."
@@ -62,17 +100,15 @@ variable "wait_for_deployment" {
   default     = true
 }
 
-
 variable "origin_protocol_policy" {
   description = "Protocol that cloudfront to use when connecting to the origin. Supported values (http-only, https-only, or match-viewer)"
   type        = string
   default = "http-only"
 }
 
-
 ##Cache Behavior Arguments###
 variable "allowed_methods" {
-  description = "Controls which HTTP methods CloudFront processes and forwards to your custom origin"
+  description = "Controls which HTTP methods CloudFront processes and forwards to your custom origin. for ex: 'DELETE', 'GET', 'HEAD', 'OPTIONS', 'PATCH', 'POST', 'PUT'"
   type        = list(any)
   default = ["GET", "HEAD"]
 }
@@ -82,7 +118,6 @@ variable "cached_methods" {
   type        = list(any)
   default = ["GET", "HEAD"]
 }
-
 
 variable "web_acl_id" {
   description = "If you're using AWS WAF to filter CloudFront requests, the Id of the AWS WAF web ACL that is associated with the distribution. The WAF Web ACL must exist in the WAF Global (CloudFront) region and the credentials configuring this argument must have waf:GetWebACL permissions assigned. If using WAFv2, provide the ARN of the web ACL."
@@ -111,8 +146,26 @@ variable "geo_restriction" {
   default     = {}
 }
 
-variable "logging_config" {
-  description = "The logging configuration that controls how logs are written to your distribution (maximum one)."
-  type        = any
-  default     = {}
+/* CF logging */
+variable "logging" {
+  description = "Set to true to enable cloudfront standard/accesslogging"
+  type        = bool
+  default     = false
+}
+
+/* CF Custom Domain */
+variable "domain_name" {
+  type = string
+  description = "Name of the hostedzone/domainname which is present in route53"
+}
+
+variable "subdomain" {
+  type = string
+  description = "Name of subdomain"
+}
+
+variable "aliases" {
+  description = "Extra CNAMEs (alternate domain names), if any, for this distribution."
+  type        = list(string)
+  default     = []
 }

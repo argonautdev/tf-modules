@@ -6,3 +6,10 @@ default_tags = {
 ##Custom origin
 comment = "cloudfront with NLB"
 custom_origin_dns_name = "NLB_DNS_NAME"
+
+/*Cf logging */
+logging = true
+
+/* CF Custom Domain */
+domain_name = "something.xxxxxx.com"
+subdomain = "custom-origin"

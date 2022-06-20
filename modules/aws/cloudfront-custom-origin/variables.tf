@@ -8,22 +8,15 @@ variable "aws_region" {
   type        = string
 }
 
+variable "app_name" {
+  description = "argo app name"
+  type        = string
+}
+
 variable "comment" {
   description = "Any comments you want to include about the distribution."
   type        = string
   default     = "Cloudfront deployed by argonaut dev team"
-}
-
-variable "aliases" {
-  description = "Extra CNAMEs (alternate domain names), if any, for this distribution."
-  type        = list(string)
-  default     = null
-}
-
-variable "default_root_object" {
-  description = "The object that you want CloudFront to return (for example, index.html) when an end user requests the root URL."
-  type        = string
-  default     = null
 }
 
 variable "is_ipv6_enabled" {
@@ -60,15 +53,14 @@ variable "custom_origin_dns_name" {
 variable "origin_protocol_policy" {
   description = "Protocol that cloudfront to use when connecting to the origin. Supported values (http-only, https-only, or match-viewer)"
   type        = string
-  default = "http-only"
+  default = "https-only"
 }
-
 
 ##Cache Behavior Arguments###
 variable "allowed_methods" {
   description = "Controls which HTTP methods CloudFront processes and forwards to your custom origin"
   type        = list(any)
-  default = ["GET", "HEAD"]
+  default = ["GET", "HEAD", "OPTIONS"]
 }
 
 variable "cached_methods" {
@@ -77,9 +69,26 @@ variable "cached_methods" {
   default = ["GET", "HEAD"]
 }
 
+/* CF logging */
+variable "logging" {
+  description = "Set to true to enable cloudfront standard/accesslogging"
+  type        = bool
+  default     = false
+}
 
-variable "logging_config" {
-  description = "The logging configuration that controls how logs are written to your distribution (maximum one)."
-  type        = any
-  default     = {}
+/* CF Custom Domain */
+variable "domain_name" {
+  type = string
+  description = "Name of the hostedzone/domainname which is present in route53"
+}
+
+variable "subdomain" {
+  type = string
+  description = "Name of subdomain"
+}
+
+variable "aliases" {
+  description = "Extra CNAMEs (alternate domain names), if any, for this distribution."
+  type        = list(string)
+  default     = []
 }

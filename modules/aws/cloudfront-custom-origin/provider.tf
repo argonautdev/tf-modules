@@ -9,3 +9,12 @@ provider "aws" {
     tags = var.default_tags
   }
 }
+
+##Provider for ACM creation
+provider "aws" {
+  region = "us-east-1"
+  alias = "acm"
+  default_tags {
+    tags = var.default_tags
+  }
+}
