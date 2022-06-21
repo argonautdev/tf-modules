@@ -13,7 +13,8 @@ terraform {
 ##Default Tag limited to AWS Provider which is not availble in GCP. Hence commented out.
 ##Region Codes: https://cloud.google.com/about/locations#americas
 provider "google" {
-  # credentials = "${file("${path.module}/../svc-account.json")}"
+  # credentials = "${file("${path.module}/../../../svc-account.json")}"
+  credentials = "svc-account.json"
   project     = var.project_id
   region      = var.region
 }

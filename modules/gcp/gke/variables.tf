@@ -86,6 +86,30 @@ variable "remove_default_node_pool" {
   default     = true
 }
 
+variable "create_service_account" {
+  type        = bool
+  description = "Defines if service account specified to run nodes should be created"
+  default     = true
+}
+
+variable "grant_registry_access" {
+  type        = bool
+  description = "Grants created cluster-specific service account storage.objectViewer and artifactregistry.reader roles"
+  default     = true
+}
+
+variable "node_metadata" {
+  type        = string
+  description = "Specifies how node metadata is exposed to the workload running on the node"
+  default     = "GKE_METADATA"
+}
+
+variable "filestore_csi_driver" {
+  type        = bool
+  description = "Enable filestore CSI driver"
+  default     = true
+}
+
 variable "node_pools_labels" {
   type        = map(map(string))
   description = "Map of maps containing node labels by node-pool name"
@@ -97,6 +121,18 @@ variable "node_pools_labels" {
       "worload_type": "monitoring"
     }
   }
+}
+
+variable "database_encryption" {
+  type        = list(object({ state = string, key_name = string }))
+  description = "Application-layer Secrets Encryption settings"
+  # Default is being set in variables_defaults.tf
+  default = [
+      {
+        "key_name": "",
+        "state": "ENCRYPTED"
+      }
+    ]
 }
 
 variable "node_pools_taints" {

@@ -24,3 +24,12 @@ module "gke" {
     node_pools_tags = var.node_pools_tags
     default_max_pods_per_node = var.default_max_pods_per_node
 }    
+
+# # example without existing KSA
+# module "workload_identity" {
+#   source              = "../../modules/workload-identity"
+#   project_id          = var.project_id
+#   name                = "iden-${module.gke.name}"
+#   namespace           = "default"
+#   use_existing_k8s_sa = false
+# }
