@@ -1,4 +1,3 @@
-
 #  Kept at environment-region level since its common per environment
 
 #  connection info for the current environment
