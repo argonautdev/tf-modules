@@ -220,19 +220,19 @@ variable "create_monitoring_role" {
 variable "monitoring_role_name" {
   description = "Name of the IAM role which will be created when create_monitoring_role is enabled"
   type        = string
-  default    = null
+  # default    = null
 }
 
 variable "monitoring_role_description" {
   description = "Description of the monitoring IAM role"
   type        = string
-  default     = null
+  default     = "DB Monitoring IAM Role"
 }
 
 variable "monitoring_role_arn" {
   description = "The ARN for the IAM role that permits RDS to send enhanced monitoring metrics to CloudWatch Logs. Must be specified if monitoring_interval is non-zero"
   type        = string
-  default     = null
+  # default     = null
 }
 
 

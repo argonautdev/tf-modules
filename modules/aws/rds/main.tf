@@ -48,9 +48,9 @@ module "db" {
   identifier = var.identifier
   /* Subnets */
   create_db_subnet_group                = var.create_db_subnet_group
-  db_subnet_group_name                  = var.db_subnet_group_name
+  # db_subnet_group_name                  = var.db_subnet_group_name
   db_subnet_group_description           = var.db_subnet_group_name
-  db_subnet_group_use_name_prefix       = var.db_subnet_group_use_name_prefix
+  # db_subnet_group_use_name_prefix       = var.db_subnet_group_use_name_prefix
   subnet_ids = var.vpc.database_subnets
   
   vpc_security_group_ids = [module.security_group.security_group_id]
