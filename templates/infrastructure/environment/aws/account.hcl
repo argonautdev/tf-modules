@@ -3,22 +3,22 @@
 // account level specs kept here
 locals {
   map_roles = [
-    {{ if .AWS.AWSRoleArn }}
+    {{ if .ProviderDetails.AWSRoleArn }}
     {
-      rolearn = "{{.AWS.AWSRoleArn}}"
+      rolearn = "{{.ProviderDetails.AWSRoleArn}}"
       username = "system:masters"
       groups = ["system:masters"]
     }
     {{ end }}
   ]
   map_users = [
-    {{ if .AWS.AWSArn }}
+    {{ if .ProviderDetails.AWSArn }}
     {
-      userarn = "{{.AWS.AWSArn}}"
-      username = "{{.AWS.Username}}"
+      userarn = "{{.ProviderDetails.AWSArn}}"
+      username = "{{.ProviderDetails.Username}}"
       groups = ["system:masters"]
     }
     {{ end }}
   ]
-  map_accounts = ["{{.AWS.AWSAccountID}}"]
+  map_accounts = ["{{.ProviderDetails.AWSAccountID}}"]
 }
