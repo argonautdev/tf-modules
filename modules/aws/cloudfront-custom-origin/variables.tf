@@ -57,8 +57,9 @@ variable "origin_protocol_policy" {
 }
 
 ##Cache Behavior Arguments###
+##Regarding Methods Ref: https://jayendrapatil.com/aws-cloudfront/#:~:text=Allowed%20HTTP%20methods,and%20to%20get%20object%20headers.&text=CloudFront%20only%20caches%20responses%20to,and%2C%20optionally%2C%20OPTIONS%20requests.
 variable "allowed_methods" {
-  description = "Controls which HTTP methods CloudFront processes and forwards to your custom origin"
+  description = "Controls which HTTP methods CloudFront processes and forwards to your custom origin, for ex: 'DELETE', 'GET', 'HEAD', 'OPTIONS', 'PATCH', 'POST', 'PUT'"
   type        = list(any)
   default = ["GET", "HEAD", "OPTIONS"]
 }
@@ -73,7 +74,7 @@ variable "cached_methods" {
 variable "logging" {
   description = "Set to true to enable cloudfront standard/accesslogging"
   type        = bool
-  default     = false
+  default     = true
 }
 
 /* CF Custom Domain */

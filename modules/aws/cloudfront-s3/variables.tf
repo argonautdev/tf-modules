@@ -103,14 +103,15 @@ variable "wait_for_deployment" {
 variable "origin_protocol_policy" {
   description = "Protocol that cloudfront to use when connecting to the origin. Supported values (http-only, https-only, or match-viewer)"
   type        = string
-  default = "http-only"
+  default = "https-only"
 }
 
 ##Cache Behavior Arguments###
+#Regarding Methods: ##Regarding Methods Ref: https://jayendrapatil.com/aws-cloudfront/#:~:text=Allowed%20HTTP%20methods,and%20to%20get%20object%20headers.&text=CloudFront%20only%20caches%20responses%20to,and%2C%20optionally%2C%20OPTIONS%20requests.
 variable "allowed_methods" {
   description = "Controls which HTTP methods CloudFront processes and forwards to your custom origin. for ex: 'DELETE', 'GET', 'HEAD', 'OPTIONS', 'PATCH', 'POST', 'PUT'"
   type        = list(any)
-  default = ["GET", "HEAD"]
+  default = ["GET", "HEAD", "OPTIONS"]
 }
 
 variable "cached_methods" {
@@ -136,7 +137,7 @@ variable "viewer_certificate" {
   type        = any
   default = {
     cloudfront_default_certificate = true
-    minimum_protocol_version       = "TLSv1"
+    minimum_protocol_version       = "TLSv1.2"
   }
 }
 
@@ -150,7 +151,7 @@ variable "geo_restriction" {
 variable "logging" {
   description = "Set to true to enable cloudfront standard/accesslogging"
   type        = bool
-  default     = false
+  default     = true
 }
 
 /* CF Custom Domain */
