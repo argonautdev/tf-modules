@@ -1,0 +1,26 @@
+aws_region = "ap-south-1"
+default_tags = {
+    "argonaut.dev/env"        = "dev"
+    "env" = "dev"
+}
+app_name = "sources3"
+##S3Origin
+comment = "cloudfront with s3 as origin"
+/* CF with existing bucket */
+#cf_origin_create_bucket = false
+#cf_origin_bucket_name = "S3_REGION_BUCKET_NAME"
+#attach_policy = false
+/* CF With New Bucket */
+cf_origin_create_bucket = true
+cf_origin_bucket_name = "S3_REGION_BUCKET_NAME"
+attach_policy = true
+s3_bucket_dns_name = "S3_REGION_BUCKET_NAME"
+
+default_root_object = "index.html"
+
+##CF Logging
+logging = false
+
+##CF With custom domain
+domain_name = "something.xxxxxxx.com"
+subdomain = "dev"
