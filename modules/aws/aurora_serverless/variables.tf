@@ -90,6 +90,14 @@ variable "db_cluster_parameter_group_parameters" {
   default     = []
 }
 
+
+/*IAM Authentication for DB*/
+variable "iam_database_authentication_enabled" {
+  description = "Specifies whether or mappings of AWS Identity and Access Management (IAM) accounts to database accounts is enabled"
+  type        = bool
+  default     = true
+}
+
 variable "db_parameter_group_family" {
   description = "The parameter group family to associate with the DB parameter group"
   type        = string
@@ -123,9 +131,11 @@ variable "copy_tags_to_snapshot" {
 variable "cluster_min_capacity" {
   description = "Min cluster ACU"
   type        = number
+  default     = 2
 }
 
 variable "cluster_max_capacity" {
   description = "Max cluster ACU"
   type        = number
+  default     = 10
 }
