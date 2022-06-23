@@ -14,7 +14,7 @@ locals {
 
   env = local.environment_vars.locals.environment
 
-  region = local.region_vars.locals.aws_region
+  region = "{{.Region}}"
 }
 
 # Terragrunt will copy the Terraform configurations specified by the source parameter, along with any files in the
