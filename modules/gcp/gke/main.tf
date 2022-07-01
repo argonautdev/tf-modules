@@ -8,7 +8,8 @@ module "gke" {
     description = var.description
     region  = var.region
     network = var.network_name
-    subnetwork = var.cluster_node_subnet_name
+    subnetwork = var.subnetwork
+    # subnetwork = var.cluster_node_subnet_name
     ip_range_pods = var.cluster_pods_subnet_name
     ip_range_services = var.cluster_service_subnet_name
     http_load_balancing = var.http_load_balancing

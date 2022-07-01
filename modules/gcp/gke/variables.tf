@@ -120,3 +120,8 @@ variable "default_max_pods_per_node" {
   description = "The maximum number of pods to schedule per node"
   default     = 110
 }
+
+variable "subnetwork" {
+  type        = string
+  description = "The subnetwork to host the cluster in (required)"
+}
