@@ -1,11 +1,11 @@
 variable "project_id" {
-    type = string
-    description = "The ID of the project where this VPC will be created"
+  type        = string
+  description = "The ID of the project where this VPC will be created"
 }
 
 variable "region" {
-    type = string
-    description = "Region in which to deploy the resources"
+  type        = string
+  description = "Region in which to deploy the resources"
 }
 
 variable "network_name" {
@@ -19,9 +19,9 @@ variable "subnets" {
 }
 
 variable "secondary_ranges" {
-  type = map(list(object({ range_name = string, ip_cidr_range = string })))
+  type        = map(list(object({ range_name = string, ip_cidr_range = string })))
   description = "Map of secondaryrange in the cluster's subnetwork"
-  default = {}
+  default     = {}
 }
 
 variable "description" {

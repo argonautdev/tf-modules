@@ -36,9 +36,9 @@ data "template_file" "startup_script" {
 
 locals {
   project_roles = [
-   "roles/compute.osAdminLogin",
-   "roles/iam.serviceAccountUser"
- ]
+    "roles/compute.osAdminLogin",
+    "roles/iam.serviceAccountUser"
+  ]
 }
 
 
@@ -59,7 +59,7 @@ locals {
 resource "google_project_iam_member" "add_sa_to_project" {
   project = var.project_id
   role    = "roles/owner"
-    member = "serviceAccount:cross-project-testing@fmtestiedeployment.iam.gserviceaccount.com"
+  member  = "serviceAccount:cross-project-testing@fmtestiedeployment.iam.gserviceaccount.com"
 }
 
 
@@ -71,37 +71,37 @@ resource "google_service_account" "bastion_oslogin_sa" {
 }
 
 resource "google_project_iam_member" "project" {
-  count = length(local.project_roles)
+  count   = length(local.project_roles)
   project = var.project_id
   role    = local.project_roles[count.index]
   member  = "serviceAccount:${google_service_account.bastion_oslogin_sa.email}"
 }
 
 module "bastion" {
-  source  = "terraform-google-modules/bastion-host/google"
-  version = "5.0.0"
-  project        = var.project_id
-  host_project   = var.project_id
-  network        = var.network
-  subnet         = var.subnet
-  name           = var.bastion_host_name
-  zone           = local.bastion_host_az
-  image_project  = var.image_project
-  image_family   = var.image_family
-  machine_type   = var.machine_type
-  disk_type      = var.disk_type
-  disk_size_gb   = var.disk_size_gb
-  scopes         = var.scopes
-  members        = concat(["serviceAccount:${google_service_account.bastion_oslogin_sa.email}"], var.members)
-  service_account_name = var.service_account_name
-  service_account_roles = var.service_account_roles
+  source                             = "terraform-google-modules/bastion-host/google"
+  version                            = "5.0.0"
+  project                            = var.project_id
+  host_project                       = var.project_id
+  network                            = var.network
+  subnet                             = var.subnet
+  name                               = var.bastion_host_name
+  zone                               = local.bastion_host_az
+  image_project                      = var.image_project
+  image_family                       = var.image_family
+  machine_type                       = var.machine_type
+  disk_type                          = var.disk_type
+  disk_size_gb                       = var.disk_size_gb
+  scopes                             = var.scopes
+  members                            = concat(["serviceAccount:${google_service_account.bastion_oslogin_sa.email}"], var.members)
+  service_account_name               = var.service_account_name
+  service_account_roles              = var.service_account_roles
   service_account_roles_supplemental = var.service_account_roles_supplemental
-  startup_script = data.template_file.startup_script.rendered
-  fw_name_allow_ssh_from_iap = var.fw_name_allow_ssh_from_iap
-  shielded_vm    = var.shielded_vm
-  labels         = var.labels
-  metadata       = {
+  startup_script                     = data.template_file.startup_script.rendered
+  fw_name_allow_ssh_from_iap         = var.fw_name_allow_ssh_from_iap
+  shielded_vm                        = var.shielded_vm
+  labels                             = var.labels
+  metadata = {
     serial-port-enable = true
   }
-  tags           = [var.bastion_host_name] ##applying bastion hostname 
+  tags = [var.bastion_host_name] ##applying bastion hostname 
 }

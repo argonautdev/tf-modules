@@ -2,7 +2,7 @@ terraform {
   required_version = ">= 1.0"
   required_providers {
     google = {
-      source = "hashicorp/google"
+      source  = "hashicorp/google"
       version = "4.22.0"
     }
   }
@@ -14,6 +14,6 @@ terraform {
 ##Region Codes: https://cloud.google.com/about/locations#americas
 provider "google" {
   # credentials = "${file("${path.module}/../svc-account.json")}"
-  project     = var.project_id
-  region      = var.region
+  project = var.project_id
+  region  = var.region
 }

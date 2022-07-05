@@ -1,6 +1,6 @@
 variable "project_id" {
-    type = string
-    description = "The ID of the project where this VPC will be created"
+  type        = string
+  description = "The ID of the project where this VPC will be created"
 }
 
 variable "cluster_name" {
@@ -15,35 +15,81 @@ variable "description" {
 }
 
 variable "region" {
-    type = string
-    description = "Region in which to deploy the resources"
+  type        = string
+  description = "Region in which to deploy the resources"
 }
 
 variable "cluster_node_zones" {
-  type = list(string)
+  type        = list(string)
   description = "The list of zones in which the cluster's nodes are located."
-  default = []
+  default     = []
 }
 
 variable "network_name" {
   description = "The VPC network to host the cluster in (required)"
-  type = string
-}
-
-variable "cluster_node_subnet_name" {
   type        = string
-  description = "The _name_ of subnetwork in which the cluster's instances are launched"
 }
 
-variable "cluster_pods_subnet_name" {
+variable "subnetwork_name" {
+  description = "The _name_ of subnetwork in which the cluster's instances are launched"
+  type        = string
+}
+
+variable "pod_subnet_name" {
   type        = string
   description = "The _name_ of the secondary subnet to use for pods"
 }
 
-variable "cluster_service_subnet_name" {
+variable "service_subnet_name" {
   type        = string
   description = "The _name_ of the secondary subnet to use for services"
 }
+
+variable "subnetwork_cidr" {
+  description = "Cidr of the subnetwork"
+  type        = string
+}
+
+variable "pod_subnet_cidr_block" {
+  type        = string
+  description = "Pod subnetwork cidr block"
+}
+
+variable "service_subnet_cidr_block" {
+  type        = string
+  description = "Services subnetwork cidr block"
+}
+
+##The variable value is important if you would want to create a private cluster
+###################
+# Variables for Private Cluster
+####################
+variable "enable_private_endpoint" {
+  type        = bool
+  description = "Kubernetes cluster endpoint get private ip if you pass it as true"
+  default     = false
+}
+
+variable "enable_private_nodes" {
+  type        = bool
+  description = "Nodes inside the nodepool get's privateip only when we pass is as true. Since we are using private subnets we want all of our nodes to have priavate IP"
+  default     = false
+}
+
+/* Note: When you Pass "enable_private_endpoint" to true you must pass the value for below variable */
+variable "master_authorized_networks" {
+  type        = list(object({ cidr_block = string, display_name = string }))
+  description = "List of master authorized networks. If none are provided, disallow external access (except the cluster node IPs, which GKE automatically whitelists)."
+  default     = []
+}
+
+/* CIDR Block will be used by GKE and creats endpoint and peer with our network */
+variable "master_ipv4_cidr_block" {
+  type        = string
+  description = "(Beta) The IP range in CIDR notation to use for the hosted master network"
+  default     = "10.0.0.0/28"
+}
+
 
 variable "http_load_balancing" {
   type        = bool
@@ -51,10 +97,18 @@ variable "http_load_balancing" {
   default     = true
 }
 
+
+variable "filestore_csi_driver" {
+  type        = bool
+  description = "The status of the Filestore CSI driver addon, which allows the usage of filestore instance as volumes"
+  default     = false
+}
+
+
 variable "kubernetes_version" {
-  type = string
+  type        = string
   description = "The Kubernetes version of the masters."
-  default = "latest"
+  default     = "latest"
 }
 
 variable "initial_node_count" {
@@ -91,12 +145,7 @@ variable "node_pools_labels" {
   description = "Map of maps containing node labels by node-pool name"
 
   # Default is being set in variables_defaults.tf
-  default = {
-    applications = {
-      "nodeType": "linux",
-      "worload_type": "monitoring"
-    }
-  }
+  default = {}
 }
 
 variable "node_pools_taints" {
@@ -119,4 +168,17 @@ variable "default_max_pods_per_node" {
   type        = number
   description = "The maximum number of pods to schedule per node"
   default     = 110
+}
+
+##By default this false in public module, so override that by saying to true
+variable "grant_registry_access" {
+  type        = bool
+  description = "Grants created cluster-specific service account storage.objectViewer and artifactregistry.reader roles."
+  default     = true
+}
+
+variable "registry_project_ids" {
+  type        = list(string)
+  description = "Projects holding Google Container Registries. If empty, we use the cluster project. If a service account is created and the `grant_registry_access` variable is set to `true`, the `storage.objectViewer` and `artifactregsitry.reader` roles are assigned on these projects."
+  default     = []
 }

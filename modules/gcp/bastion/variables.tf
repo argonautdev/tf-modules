@@ -1,11 +1,11 @@
 variable "project_id" {
-    type = string
-    description = "The ID of the project where this VPC will be created"
+  type        = string
+  description = "The ID of the project where this VPC will be created"
 }
 
 variable "region" {
-    type = string
-    description = "Region in which to deploy the resources"
+  type        = string
+  description = "Region in which to deploy the resources"
 }
 
 /* Bastion Details */
@@ -32,13 +32,13 @@ variable "image_project" {
 }
 
 variable "create_instance_from_template" {
-  type = bool
+  type        = bool
   description = "Whether to create and instance from the template or not. If false, no instance is created, but the instance template is created and usable by a MIG"
   default     = true
 }
 
 variable "bastion_host_name" {
-  type = string
+  type        = string
   description = "Name of the Bastion instance. host name must follow the following constraints ^[a-z](?:[-a-z0-9]{4,28}[a-z0-9])$"
 }
 
@@ -47,13 +47,13 @@ variable "bastion_host_name" {
 ##the time we want apply firwalls we can use networks in firewalls to know on which instances the firewall should be applied.
 ##############
 variable "tags" {
-  type = list(string)
+  type        = list(string)
   description = "Network tags, provided as a list"
   default     = []
 }
 
 variable "labels" {
-  type = map(any)
+  type        = map(any)
   description = "Key-value map of labels to assign to the bastion host"
   default     = {}
 }
@@ -79,13 +79,13 @@ variable "name_prefix" {
 }
 
 variable "shielded_vm" {
-  type = bool
+  type        = bool
   description = "Enable shielded VM on the bastion host"
   default     = false
 }
 
 variable "startup_script" {
-  type = string
+  type        = string
   description = "Render a startup script with a template."
   default     = ""
 }
@@ -152,7 +152,7 @@ variable "network" {
 }
 
 variable "subnet" {
-  type = string
+  type        = string
   description = "Self link for the subnet on which the Bastion should live. Can be private when using IAP"
 }
 
@@ -166,7 +166,7 @@ variable "create_firewall_rule" {
 }
 
 variable "fw_name_allow_ssh_from_iap" {
-  type = string
+  type        = string
   description = "Firewall rule name for allowing SSH from IAP"
 }
 
@@ -199,16 +199,16 @@ variable "service_account_roles" {
 
 ##Additionally allowing container admin, so that we can run kubectl commands by download kubeconfig file to bastion
 variable "service_account_roles_supplemental" {
-  type = list(string)
+  type        = list(string)
   description = "An additional list of roles to assign to the bastion if desired"
-  default     = [
-     "roles/container.admin" ##Provides access to full management of clusters and their Kubernetes API objects.
+  default = [
+    "roles/container.admin" ##Provides access to full management of clusters and their Kubernetes API objects.
   ]
 }
 
 ##Make sure pass service account name
 variable "service_account_name" {
-  type = string
+  type        = string
   description = "Account ID for the service account"
 }
 
