@@ -100,6 +100,8 @@ module "bastion" {
   fw_name_allow_ssh_from_iap         = var.fw_name_allow_ssh_from_iap
   shielded_vm                        = var.shielded_vm
   labels                             = var.labels
+  external_ip                        = var.external_ip
+  access_config                      = var.access_config
   metadata = {
     serial-port-enable = true
   }

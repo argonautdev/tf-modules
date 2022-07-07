@@ -39,6 +39,8 @@ module "gke" {
   master_ipv4_cidr_block   = var.master_ipv4_cidr_block
   http_load_balancing      = var.http_load_balancing
   filestore_csi_driver     = var.filestore_csi_driver
+  horizontal_pod_autoscaling = var.horizontal_pod_autoscaling
+  enable_vertical_pod_autoscaling = var.enable_vertical_pod_autoscaling
   kubernetes_version       = var.kubernetes_version
   initial_node_count       = var.initial_node_count ##How many instances should be launched in each zone
   cluster_resource_labels  = var.cluster_resource_labels

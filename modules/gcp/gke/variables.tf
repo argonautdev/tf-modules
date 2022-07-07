@@ -91,17 +91,30 @@ variable "master_ipv4_cidr_block" {
 }
 
 
+/* Addons */
 variable "http_load_balancing" {
   type        = bool
   description = "Enable httpload balancer addon"
-  default     = true
+  default     = false
 }
 
 
 variable "filestore_csi_driver" {
   type        = bool
   description = "The status of the Filestore CSI driver addon, which allows the usage of filestore instance as volumes"
+  default     = true
+}
+
+variable "enable_vertical_pod_autoscaling" {
+  type        = bool
+  description = "Vertical Pod Autoscaling automatically adjusts the resources of pods controlled by it"
   default     = false
+}
+
+variable "horizontal_pod_autoscaling" {
+  type        = bool
+  description = "Enable horizontal pod autoscaling addon"
+  default     = true
 }
 
 
