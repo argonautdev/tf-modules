@@ -103,5 +103,7 @@ module "bastion" {
   metadata = {
     serial-port-enable = true
   }
+  external_ip                        = var.external_ip
+  access_config                      = var.access_config
   tags = [var.bastion_host_name] ##applying bastion hostname 
 }

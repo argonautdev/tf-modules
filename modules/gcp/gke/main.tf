@@ -25,7 +25,8 @@ resource "google_compute_subnetwork" "cluster_subnet" {
 
 module "gke" {
   depends_on = [google_compute_subnetwork.cluster_subnet]
-  source = "terraform-google-modules/kubernetes-engine/google//modules/private-cluster"
+  #source = "terraform-google-modules/kubernetes-engine/google//modules/private-cluster"
+  source = "terraform-google-modules/kubernetes-engine/google//modules/beta-private-cluster-update-variant"
   # source  = local.gke_source
   version                  = "21.1.0"
   project_id               = var.project_id
@@ -37,11 +38,29 @@ module "gke" {
   ip_range_pods            = var.pod_subnet_name
   ip_range_services        = var.service_subnet_name
   master_ipv4_cidr_block   = var.master_ipv4_cidr_block
+  /* Addons */
   http_load_balancing      = var.http_load_balancing
   filestore_csi_driver     = var.filestore_csi_driver
+  enable_vertical_pod_autoscaling = var.enable_vertical_pod_autoscaling
+  horizontal_pod_autoscaling = var.horizontal_pod_autoscaling
+  config_connector         = var.config_connector
+  gce_pd_csi_driver        = var.gce_pd_csi_driver
+  # monitoring_enable_managed_prometheus = var.monitoring_enable_managed_prometheus
+  
+  istio                    = var.istio
+  istio_auth               = var.istio_auth
+  kalm_config              = var.kalm_config
+  enable_l4_ilb_subsetting = var.enable_l4_ilb_subsetting
+  
+  /*lables*/
+  cluster_resource_labels   = var.cluster_resource_labels
+  
+  /* logging and monitoring */
+  logging_enabled_components = var.logging_enabled_components
+  monitoring_enabled_components = var.monitoring_enabled_components
+  
   kubernetes_version       = var.kubernetes_version
   initial_node_count       = var.initial_node_count ##How many instances should be launched in each zone
-  cluster_resource_labels  = var.cluster_resource_labels
   node_pools               = var.node_pools
   remove_default_node_pool = var.remove_default_node_pool
   //kubernetes_version = var.kubernetes_version

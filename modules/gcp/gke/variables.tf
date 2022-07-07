@@ -91,17 +91,95 @@ variable "master_ipv4_cidr_block" {
 }
 
 
+/* Lables */
+
+variable "cluster_resource_labels" {
+  type        = map(string)
+  description = "The GCE resource labels (a map of key/value pairs) to be applied to the cluster"
+  default     = {}
+}
+
+
+/* Addons */
 variable "http_load_balancing" {
   type        = bool
   description = "Enable httpload balancer addon"
-  default     = true
+  default     = false
 }
-
 
 variable "filestore_csi_driver" {
   type        = bool
   description = "The status of the Filestore CSI driver addon, which allows the usage of filestore instance as volumes"
+  default     = true
+}
+
+variable "enable_vertical_pod_autoscaling" {
+  type        = bool
+  description = "Vertical Pod Autoscaling automatically adjusts the resources of pods controlled by it"
   default     = false
+}
+
+variable "horizontal_pod_autoscaling" {
+  type        = bool
+  description = "Enable horizontal pod autoscaling addon"
+  default     = false
+}
+
+variable "config_connector" {
+  type        = bool
+  description = "(Beta) Whether ConfigConnector is enabled for this cluster."
+  default     = false
+}
+
+variable "gce_pd_csi_driver" {
+  type        = bool
+  description = "(Beta) Whether this cluster should enable the Google Compute Engine Persistent Disk Container Storage Interface (CSI) Driver."
+  default     = true
+}
+
+variable "monitoring_enable_managed_prometheus" {
+  type        = bool
+  description = "(Beta) Configuration for Managed Service for Prometheus. Whether or not the managed collection is enabled."
+  default     = false
+}
+
+variable "istio" {
+  description = "(Beta) Enable Istio addon"
+  default     = false
+}
+
+variable "istio_auth" {
+  type        = string
+  description = "(Beta) The authentication type between services in Istio."
+  default     = "AUTH_MUTUAL_TLS"
+}
+
+variable "kalm_config" {
+  type        = bool
+  description = "(Beta) Whether KALM is enabled for this cluster."
+  default     = false
+}
+
+variable "enable_l4_ilb_subsetting" {
+  type        = bool
+  description = "Enable L4 ILB Subsetting on the cluster"
+  default     = false
+}
+
+/* logging and monitoring */
+/* GKE Bydefaults enables both */
+/* Config connector requires Monitoring and Workload Identity Pool should be enabled */
+/* About Logging and Monitoring ---> https://cloud.google.com/stackdriver/docs/solutions/gke/installing */
+variable "logging_enabled_components" {
+  type        = list(string)
+  description = "List of services to monitor: SYSTEM_COMPONENTS, WORKLOADS. Empty list is default GKE configuration."
+  default     = ["SYSTEM_COMPONENTS", "WORKLOADS"]
+}
+
+variable "monitoring_enabled_components" {
+  type        = list(string)
+  description = "List of services to monitor: SYSTEM_COMPONENTS, WORKLOADS ( Deprected ) (provider version >= 3.89.0). Empty list is default GKE configuration."
+  default     = ["SYSTEM_COMPONENTS"]
 }
 
 
@@ -115,12 +193,6 @@ variable "initial_node_count" {
   type        = number
   description = "The number of nodes to create in this cluster's default node pool."
   default     = 1
-}
-
-variable "cluster_resource_labels" {
-  type        = map(string)
-  description = "The GCE resource labels (a map of key/value pairs) to be applied to the cluster"
-  default     = {}
 }
 
 variable "node_pools" {
@@ -182,3 +254,4 @@ variable "registry_project_ids" {
   description = "Projects holding Google Container Registries. If empty, we use the cluster project. If a service account is created and the `grant_registry_access` variable is set to `true`, the `storage.objectViewer` and `artifactregsitry.reader` roles are assigned on these projects."
   default     = []
 }
+

@@ -115,6 +115,7 @@ variable "metadata" {
 ####################################################################
 # We don't want to enable external ip.                             #
 # IAP is used for accessing vms using internal ip. hence disabling #
+# When you launching in PublicIp pass it as true                   #
 ####################################################################
 variable "external_ip" {
   type        = bool
@@ -218,7 +219,5 @@ variable "service_account_email" {
   description = "If set, the service account and its permissions will not be created. The service account being passed in should have at least the roles listed in the `service_account_roles` variable so that logging and OS Login work as expected."
   default     = ""
 }
-
-
 
 
