@@ -96,7 +96,7 @@ variable "disk_size_gb" {
 }
 
 variable "disk_type" {
-  description = "Boot disk type, can be either pd-ssd, local-ssd, or pd-standard"
+  description = "Boot disk type, can be either pd-ssd, local-ssd, pd-balanced, or pd-standard"
   default     = "pd-balanced"
 }
 
@@ -115,6 +115,7 @@ variable "metadata" {
 ####################################################################
 # We don't want to enable external ip.                             #
 # IAP is used for accessing vms using internal ip. hence disabling #
+# When launching in publicsubnet makesure to pass external_ip true #
 ####################################################################
 variable "external_ip" {
   type        = bool
