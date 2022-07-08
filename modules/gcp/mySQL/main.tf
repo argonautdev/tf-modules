@@ -1,0 +1,103 @@
+##To Work with cloudSQL module, The following APIs should be enabled.
+
+module "enabled_google_apis" {
+  source  = "terraform-google-modules/project-factory/google//modules/project_services"
+  version = "~> 11.3"
+
+  project_id                  = var.project_id
+  disable_services_on_destroy = false
+
+  activate_apis = [
+    "sqladmin.googleapis.com",
+    "compute.googleapis.com",
+    "servicenetworking.googleapis.com",
+    "cloudresourcemanager.googleapis.com"
+  ]
+}
+
+
+resource "random_id" "suffix" {
+  byte_length = 5
+}
+
+# locals {
+#   /*
+#     Random instance name needed because:
+#     "You cannot reuse an instance name for up to a week after you have deleted an instance."
+#     See https://cloud.google.com/sql/docs/mysql/delete-instance for details.
+#   */
+#   network_name = "${var.network_name}-safer-${random_id.suffix.hex}"
+# }
+
+# module "network-safer-mysql-simple" {
+#   source  = "terraform-google-modules/network/google"
+#   version = "~> 4.0"
+
+#   project_id   = var.project_id
+#   network_name = local.network_name
+
+#   subnets = []
+# }
+
+/*IMP: Please read doc carefully about Private service access */
+## https://cloud.google.com/vpc/docs/configure-private-services-access?authuser=1&_ga=2.86912664.-1808336238.1654844270&_gac=1.153215690.1656639899.CjwKCAjwk_WVBhBZEiwAUHQCmQzQRuTvjYfO5ZBs1IQh0OVGfrsVSqUAoisb3j932g0yfSPw4S5qNhoC1kMQAvD_BwE
+
+/* Allocate IP Address range */
+module "private-service-access" {
+  count = var.db_connectivity_type == "private" ? 1: 0 
+  source      = "GoogleCloudPlatform/sql-db/google//modules/private_service_access"
+  project_id  = var.project_id
+  vpc_network = var.vpc_network_name
+  address          = var.address
+  description = "reserverd ${var.address} from ${var.vpc_network_name}"
+  prefix_length = var.prefix_length
+}
+
+// Data Block for getting VPC self link
+data "google_compute_network" "my-network" {
+    name = var.vpc_network_name
+}
+
+module "mysql" {
+    depends_on = [module.private-service-access]
+    source = "GoogleCloudPlatform/sql-db/google//modules/mysql"
+    project_id = var.project_id
+    region = var.region
+    zone = var.zone
+    name = var.name
+    tier = var.db_compute_instance_size
+    activation_policy = var.activation_policy
+    availability_type = var.availability_type
+    ip_configuration = {
+        ipv4_enabled = var.db_connectivity_type == "private" ? false : true
+        allocated_ip_range = var.db_connectivity_type == "private" ? module.private-service-access[0].google_compute_global_address_name : null
+        authorized_networks = var.authorized_networks
+        //The VPC network from which the Cloud SQL instance is accessible for private IP
+        private_network = var.db_connectivity_type == "private" ? data.google_compute_network.my-network.self_link : null
+        require_ssl = var.require_ssl
+    }
+    backup_configuration = {
+        binary_log_enabled             = var.binary_log_enabled
+        enabled                        = var.enabled
+        start_time                     = var.start_time
+        location                       = var.location
+        transaction_log_retention_days = var.transaction_log_retention_days
+        retained_backups               = var.retained_backups
+        retention_unit                 = var.retention_unit
+    }
+    database_version = var.database_version
+    disk_autoresize = var.disk_autoresize
+    disk_autoresize_limit = var.disk_autoresize_limit
+    disk_size = var.disk_size
+    db_name = var.db_name
+    deletion_protection = var.deletion_protection
+    additional_databases = var.additional_databases
+    user_name = var.user_name
+    user_password = var.user_password
+    additional_users = var.additional_users
+    maintenance_window_day = var.maintenance_window_day
+    maintenance_window_hour = var.maintenance_window_hour
+    user_labels = var.user_labels
+    pricing_plan = var.pricing_plan
+    # google_compute_global_address_name = var.db_connectivity_type == "private" ? module.private-service-access[0].google_compute_global_address_name : null
+}

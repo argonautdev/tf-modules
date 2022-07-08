@@ -235,3 +235,77 @@ module "bastion_host" {
   service_account_name       = "eks-devcluster-bastion"
   external_ip                = false
 }
+
+module "mysql-private" {
+  source            = "./modules/gcp/mySQL"
+  project_id        = "playground-351903"
+  region            = "us-east4"
+  name              = "argonaut-dev-private-db-123"
+  database_version  = "MYSQL_8_0"
+  db_connectivity_type = "private"
+  vpc_network_name = "dev-microservices-new-vpc"
+  address          = "10.240.0.0"
+  db_compute_instance_size = "db-n1-standard-2" ##2 vcpu, 8GB ram
+  user_labels = {
+    "env" : "dev",
+    "type" : "mysql-private-db"
+  }
+  zone                       = "us-east4-a"
+  activation_policy          = "ALWAYS"
+  availability_type          = "ZONAL"
+  disk_autoresize            = true
+  disk_autoresize_limit      = 100
+  disk_size                  = 20
+  disk_type                  = "PD_SSD"
+  maintenance_window_day     = 6 ##Saturday
+  maintenance_window_hour    = 23 ##11:00 AM ( to be in the range (0 - 23))
+  /* Backup */
+  binary_log_enabled        = true
+  enabled                   = true
+  location                  = "us" ##trying with multiregion.
+  retained_backups          = 14
+  transaction_log_retention_days = 7
+  retention_unit = "COUNT"
+  ipv4_enabled = false
+  db_name = "tempdb"
+  user_name = "argonaut"
+  user_password = "argonautadmin123#"
+  deletion_protection = false
+}
+
+module "mysql-public" {
+  source            = "./modules/gcp/mySQL"
+  project_id        = "playground-351903"
+  region            = "us-east4"
+  name              = "argonaut-dev-public-db-123"
+  database_version  = "MYSQL_8_0"
+  db_connectivity_type = "public"
+  vpc_network_name = "dev-microservices-new-vpc"
+  address          = "10.240.0.0"
+  db_compute_instance_size = "db-n1-standard-2" ##2 vcpu, 8GB ram
+  user_labels = {
+    "env" : "dev",
+    "type" : "mysql-public-db"
+  }
+  zone                       = "us-east4-a"
+  activation_policy          = "ALWAYS"
+  availability_type          = "ZONAL"
+  disk_autoresize            = true
+  disk_autoresize_limit      = 100
+  disk_size                  = 20
+  disk_type                  = "PD_SSD"
+  maintenance_window_day     = 6 ##Saturday
+  maintenance_window_hour    = 23 ##11:00 AM ( to be in the range (0 - 23))
+  /* Backup */
+  binary_log_enabled        = true
+  enabled                   = true
+  location                  = "us" ##trying with multiregion.
+  retained_backups          = 14
+  transaction_log_retention_days = 7
+  retention_unit = "COUNT"
+  ipv4_enabled = false
+  db_name = "tempdb"
+  user_name = "argonaut"
+  user_password = "argonautadmin123#"
+  deletion_protection = false
+}
