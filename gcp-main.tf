@@ -240,7 +240,7 @@ module "mysql-private" {
   source            = "./modules/gcp/mySQL"
   project_id        = "playground-351903"
   region            = "us-east4"
-  name              = "argonaut-dev-private-db-123"
+  name              = "argonaut-dev-private-db-3453"
   database_version  = "MYSQL_8_0"
   db_connectivity_type = "private"
   vpc_network_name = "dev-microservices-new-vpc"
@@ -252,7 +252,7 @@ module "mysql-private" {
   }
   zone                       = "us-east4-a"
   activation_policy          = "ALWAYS"
-  availability_type          = "ZONAL"
+  availability_type          = "REGIONAL"
   disk_autoresize            = true
   disk_autoresize_limit      = 100
   disk_size                  = 20
@@ -271,17 +271,38 @@ module "mysql-private" {
   user_name = "argonaut"
   user_password = "argonautadmin123#"
   deletion_protection = false
+  ##Max limit to 10
+  ## To Create replicas, Backup and binary logging should be enabled. 
+  # read_replicas = [
+  # {
+  #   name = "primary-replica"
+  #   tier = "db-n1-standard-4"
+  #   #The automatic storage increase setting of a primary instance automatically applies to any read replicas of that instance. 
+  #   #The automatic storage increase setting cannot be independently set for read replicas.
+  #   disk_type = "PD_SSD"
+  #   disk_autoresize = false
+  #   disk_autoresize_limit = 500
+  #   database_flags = []
+  #   disk_size = 200
+  #   zone = "us-east4-b"
+  #   user_labels = {
+  #     "env" : "dev",
+  #     "type" : "mysql-private-db-primary-replica"
+  #   },
+  #   encryption_key_name = null
+  # }]
 }
 
 module "mysql-public" {
   source            = "./modules/gcp/mySQL"
   project_id        = "playground-351903"
   region            = "us-east4"
-  name              = "argonaut-dev-public-db-123"
+  name              = "argonaut-dev-public-db-1233"
   database_version  = "MYSQL_8_0"
   db_connectivity_type = "public"
+  ##Below is one mandatory if it's public
+  authorized_networks  = [{ name = "Allowing All Ip", value = "0.0.0.0/0" }]
   vpc_network_name = "dev-microservices-new-vpc"
-  address          = "10.240.0.0"
   db_compute_instance_size = "db-n1-standard-2" ##2 vcpu, 8GB ram
   user_labels = {
     "env" : "dev",
@@ -308,4 +329,87 @@ module "mysql-public" {
   user_name = "argonaut"
   user_password = "argonautadmin123#"
   deletion_protection = false
+}
+
+
+// Master
+output "instance_name" {
+  value       = module.mysql-public.instance_name
+  description = "The instance name for the master instance"
+}
+
+output "instance_ip_address" {
+  value       = module.mysql-public.instance_ip_address
+  description = "The IPv4 address assigned for the master instance"
+}
+
+output "private_address" {
+  value       = module.mysql-public.private_address
+  description = "The private IP address assigned for the master instance"
+}
+
+output "instance_first_ip_address" {
+  value       = module.mysql-public.instance_first_ip_address
+  description = "The first IPv4 address of the addresses assigned for the master instance."
+}
+
+output "instance_connection_name" {
+  value       = module.mysql-public.instance_connection_name
+  description = "The connection name of the master instance to be used in connection strings"
+}
+
+output "instance_self_link" {
+  value       = module.mysql-public.instance_self_link
+  description = "The URI of the master instance"
+}
+
+output "instance_server_ca_cert" {
+  value       = module.mysql-public.instance_server_ca_cert
+  description = "The CA certificate information used to connect to the SQL instance via SSL"
+}
+
+output "instance_service_account_email_address" {
+  value       = module.mysql-public.instance_service_account_email_address
+  description = "The service account email address assigned to the master instance"
+}
+
+// Replicas
+output "replicas_instance_first_ip_addresses" {
+  value       = module.mysql-public.replicas_instance_first_ip_addresses
+  description = "The first IPv4 addresses of the addresses assigned for the replica instances"
+}
+
+output "replicas_instance_connection_names" {
+  value       = module.mysql-public.replicas_instance_connection_names
+  description = "The connection names of the replica instances to be used in connection strings"
+}
+
+output "replicas_instance_self_links" {
+  value       = module.mysql-public.replicas_instance_self_links
+  description = "The URIs of the replica instances"
+}
+
+output "replicas_instance_server_ca_certs" {
+  value       = module.mysql-public.replicas_instance_server_ca_certs
+  description = "The CA certificates information used to connect to the replica instances via SSL"
+}
+
+output "replicas_instance_service_account_email_addresses" {
+  value       = module.mysql-public.replicas_instance_service_account_email_addresses
+  description = "The service account email addresses assigned to the replica instances"
+}
+
+output "read_replica_instance_names" {
+  value       = module.mysql-public.read_replica_instance_names
+  description = "The instance names for the read replica instances"
+}
+
+output "public_ip_address" {
+  description = "The first public (PRIMARY) IPv4 address assigned for the master instance"
+  value       = module.mysql-public.public_ip_address
+}
+
+output "private_ip_address" {
+  description = "The first private (PRIVATE) IPv4 address assigned for the master instance"
+  value       = module.mysql-public.private_ip_address
 }

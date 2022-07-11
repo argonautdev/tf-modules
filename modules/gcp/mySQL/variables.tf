@@ -44,6 +44,7 @@ variable "vpc_network_name" {
 variable "address" {
   description = "internal cidrblock with in the VPC to use by service provider VPC"
   type        = string
+  default     = ""
 }
 
 variable "prefix_length" {
@@ -245,7 +246,7 @@ variable "authorized_networks" {
 
 variable "require_ssl" {
     default = false
-    description = "Whether SSL connections over IP are enforced or not."
+    description = "Whether SSL connections over Public IP are enforced or not."
 }
 
 # variable "ip_configuration" {
@@ -282,13 +283,6 @@ variable "read_replicas" {
       name  = string
       value = string
     }))
-    ip_configuration = object({
-      authorized_networks = list(map(string))
-      ipv4_enabled        = bool
-      private_network     = string
-      require_ssl         = bool
-      allocated_ip_range  = string
-    })
     encryption_key_name = string
   }))
   default = []
