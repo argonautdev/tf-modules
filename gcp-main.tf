@@ -331,6 +331,66 @@ module "mysql-public" {
   deletion_protection = false
 }
 
+module "postgresql" {
+  source            = "./modules/gcp/postgreSQL"
+  project_id        = "playground-351903"
+  region            = "us-east4"
+  name              = "argonaut-dev-postgrsql-private-db-34533"
+  database_version  = "POSTGRES_13"
+  db_connectivity_type = "private"
+  vpc_network_name = "dev-microservices-new-vpc"
+  address          = "10.240.0.0"
+  ##Postgres only supports custom and shared instancetypes.
+  db_compute_instance_size = "db-custom-2-7680" ##2 vcpu, 8GB ram
+  user_labels = {
+    "env" : "dev",
+    "type" : "postgrsql-private-db"
+  }
+  zone                       = "us-east4-a"
+  activation_policy          = "ALWAYS"
+  availability_type          = "ZONAL"
+  disk_autoresize            = true
+  disk_autoresize_limit      = 100
+  disk_size                  = 20
+  disk_type                  = "PD_SSD"
+  maintenance_window_day     = 6 ##Saturday
+  maintenance_window_hour    = 23 ##11:00 AM ( to be in the range (0 - 23))
+  /* Backup */
+  point_in_time_recovery_enabled = true
+  enabled                   = true
+  location                  = "us" ##trying with multiregion.
+  retained_backups          = 14
+  transaction_log_retention_days = 7
+  retention_unit = "COUNT"
+  ipv4_enabled = false
+  db_name = "tempdb"
+  user_name = "argonaut"
+  user_password = "argonautadmin123#"
+  deletion_protection = false
+  ##Max limit to 10
+  ## To Create replicas, Backup and binary logging should be enabled. 
+  read_replicas = [
+    {
+      name = "0"
+      tier = "db-custom-2-7680"
+      #The automatic storage increase setting of a primary instance automatically applies to any read replicas of that instance. 
+      #The automatic storage increase setting cannot be independently set for read replicas.
+      disk_type = "PD_SSD"
+      disk_autoresize = false
+      disk_autoresize_limit = 500
+      database_flags = []
+      disk_size = 200
+      zone = "us-east4-b"
+      user_labels = {
+        "env" : "dev",
+        "type" : "postgresql-private-db-primary-replica"
+      },
+      encryption_key_name = null
+    }
+  ]
+}
+
+
 
 // Master
 output "instance_name" {

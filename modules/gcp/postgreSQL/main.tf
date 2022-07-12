@@ -65,9 +65,9 @@ locals {
   }]): []
 }
 
-module "mysql" {
+module "postgresql" {
     depends_on = [module.private-service-access]
-    source = "GoogleCloudPlatform/sql-db/google//modules/mysql"
+    source = "GoogleCloudPlatform/sql-db/google//modules/postgresql"
     version = "11.0.0"
     project_id = var.project_id
     region = var.region
@@ -78,10 +78,10 @@ module "mysql" {
     availability_type = var.availability_type
     ip_configuration = local.ip_configuration
     backup_configuration = {
-        binary_log_enabled             = var.binary_log_enabled
         enabled                        = var.enabled
         start_time                     = var.start_time
         location                       = var.location
+        point_in_time_recovery_enabled = var.point_in_time_recovery_enabled
         transaction_log_retention_days = var.transaction_log_retention_days
         retained_backups               = var.retained_backups
         retention_unit                 = var.retention_unit
@@ -101,5 +101,6 @@ module "mysql" {
     user_labels = var.user_labels
     pricing_plan = var.pricing_plan
     read_replicas = local.read_replicas
+    insights_config = var.insights_config
     # google_compute_global_address_name = var.db_connectivity_type == "private" ? module.private-service-access[0].google_compute_global_address_name : null
 }
