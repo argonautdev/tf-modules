@@ -3,6 +3,7 @@ module "s3_bucket" {
 
   bucket = var.name
 
+  force_destroy        = var.force_destroy
   acl = var.visibility == "public" ? "public-read" : "private"
 
   block_public_acls       = var.visibility == "public" ? false : true
@@ -13,5 +14,6 @@ module "s3_bucket" {
   versioning = {
     enabled = true
   }
+
 
 }
