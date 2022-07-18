@@ -391,6 +391,67 @@ module "postgresql" {
 }
 
 
+module "gcs_bucket" {
+  source            = "./modules/gcp/gcs"
+  project_id        = "playground-351903"
+  region            = "us-east4"
+  names             = ["demo-bucket-123"]
+  location          = "US-EAST4"
+  storage_class = "NEARLINE"
+  force_destroy = {
+    demo-bucket-123 = true
+  }
+  versioning = {
+    demo-bucket-123 = true
+  }
+  labels = {
+      "env" : "dev",
+      "type" : "logstoragebucket"
+  }  
+  lifecycle_rules = [
+  {
+    action = {
+      "type" :  "SetStorageClass",
+      "storage_class": "COLDLINE"
+    }  
+    condition = {
+      "age": 30
+      "with_state": "LIVE"
+      
+    }
+  },
+  {
+    action = {
+      "type" :  "SetStorageClass",
+      "storage_class": "ARCHIVE"
+    }  
+    condition = {
+      "age": 90
+      "with_state": "LIVE"
+      "matches_storage_class": "COLDLINE"
+    }
+  },
+  {
+    action = {
+      "type" :  "Delete"
+    }  
+    condition = {
+      # {"age": 365, "isLive": true, "matchesStorageClass": ["ARCHIVE"]}
+      "age": 365,
+      "with_state": "LIVE", ##Current Versions of Objects
+      "matches_storage_class": "ARCHIVE"
+    }
+  }]
+  ##Permissions testing
+  set_creator_roles = true
+  bucket_creators = {
+    demo-bucket-123 = "serviceAccount:storage-service-permission-tes@playground-351903.iam.gserviceaccount.com"
+  }
+  set_viewer_roles = true
+  bucket_viewers = {
+    demo-bucket-123 = "serviceAccount:storage-service-permission-tes@playground-351903.iam.gserviceaccount.com"
+  }
+}
 
 // Master
 output "instance_name" {
