@@ -40,7 +40,7 @@ variable "instance_class" {
 
 variable "cluster_size" {
   type        = number
-  default     = 3
+  default     = 1
   description = "Number of DB instances to create in the cluster"
 }
 
