@@ -15,6 +15,7 @@ variable "name" {
 variable "cidr_block" {
   description = "CIDR block for VPC"
   type        = string
+  default     = "10.0.0.0/16"
 }
 
 variable "enable_vpn_gateway" {
@@ -90,4 +91,34 @@ variable "database_subnet_cidr_blocks" {
 variable "elasticache_subnet_cidr_blocks" {
   description = "Available cidr blocks for elasticache subnets."
   type        = list(string)
+}
+
+variable "enable_flow_log" {
+  description = "Whether or not to enable VPC Flow Logs"
+  type        = bool
+  default     = false
+}
+
+variable "create_flow_log_cloudwatch_log_group" {
+  description = "Whether to create CloudWatch log group for VPC Flow Logs"
+  type        = bool
+  default     = false
+}
+
+variable "create_flow_log_cloudwatch_iam_role" {
+  description = "Whether to create IAM role for VPC Flow Logs"
+  type        = bool
+  default     = false
+}
+
+variable "flow_log_traffic_type" {
+  description = "The type of traffic to capture. Valid values: ACCEPT, REJECT, ALL."
+  type        = string
+  default     = "ALL"
+}
+
+variable "flow_log_max_aggregation_interval" {
+  description = "The maximum interval of time during which a flow of packets is captured and aggregated into a flow log record. Valid Values: `60` seconds or `600` seconds."
+  type        = number
+  default     = 600
 }
