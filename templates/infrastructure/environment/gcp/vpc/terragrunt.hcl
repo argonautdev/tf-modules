@@ -20,7 +20,7 @@ inputs = {
   region       = "us-east4"
   network_name = "{{.Spec.network_name}}"
   description  = "{{.Spec.description}}"
-  subnets = [{{ range $subnet := .Spec.Subnets }}
+  subnets = [{{ range $subnet := .Spec.subnets }}
     {
       subnet_name           = "{{$subnet.subnet_name}}"
       subnet_ip             = "{{$subnet.subnet_ip}}"
