@@ -17,7 +17,7 @@ inputs = {
     "argonaut.dev/environment" = "{{.Environment.Name}}"
   }
   project_id   = "{{.Spec.project_id}}"
-  region       = "us-east4"
+  region       = "{{.Spec.region}}"
   network_name = "{{.Spec.network_name}}"
   description  = "{{.Spec.description}}"
   subnets = [{{ range $subnet := .Spec.subnets }}
