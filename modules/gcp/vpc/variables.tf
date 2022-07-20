@@ -63,5 +63,9 @@ variable "router_description" {
 #   - secondary_ip_range_names (string, optional): List of the secondary ranges of the subnetwork that are allowed to use NAT.
 variable "nats" {
   description = "NATs to deploy on this router."
-  type        = list(object({ name = string,  source_subnetwork_ip_ranges_to_nat = string, nat_ip_allocate_option = string }))
+  type = list(object({
+    name                               = string,
+    source_subnetwork_ip_ranges_to_nat = string,
+    nat_ip_allocate_option             = string,
+  }))
 }
