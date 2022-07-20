@@ -31,7 +31,7 @@ module "vpc" {
     }
   ]
 
-  ##CloudNat & Router Info
+  ##CloudNat&Router Info
   router_description = "Router used by cloud nat"
   router_name        = "dev-microservices-new-vpc-router"
   nats = [
