@@ -11,5 +11,5 @@ output "rds_instance_port" {
 output "rds_instance_username" {
   description = "The master username for the database"
   value       = module.db.db_instance_username
-  sensitive = true
+  sensitive   = true
 }

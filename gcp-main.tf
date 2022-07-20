@@ -10,7 +10,7 @@ module "vpc" {
       subnet_ip             = "10.10.0.0/16"
       subnet_region         = "us-east4"
       subnet_private_access = false ##Setting to false as it should be act as public subnet
-      subnet_flow_logs      = "false"
+      subnet_flow_logs      = false
       description           = "Public subnets for running application frontend servers"
     },
     {
@@ -18,7 +18,7 @@ module "vpc" {
       subnet_ip             = "10.20.0.0/16"
       subnet_region         = "us-east4"
       subnet_private_access = true
-      subnet_flow_logs      = "false"
+      subnet_flow_logs      = false
       description           = "Private subnets for running application backend servers"
     },
     {
@@ -26,7 +26,7 @@ module "vpc" {
       subnet_ip             = "10.30.0.0/16"
       subnet_region         = "us-east4"
       subnet_private_access = true
-      subnet_flow_logs      = "false"
+      subnet_flow_logs      = false
       description           = "Subnets for running database. for instance, Cloud SQL"
     }
   ]
@@ -37,6 +37,43 @@ module "vpc" {
   nats = [
     {
       "name" : "dev-microservices-new-vpc-nat",
+      "nat_ip_allocate_option" : "AUTO_ONLY",
+      "source_subnetwork_ip_ranges_to_nat" : "ALL_SUBNETWORKS_ALL_IP_RANGES"
+  }]
+}
+
+
+module "vpc1" {
+  source       = "./modules/gcp/vpc"
+  project_id   = "playground-351903"
+  region       = "us-east4"
+  network_name = "dev-microservices-gke-vpc"
+  description  = "custom vpc for kubernetes engine workloads"
+  subnets = [
+    {
+      subnet_name           = "dev-microservices-gke-public-subnet"
+      subnet_ip             = "10.10.0.0/16"
+      subnet_region         = "us-east4"
+      subnet_private_access = false ##Setting to false as it should be act as public subnet
+      subnet_flow_logs      = false
+      description           = "Public subnets for running application frontend servers"
+    },
+    {
+      subnet_name           = "dev-microservices-gke-private-subnets"
+      subnet_ip             = "10.20.0.0/16"
+      subnet_region         = "us-east4"
+      subnet_private_access = true
+      subnet_flow_logs      = true
+      description           = "Private subnets for running application backend servers"
+    }
+  ]
+
+  ##CloudNat & Router Info
+  router_description = "Router used by cloud nat"
+  router_name        = "dev-microservices-gke-vpc-router"
+  nats = [
+    {
+      "name" : "dev-microservices-gke-vpc-nat",
       "nat_ip_allocate_option" : "AUTO_ONLY",
       "source_subnetwork_ip_ranges_to_nat" : "ALL_SUBNETWORKS_ALL_IP_RANGES"
   }]

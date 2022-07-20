@@ -1,10 +1,10 @@
 variable "aws_region" {
-  default = "us-east-1"
+  default     = "us-east-1"
   description = "s3 bucket region"
 }
 
 variable "visibility" {
-  default = "private"
+  default     = "private"
   description = "Switch bucket access to be public / private"
 }
 
@@ -26,7 +26,7 @@ variable "error_document" {
 
 variable "website" {
   description = "website info to be filled in policy of s3"
-  type = string
+  type        = string
 }
 
 variable "default_tags" {

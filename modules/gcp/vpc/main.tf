@@ -5,7 +5,7 @@ module "vpc" {
   network_name     = var.network_name
   description      = var.description
   subnets          = var.subnets
-  secondary_ranges = var.secondary_ranges
+  # secondary_ranges = var.secondary_ranges
 }
 
 ################################

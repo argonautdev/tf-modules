@@ -15,5 +15,5 @@ terraform {
 provider "google" {
   # credentials = "${file("${path.module}/../svc-account.json")}"
   project = var.project_id
-  region  = var.region
+  # region  = var.region
 }

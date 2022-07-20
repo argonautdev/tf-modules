@@ -27,7 +27,7 @@ variable "aws_region" {
 
 variable "cluster_size" {
   type        = number
-  default    = 1
+  default     = 1
   description = "Number of nodes in cluster"
 }
 
@@ -38,19 +38,19 @@ variable "instance_type" {
 
 variable "family" {
   type        = string
-  default = "redis6.x"
+  default     = "redis6.x"
   description = "Redis family"
 }
 
 variable "engine_version" {
   type        = string
-  default = "6.x"
+  default     = "6.x"
   description = "Redis engine version"
 }
 
 variable "at_rest_encryption_enabled" {
   type        = bool
-  default = true
+  default     = true
   description = "Enable encryption at rest"
 }
 
@@ -66,7 +66,7 @@ variable "transit_encryption_enabled" {
 
 variable "cloudwatch_metric_alarms_enabled" {
   type        = bool
-  default = true
+  default     = true
   description = "Boolean flag to enable/disable CloudWatch metrics alarms"
 }
 
@@ -74,13 +74,13 @@ variable "cloudwatch_metric_alarms_enabled" {
 variable "vpc" {
   description = "All vpc info"
   type = object({
-    name = string
-    vpc_id   = string
-    public_subnets = list(string)
-    private_subnets = list(string)
-    database_subnets = list(string)
+    name                      = string
+    vpc_id                    = string
+    public_subnets            = list(string)
+    private_subnets           = list(string)
+    database_subnets          = list(string)
     default_security_group_id = string
-    vpc_cidr_block = string
+    vpc_cidr_block            = string
   })
 }
 

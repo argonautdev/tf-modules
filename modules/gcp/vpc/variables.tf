@@ -10,19 +10,20 @@ variable "region" {
 
 variable "network_name" {
   description = "The name of the network being created"
+  type        = string
 }
 
 variable "subnets" {
-  type        = list(map(string))
+  type        = list(object({ subnet_name = string, subnet_ip = string, subnet_region = string, subnet_private_access = bool, subnet_flow_logs = bool, description = string }))
   default     = []
   description = "The list of subnets being created"
 }
 
-variable "secondary_ranges" {
-  type        = map(list(object({ range_name = string, ip_cidr_range = string })))
-  description = "Map of secondaryrange in the cluster's subnetwork"
-  default     = {}
-}
+# variable "secondary_ranges" {
+#   type        = map(list(object({ range_name = string, ip_cidr_range = string })))
+#   description = "Map of secondaryrange in the cluster's subnetwork"
+#   default     = {}
+# }
 
 variable "description" {
   type        = string
@@ -62,6 +63,5 @@ variable "router_description" {
 #   - secondary_ip_range_names (string, optional): List of the secondary ranges of the subnetwork that are allowed to use NAT.
 variable "nats" {
   description = "NATs to deploy on this router."
-  type        = any
-  default     = []
+  type        = list(object({ name = string,  source_subnetwork_ip_ranges_to_nat = string, nat_ip_allocate_option = string }))
 }
