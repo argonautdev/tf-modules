@@ -79,7 +79,7 @@ inputs = {
   node_pools_tags = {
   {{range $node_pool_name, $node_pool_tags := .Spec.node_pools_tags}}"
     {{ $node_pool_name }}" = [
-      {{ range $node_pool_tag := range $node_pool_tags }}"{{$node_pool_tag}}",
+      {{ range $node_pool_tag := $node_pool_tags }}"{{$node_pool_tag}}",
       {{ end}}
     ],
   {{end}}
