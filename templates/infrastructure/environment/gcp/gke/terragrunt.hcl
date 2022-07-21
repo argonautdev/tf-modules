@@ -57,7 +57,7 @@ inputs = {
     {{ end }}
     },{{ end }}
   ]
-  {{ ne .Spec.remove_default_node_pool nil }}remove_default_node_pool={{.Spec.remove_default_node_pool}}{{ end }}
+  {{ if ne .Spec.remove_default_node_pool nil }}remove_default_node_pool={{.Spec.remove_default_node_pool}}{{ end }}
   node_pools_labels = {
     {{range $node_pool_name, $node_pool_labels := .Spec.node_pools_labels}}"{{ $node_pool_name }}" = {
       {{range $label_key, $label_value := $node_pool_labels}}"{{$label_key}}" = "{{$label_value}}",
