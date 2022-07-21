@@ -35,10 +35,14 @@ inputs = {
   subnetwork_cidr            = "{{.Spec.subnetwork_cidr}}"
   pod_subnet_cidr_block      = "{{.Spec.pod_subnet_cidr_block}}"
   service_subnet_cidr_block  = "{{.Spec.service_subnet_cidr_block}}"
-  enable_private_endopoint   = {{.Spec.enable_private_endopoint}}
-  enable_private_nodes       = {{.Spec.enable_private_nodes}}
+  {{ if ne .Spec.enable_private_endopoint nil }}enable_private_endopoint = {{.Spec.enable_private_endopoint}}{{ end }}
+  {{ if ne .Spec.enable_private_nodes nil }}enable_private_nodes = {{.Spec.enable_private_nodes}}{{ end }}
   master_authorized_networks = [
-    {{ range $master_authorized_network := .Spec.master_authorized_networks }}"{{$master_authorized_network}}",
+    {{ range $master_authorized_network := .Spec.master_authorized_networks }}{
+      {{range $key, $value := $master_authorized_network }}
+        "$key" = "$value",
+      {{end}}
+    },
     {{ end }}
   ]
   master_ipv4_cidr_block = "{{.Spec.master_ipv4_cidr_block}}"
