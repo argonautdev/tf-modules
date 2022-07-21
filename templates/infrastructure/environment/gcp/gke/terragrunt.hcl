@@ -9,7 +9,6 @@ terraform {
 
 dependency "{{.Spec.vpc_id}}" {
   config_path = "../vpc_{{.Spec.vpc_id}}"
-  }
 }
 
 inputs = {
