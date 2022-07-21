@@ -28,11 +28,11 @@ output "zones" {
   value       = module.gke.zones
 }
 
-output "endpoint" {
-#   sensitive   = true
-  description = "Cluster endpoint"
-  value       = module.gke.endpoint
-}
+# output "endpoint" {
+# #   sensitive   = true
+#   description = "Cluster endpoint"
+#   value       = module.gke.endpoint
+# }
 
 output "min_master_version" {
   description = "Minimum master kubernetes version"
@@ -122,11 +122,11 @@ output "peering_name" {
 
 ##VPC SubnetInfo
 output "subnetowrk_id" {
-    description = "identifier of the created subnetwork resource"
-    value = google_compute_subnetwork.cluster_subnet.id
+  description = "identifier of the created subnetwork resource"
+  value       = google_compute_subnetwork.cluster_subnet.id
 }
 
 output "subnetwork_self_link" {
-    description = "The URI of the created resource."
-    value = google_compute_subnetwork.cluster_subnet.self_link
+  description = "The URI of the created resource."
+  value       = google_compute_subnetwork.cluster_subnet.self_link
 }
