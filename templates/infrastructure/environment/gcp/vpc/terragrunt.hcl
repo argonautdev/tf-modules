@@ -8,8 +8,7 @@ terraform {
 }
 
 inputs = {
-  source       = "./modules/gcp/vpc"
-  default_tags = {
+  default_labels= {
     "argonaut.dev/id"        = "{{.Spec.id}}"
     "argonaut.dev/name"        = "{{.Spec.name}}"
     "argonaut.dev/type"        = "VPC"
