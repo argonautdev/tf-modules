@@ -130,7 +130,7 @@ variable "initial_node_count" {
   default     = 1
 }
 
-variable "cluster_resource_labels" {
+variable "labels" {
   type        = map(string)
   description = "The GCE resource labels (a map of key/value pairs) to be applied to the cluster"
   default     = {}
