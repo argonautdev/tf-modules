@@ -7,3 +7,8 @@ terraform {
   source = "github.com/argonautdev/tf-modules.git//modules/gcp/gke?ref={{.RefVersion}}"
 }
 
+dependency "{{.Spec.vpc_id}}" {
+  config_path = "../vpc_{{.Spec.vpc_id}}"
+  }
+}
+
