@@ -42,7 +42,7 @@ inputs = {
     {{ end }}
   ]
   master_ipv4_cidr_block = "{{.Spec.master_ipv4_cidr_block}}"
-  {{ if .Spec.http_load_balancing }}http_load_balancing={{.Spec.http_load_balancing}{{end}}}
+  {{ if .Spec.http_load_balancing }}http_load_balancing={{.Spec.http_load_balancing}{{end}}
   {{ if .Spec.filestore_csi_driver}}filestore_csi_driver={{.Spec.filestore_csi_driver}}{{end}}
   {{ if .Spec.enable_vertical_pod_autoscaling}}enable_vertical_pod_autoscaling={{.Spec.enable_vertical_pod_autoscaling}}{{end}}
   {{ if .Spec.horizontal_pod_autoscaling }}horizontal_pod_autoscaling={{.Spec.horizontal_pod_autoscaling}}{{end}}
