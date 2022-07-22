@@ -1,5 +1,5 @@
 module "redis" {
-  source = "cloudposse/elasticache-redis/aws"
+  source  = "cloudposse/elasticache-redis/aws"
   version = "v0.40.0"
   // version = "v0.41.2"
 
@@ -37,11 +37,11 @@ module "redis" {
       description              = "Allow all inbound traffic from trusted Security Groups"
     },
     {
-      type        = "ingress"
-      from_port   = 0
-      to_port     = 6379
-      protocol    = "-1"
-      cidr_blocks = ["10.0.0.0/8", "172.0.0.0/8", "192.0.0.0/8"]
+      type                     = "ingress"
+      from_port                = 0
+      to_port                  = 6379
+      protocol                 = "-1"
+      cidr_blocks              = ["10.0.0.0/8", "172.0.0.0/8", "192.0.0.0/8"]
       source_security_group_id = null
       // self        = null
       description = "Allow connections from within the VPC"

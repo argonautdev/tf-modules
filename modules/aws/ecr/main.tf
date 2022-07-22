@@ -23,7 +23,7 @@ module "ecr" {
   source  = "lgallard/ecr/aws"
   version = "0.3.2"
 
-  count                = length(local.repositories)
+  count = length(local.repositories)
 
   name                 = local.repositories[count.index].name
   scan_on_push         = local.repositories[count.index].scan_on_push
@@ -49,11 +49,11 @@ resource "aws_ecr_replication_configuration" "default" {
       dynamic "destination" {
         for_each = var.cross_replication
         content {
-          region  = destination.value.region
+          region      = destination.value.region
           registry_id = data.aws_caller_identity.current.account_id
         }
       }
-      
+
     }
   }
 }

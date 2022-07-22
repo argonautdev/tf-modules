@@ -27,6 +27,6 @@ variable "cross_replication" {
   type = list(object({
     region = string
   }))
-  default = []
+  default     = []
   description = "All cross replication inputs"
 }

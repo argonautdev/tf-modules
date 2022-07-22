@@ -35,7 +35,7 @@ resource "aws_security_group_rule" "ingress_security_groups" {
   security_group_id        = join("", aws_security_group.default.*.id)
 }
 
- resource "aws_security_group_rule" "ingress_cidr_blocks" {
+resource "aws_security_group_rule" "ingress_cidr_blocks" {
   count             = module.this.enabled && var.vpc_enabled && length(var.allowed_cidr_blocks) > 0 ? 1 : 0
   description       = "Allow inbound traffic from CIDR blocks"
   type              = "ingress"
@@ -211,7 +211,7 @@ resource "aws_elasticsearch_domain" "default" {
 
 data "aws_iam_policy_document" "default" {
   # count = module.this.enabled && (length(var.iam_authorizing_role_arns) > 0 || length(var.iam_role_arns) > 0) ? 1 : 0
-  count = 1 
+  count = 1
 
   statement {
     effect = "Allow"
