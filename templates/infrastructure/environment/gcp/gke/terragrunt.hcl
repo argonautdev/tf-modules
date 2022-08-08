@@ -15,7 +15,7 @@ inputs = {
   default_labels = {
     "argonaut-dev___id"          = "{{.Spec.id}}"
     "argonaut-dev___name"        = "{{.Spec.name}}"
-    "argonaut-dev___type"        = "GKE"
+    "argonaut-dev___type"        = "gke"
     "argonaut-dev___manager"     = "argonaut-dev"
     "argonaut-dev___environment" = "{{.Environment.Name}}"
   }
