@@ -45,6 +45,7 @@ module "gke" {
   initial_node_count              = var.initial_node_count ##How many instances should be launched in each zone
   node_pools                      = var.node_pools
   remove_default_node_pool        = var.remove_default_node_pool
+  cluster_resource_labels = merge(var.default_labels, var.labels)
   //kubernetes_version = var.kubernetes_version
   /*Node Pool taints, Labels, tags */
   node_pools_labels         = var.node_pools_labels

@@ -107,7 +107,7 @@ module "kubernetes_engine" {
   horizontal_pod_autoscaling = true
   /* labels */
   /* Labels for organizing resources and can be used in finding resource billing */
-  cluster_resource_labels    = {
+  labels    = {
       env      = "dev"
       type     = "public-gke-cluster"
   }
@@ -165,6 +165,104 @@ module "kubernetes_engine" {
   #format  = list(object({ cidr_block = string, display_name = string }))
   master_authorized_networks = []
   
+}
+
+module "kubernetes_engine_new" {
+  source                      = "./modules/gcp/gke"
+  project_id                  = "playground-351903"
+  region                      = "us-east4"
+  network_name                = "dev-microservices-new-vpc"
+  cluster_name                = "dev-cluster-new"
+  description                 = "Public and Private endpoint cluster for running containerized application that makes up the application"
+  cluster_node_zones          = ["us-east4-a"]
+  /*Networking Details*/
+  subnetwork_name             = "dev-cluster-new-subnet"
+  subnetwork_cidr             = "10.50.0.0/16"
+  pod_subnet_name             = "dev-cluster-new-pod-subnet"
+  pod_subnet_cidr_block       = "10.51.0.0/16"
+  service_subnet_name         = "dev-cluster-new-services-subnet"
+  service_subnet_cidr_block   = "10.52.0.0/16"
+  ## The IP range in CIDR notation used for the hosted master network
+  ## If you ignore the parameter by default it will reserve "10.0.0.0/28" 
+  ## If we use same vpc next time for creating another cluster, it fails because 
+  # https://docs.google.com/document/d/1WF5bJobHc1C_g6Eb09rYQNzUw497YTpTEHpxub_Mwws/edit ---> Look the image here in google doc
+  master_ipv4_cidr_block      = "10.4.0.0/28" 
+  /*Addons*/
+  http_load_balancing         = false
+  filestore_csi_driver        = true
+  enable_vertical_pod_autoscaling = false
+  horizontal_pod_autoscaling = true
+  /* labels */
+  /* Labels for organizing resources and can be used in finding resource billing */
+  labels    = {
+      env      = "dev"
+      type     = "public-gke-cluster"
+  }
+  default_labels = {
+      managedby = "argonaut"
+      cluster_type = "public_and_private"
+  }
+  initial_node_count          = 1
+  node_pools = [
+    {
+      name            = "applications"
+      machine_type    = "e2-medium"
+      autoscaling     = true
+      min_count       = 1
+      max_count       = 1
+      disk_size_gb    = 50
+      disk_type       = "pd-balanced"
+      image_type      = "COS_CONTAINERD"
+      enable_gcfs     = false
+      auto_repair     = true
+      auto_upgrade    = true
+      preemptible     = true
+    },
+    {
+      name            = "optional-setting"
+      machine_type    = "e2-medium"
+      autoscaling     = false
+      disk_size_gb    = 50
+      disk_type       = "pd-balanced"
+      image_type      = "COS_CONTAINERD"
+      enable_gcfs     = false
+      auto_upgrade    = false
+    }
+    # {
+    #   name            = "monitoring"
+    #   machine_type    = "e2-medium"
+    #   node_locations  = "us-east4-a,us-east4-b,us-east4-c"
+    #   autoscaling     = true
+    #   min_count       = 1
+    #   max_count       = 5
+    #   local_ssd_count = 0
+    #   disk_size_gb    = 100
+    #   disk_type       = "pd-balanced"
+    #   image_type      = "COS_CONTAINERD"
+    #   enable_gcfs     = false
+    #   auto_repair     = true
+    #   auto_upgrade    = true
+    #   preemptible     = false
+    # }
+  ]
+  node_pools_labels = {
+    monitoring = {
+      workload_type = "monitoring"
+    }
+  }
+  node_pools_taints = {
+    monitoring = [{
+      key    = "workload_type"
+      value  = "monitoring"
+      effect = "NO_SCHEDULE"
+    }, ]
+  }
+  /*PrivateCluster Specifics*/
+  enable_private_endpoint = false ##Making Master API endpoint public
+  enable_private_nodes    = true
+  /* Note: When you Pass "enable_private_endpoint" to true you must pass the value for below variable */
+  #format  = list(object({ cidr_block = string, display_name = string }))
+  master_authorized_networks = []
 }
 
 ##Private GKE Cluster
@@ -236,7 +334,7 @@ module "kubernetes_private_engine_cluster" {
       effect = "NO_SCHEDULE"
     }, ]
   }
-  cluster_resource_labels    = {
+  labels    = {
       env      = "dev"
       type     = "private-gke-cluster"
   }

@@ -14,16 +14,17 @@ variable "network_name" {
 }
 
 variable "subnets" {
-  type        = list(object({ subnet_name = string, subnet_ip = string, subnet_region = string, subnet_private_access = bool, subnet_flow_logs = bool, description = string }))
+  type        = list(object({ 
+      subnet_name = string, 
+      subnet_ip = string, 
+      subnet_region = string, 
+      subnet_private_access = bool, 
+      subnet_flow_logs = bool, 
+      description = string
+  }))
   default     = []
   description = "The list of subnets being created"
 }
-
-# variable "secondary_ranges" {
-#   type        = map(list(object({ range_name = string, ip_cidr_range = string })))
-#   description = "Map of secondaryrange in the cluster's subnetwork"
-#   default     = {}
-# }
 
 variable "description" {
   type        = string
