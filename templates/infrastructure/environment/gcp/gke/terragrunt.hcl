@@ -13,11 +13,11 @@ dependency "{{.Spec.vpc_id}}" {
 
 inputs = {
   default_labels = {
-    "argonaut.dev/id"        = "{{.Spec.id}}"
-    "argonaut.dev/name"        = "{{.Spec.name}}"
-    "argonaut.dev/type"        = "GKE"
-    "argonaut.dev/manager"     = "argonaut.dev"
-    "argonaut.dev/environment" = "{{.Environment.Name}}"
+    "argonaut-dev___id"          = "{{.Spec.id}}"
+    "argonaut-dev___name"        = "{{.Spec.name}}"
+    "argonaut-dev___type"        = "GKE"
+    "argonaut-dev___manager"     = "argonaut.dev"
+    "argonaut-dev___environment" = "{{.Environment.Name}}"
   }
   // project_id   = "{{.Spec.project_id}}"
   // cluster_name = "{{.Spec.cluster_name}}"
