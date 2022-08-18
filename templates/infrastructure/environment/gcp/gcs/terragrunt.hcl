@@ -16,7 +16,7 @@ inputs = {
     "argonaut-id"        = "{{.Spec.id}}"
     "argonaut-name"        = "{{.Spec.name}}"
     "argonaut-type"        = "GCS"
-    "argonaut-manager"     = "argonaut.dev"
+    "argonaut-manager"     = "argonautdev"
     "argonaut-environment" = "{{.Environment.Name}}"
   }
   
