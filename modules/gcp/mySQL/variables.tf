@@ -38,8 +38,8 @@ variable "vpc_network_name" {
 }
 
 
-/* When we use want to use private DB we should actually reservice /16 Internal IP for service provider */ 
-/* The Service provider then create subnet on their end and establish peering with our vpc and the good vpc */
+/* When we want us private DB we should actually reservice /16 Internal IP for service provider */ 
+/* The Service provider then create subnet on their end and establish peering with our vpc and the google vpc */
 /* Note: What ever the IP we reserve here and can't be used with subnetwork or with secondary ranges anymore */
 variable "address" {
   description = "internal cidrblock with in the VPC to use by service provider VPC"
@@ -154,6 +154,12 @@ variable "user_labels" {
   description = "The key/value labels for the master instances."
 }
 
+variable "default_labels" {
+  type        = map(string)
+  default     = {}
+  description = "The key/value labels for the master instances."
+}
+
 /* Backup Configuration */
 
 variable "binary_log_enabled" {
@@ -223,7 +229,7 @@ variable "retention_unit" {
 
 /* IP Configuration */
 
-/* If connectivity == private */
+/* If connectivity == public */
 variable "ipv4_enabled" {
    type = bool
    description = "set to true, if you would want to create public sql instance"
@@ -235,6 +241,10 @@ variable "ipv4_enabled" {
 /* name = A name for this whitelist entry */
 /* value = A CIDR notation IPv4 or IPv6 address that is allowed to access this instance. */
 variable "authorized_networks" {
+    type = list(object({ 
+        name = string, 
+        value = string 
+    }))
     default = []
     description = "whitelist entrys"
 } 
@@ -396,4 +406,3 @@ variable "enable_default_user" {
   type        = bool
   default     = true
 }
-
