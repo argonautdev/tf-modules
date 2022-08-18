@@ -13,11 +13,11 @@ dependency "{{.Spec.vpc_id}}" {
 
 inputs = {
   default_labels = {
-    "argonaut.dev/id"        = "{{.Spec.id}}"
-    "argonaut.dev/name"        = "{{.Spec.name}}"
-    "argonaut.dev/type"        = "MYSQL"
-    "argonaut.dev/manager"     = "argonaut.dev"
-    "argonaut.dev/environment" = "{{.Environment.Name}}"
+    "argonaut-id"        = "{{.Spec.id}}"
+    "argonaut-name"        = "{{.Spec.name}}"
+    "argonaut-type"        = "MYSQL"
+    "argonaut-manager"     = "argonaut.dev"
+    "argonaut-environment" = "{{.Environment.Name}}"
   }
   
   vpc_network_name               = dependency.{{ .Spec.vpc_id }}.outputs.network_name
