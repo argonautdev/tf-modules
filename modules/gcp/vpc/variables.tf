@@ -70,3 +70,13 @@ variable "nats" {
     nat_ip_allocate_option             = string,
   }))
 }
+
+
+#####################################################################################
+# Reserved global compute address ( Internal ) Prefix length                       #
+#####################################################################################
+variable "prefix_length" {
+  description = "Prefix length of the IP range reserved for Cloud SQL instances and other Private Service Access services. Defaults to /16"
+  type = string
+  default = 16
+}

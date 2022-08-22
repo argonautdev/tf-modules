@@ -1,4 +1,5 @@
 ##To Work with cloudSQL module, The following APIs should be enabled.
+
 module "enabled_google_apis" {
   source  = "terraform-google-modules/project-factory/google//modules/project_services"
   version = "~> 11.3"
@@ -17,7 +18,6 @@ module "enabled_google_apis" {
 // Data Block for getting VPC self link
 data "google_compute_network" "my-network" {
     name = var.vpc_network_name
-    project = var.project_id
 }
 
 locals {
@@ -45,9 +45,8 @@ locals {
   }]): []
 }
 
-module "mysql" {
-    # depends_on = [google_service_networking_connection.private_service_access]
-    source = "GoogleCloudPlatform/sql-db/google//modules/mysql"
+module "postgresql" {
+    source = "GoogleCloudPlatform/sql-db/google//modules/postgresql"
     version = "11.0.0"
     project_id = var.project_id
     region = var.region
@@ -58,10 +57,10 @@ module "mysql" {
     availability_type = var.availability_type
     ip_configuration = local.ip_configuration
     backup_configuration = {
-        binary_log_enabled             = var.binary_log_enabled
         enabled                        = var.enabled
         start_time                     = var.start_time
         location                       = var.location
+        point_in_time_recovery_enabled = var.point_in_time_recovery_enabled
         transaction_log_retention_days = var.transaction_log_retention_days
         retained_backups               = var.retained_backups
         retention_unit                 = var.retention_unit
@@ -81,4 +80,5 @@ module "mysql" {
     user_labels = merge(var.user_labels, var.default_labels)
     pricing_plan = var.pricing_plan
     read_replicas = local.read_replicas
+    insights_config = var.insights_config
 }
