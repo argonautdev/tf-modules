@@ -15,26 +15,6 @@ module "enabled_google_apis" {
   ]
 }
 
-
-resource "random_id" "suffix" {
-  byte_length = 5
-}
-
-/*IMP: Please read doc carefully about Private service access */
-## https://cloud.google.com/vpc/docs/configure-private-services-access?authuser=1&_ga=2.86912664.-1808336238.1654844270&_gac=1.153215690.1656639899.CjwKCAjwk_WVBhBZEiwAUHQCmQzQRuTvjYfO5ZBs1IQh0OVGfrsVSqUAoisb3j932g0yfSPw4S5qNhoC1kMQAvD_BwE
-
-/* Allocate IP Address range */
-module "private-service-access" {
-  count = var.db_connectivity_type == "private" ? 1: 0 
-  source      = "GoogleCloudPlatform/sql-db/google//modules/private_service_access"
-  version = "11.0.0"
-  project_id  = var.project_id
-  vpc_network = var.vpc_network_name
-  address          = var.address
-  description = "reserverd ${var.address} from ${var.vpc_network_name}"
-  prefix_length = var.prefix_length
-}
-
 // Data Block for getting VPC self link
 data "google_compute_network" "my-network" {
     name = var.vpc_network_name
@@ -43,7 +23,7 @@ data "google_compute_network" "my-network" {
 locals {
   ip_configuration = {
       ipv4_enabled = var.db_connectivity_type == "private" ? false : true
-      allocated_ip_range = var.db_connectivity_type == "private" ? module.private-service-access[0].google_compute_global_address_name : null
+      allocated_ip_range = var.db_connectivity_type == "private" ? "google-managed-services-${var.vpc_network_name}": null
       authorized_networks = var.authorized_networks
       //The VPC network from which the Cloud SQL instance is accessible for private IP
       private_network = var.db_connectivity_type == "private" ? data.google_compute_network.my-network.self_link : null
@@ -66,7 +46,6 @@ locals {
 }
 
 module "postgresql" {
-    depends_on = [module.private-service-access]
     source = "GoogleCloudPlatform/sql-db/google//modules/postgresql"
     version = "11.0.0"
     project_id = var.project_id
@@ -98,9 +77,8 @@ module "postgresql" {
     additional_users = var.additional_users
     maintenance_window_day = var.maintenance_window_day
     maintenance_window_hour = var.maintenance_window_hour
-    user_labels = var.user_labels
+    user_labels = merge(var.user_labels, var.default_labels)
     pricing_plan = var.pricing_plan
     read_replicas = local.read_replicas
     insights_config = var.insights_config
-    # google_compute_global_address_name = var.db_connectivity_type == "private" ? module.private-service-access[0].google_compute_global_address_name : null
 }

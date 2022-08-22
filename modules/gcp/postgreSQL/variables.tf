@@ -154,6 +154,12 @@ variable "user_labels" {
   description = "The key/value labels for the master instances."
 }
 
+variable "default_labels" {
+  type        = map(string)
+  default     = {}
+  description = "The key/value labels for the master instances."
+}
+
 /* Backup Configuration */
 
 variable "point_in_time_recovery_enabled" {
