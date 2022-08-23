@@ -22,5 +22,5 @@ inputs = {
   
   vpc_network_name               = dependency.{{ .Spec.vpc_id }}.outputs.network_name
 
-  bucket_access_level            = {{.Spec.bucket_connectivity_type}}
+  bucket_access_level            = "{{.Spec.bucket_connectivity_type}}"
 }
