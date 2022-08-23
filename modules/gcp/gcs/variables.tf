@@ -37,7 +37,7 @@ variable "location" {
 variable "prefix" {
   description = "Prefix used to generate the bucket name."
   type        = string
-  default = "argonaut"
+  default     = ""
 }
 
 variable "storage_class" {
@@ -86,7 +86,13 @@ variable "bucket_policy_only" {
 variable "labels" {
   description = "A set of key/value label pairs to assign to the bucket."
   type        = map(string)
-  default     = null
+  default     = {}
+}
+
+variable "default_labels" {
+  description = "A set of default key/value label pairs to assign to the bucket."
+  type        = map(string)
+  default     = {}
 }
 
 variable "lifecycle_rules" {
@@ -242,6 +248,14 @@ variable "bucket_storage_admins" {
   default     = {}
 }
 
-
+##Type of access should be given at the bucket level
+variable "bucket_access_level" {
+  validation {
+    condition     = var.bucket_access_level == "public" || var.bucket_access_level == "private"  
+    error_message = "The value choosen is not in the list of ( STANDARD, NEARLINE, COLDLINE or ARCHIVE )."
+  }
+  default = "private"
+  description = "Type of access should be given to the bucket. If it's public, anybody who is on the internet can read objects"
+}
 
 

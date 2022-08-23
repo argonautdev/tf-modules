@@ -27,7 +27,7 @@ module "gcs_bucket" {
   encryption_key_names = var.encryption_key_names
   # encryption = var.encryption
   bucket_policy_only = var.bucket_policy_only
-  labels = var.labels
+  labels = merge(var.labels, var.default_labels)
   lifecycle_rules = var.lifecycle_rules
   cors = var.cors
   website = var.website
@@ -43,4 +43,15 @@ module "gcs_bucket" {
   bucket_hmac_key_admins = var.bucket_hmac_key_admins
   set_storage_admin_roles = var.set_storage_admin_roles
   bucket_storage_admins = var.bucket_storage_admins
+}
+
+resource "google_storage_bucket_iam_binding" "make_bucket_public" {
+  depends_on = [module.gcs_bucket]
+  count = var.bucket_access_level == "public" ? 1: 0
+  bucket = element(var.names, 0) 
+  role        = "roles/storage.objectViewer"
+
+  members = [
+    "allUsers"
+  ]
 }
