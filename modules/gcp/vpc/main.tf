@@ -1,3 +1,16 @@
+module "enabled_google_apis" {
+  source  = "terraform-google-modules/project-factory/google//modules/project_services"
+  version = "~> 11.3"
+
+  project_id                  = var.project_id
+  disable_services_on_destroy = false
+
+  activate_apis = [
+    "servicenetworking.googleapis.com",
+    "compute.googleapis.com"
+  ]
+}
+
 module "vpc" {
   source           = "terraform-google-modules/network/google"
   version          = "~> 4.0"
