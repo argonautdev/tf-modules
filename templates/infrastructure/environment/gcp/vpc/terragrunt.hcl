@@ -9,11 +9,11 @@ terraform {
 
 inputs = {
   default_labels= {
-    "argonaut-dev___id"          = "{{.Spec.id}}"
-    "argonaut-dev___name"        = "{{.Spec.name}}"
-    "argonaut-dev___type"        = "vpc"
-    "argonaut-dev___manager"     = "argonaut-dev"
-    "argonaut-dev___environment" = "{{.Environment.Name}}"
+    "argonaut-id"          = "{{.Spec.id}}"
+    "argonaut-name"        = "{{.Spec.name}}"
+    "argonaut-type"        = "vpc"
+    "argonaut-manager"     = "argonaut-dev"
+    "argonaut-environment" = "{{.Environment.Name}}"
   }
   project_id   = "{{.Spec.project_id}}"
   region       = "{{.Spec.region}}"
