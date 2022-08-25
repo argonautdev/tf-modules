@@ -19,4 +19,5 @@ inputs = {
     "argonaut-manager"     = "argonaut-dev"
     "argonaut-environment" = "{{.Environment.Name}}"
   }
+  network_name               = dependency.{{ .Spec.vpc_id }}.outputs.network_name
 }
