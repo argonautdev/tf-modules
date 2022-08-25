@@ -22,7 +22,7 @@ variable "name" {
 variable "database_version" {
   description = "The database version to use"
   type        = string
-  default    = "POSTGRES_12"
+  default     = "POSTGRES_12"
 }
 
 // DB Connectivity Type //
@@ -38,7 +38,7 @@ variable "vpc_network_name" {
 }
 
 
-/* When we use want to use private DB we should actually reservice /16 Internal IP for service provider */ 
+/* When we use want to use private DB we should actually reservice /16 Internal IP for service provider */
 /* The Service provider then create subnet on their end and establish peering with our vpc and the good vpc */
 /* Note: What ever the IP we reserve here and can't be used with subnetwork or with secondary ranges anymore */
 variable "address" {
@@ -154,64 +154,70 @@ variable "user_labels" {
   description = "The key/value labels for the master instances."
 }
 
+variable "default_labels" {
+  type        = map(string)
+  default     = {}
+  description = "The key/value labels for the master instances."
+}
+
 /* Backup Configuration */
 
 variable "point_in_time_recovery_enabled" {
   description = "True if Point-in-time recovery is enabled."
-  type = bool
-  default = true
+  type        = bool
+  default     = true
 }
 
 variable "binary_log_enabled" {
-    default = true
-    type = bool
-    description = "Bydefault enabling this feature. This allows us to work with poin in time recovery. "
+  default     = true
+  type        = bool
+  description = "Bydefault enabling this feature. This allows us to work with poin in time recovery. "
 }
 
 variable "enabled" {
-    default = true
-    description = "Whether or not backups should be enabled."
+  default     = true
+  description = "Whether or not backups should be enabled."
 }
 
 variable "start_time" {
-    type = string
-    default = ""
-    description = "four hours window for daily automated backups"
+  type        = string
+  default     = ""
+  description = "four hours window for daily automated backups"
 }
 
 /* If it's Multiple region it only supports following */
 /* us, eu, asia */
 variable "location" {
-    type = string
-    description = "backups can be stored in multi-region for DR purpose. can be stored in same region itself."
+  type        = string
+  description = "backups can be stored in multi-region for DR purpose. can be stored in same region itself."
 }
 
 /* Automated Backups can be retained for 365 days */
 variable "retained_backups" {
-    type = number
-    description = "How many number of days that automated backups should be retained. valid values between 7 to 365"
-    default = 14
+  type        = number
+  description = "How many number of days that automated backups should be retained. valid values between 7 to 365"
+  default     = 14
 }
 
 variable "transaction_log_retention_days" {
-    type = number
-    description = "How many number of days that transaction logs should be retained. Must be between 1 and 7"
-    default = 7
+  type        = number
+  description = "How many number of days that transaction logs should be retained. Must be between 1 and 7"
+  default     = 7
 }
 
 variable "retention_unit" {
-    type = string
-    description = "The unit that 'retained_backups' represents. Defaults to COUNT"
-    default = "COUNT"
+  type        = string
+  description = "The unit that 'retained_backups' represents. Defaults to COUNT"
+  default     = "COUNT"
 }
 
 /* IP Configuration */
 
 /* If connectivity == private */
 variable "ipv4_enabled" {
-   type = bool
-   description = "set to true, if you would want to create public sql instance"
-   default = false
+  type        = bool
+  description = "set to true, if you would want to create public sql instance"
+  default     = false
 }
 
 /* Whitlist IP address if type is public */
@@ -219,13 +225,13 @@ variable "ipv4_enabled" {
 /* name = A name for this whitelist entry */
 /* value = A CIDR notation IPv4 or IPv6 address that is allowed to access this instance. */
 variable "authorized_networks" {
-    default = []
-    description = "whitelist entrys"
-} 
+  default     = []
+  description = "whitelist entrys"
+}
 
 variable "require_ssl" {
-    default = false
-    description = "Whether SSL connections over Public IP are enforced or not."
+  default     = false
+  description = "Whether SSL connections over Public IP are enforced or not."
 }
 
 // Read Replicas
@@ -372,3 +378,4 @@ variable "insights_config" {
     record_client_address   = true
   }
 }
+

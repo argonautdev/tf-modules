@@ -14,13 +14,13 @@ variable "network_name" {
 }
 
 variable "subnets" {
-  type        = list(object({ 
-      subnet_name = string, 
-      subnet_ip = string, 
-      subnet_region = string, 
-      subnet_private_access = bool, 
-      subnet_flow_logs = bool, 
-      description = string
+  type = list(object({
+    subnet_name           = string,
+    subnet_ip             = string,
+    subnet_region         = string,
+    subnet_private_access = bool,
+    subnet_flow_logs      = bool,
+    description           = string
   }))
   default     = []
   description = "The list of subnets being created"
@@ -69,4 +69,14 @@ variable "nats" {
     source_subnetwork_ip_ranges_to_nat = string,
     nat_ip_allocate_option             = string,
   }))
+}
+
+
+#####################################################################################
+# Reserved global compute address ( Internal ) Prefix length                       #
+#####################################################################################
+variable "prefix_length" {
+  description = "Prefix length of the IP range reserved for Cloud SQL instances and other Private Service Access services. Defaults to /16"
+  type        = string
+  default     = 16
 }

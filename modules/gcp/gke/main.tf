@@ -1,3 +1,17 @@
+module "enabled_google_apis" {
+  source  = "terraform-google-modules/project-factory/google//modules/project_services"
+  version = "~> 11.3"
+
+  project_id                  = var.project_id
+  disable_services_on_destroy = false
+
+  activate_apis = [
+    "compute.googleapis.com",  ##Compute Storage API
+    "container.googleapis.com" ##Container API
+  ]
+}
+
+
 ##Not Passing Zone Parameter to Module, If We Don't Pass zone, default locations are selected.
 ##Not adding gcp_filestore_csi_driver, gce_persistent_disk_csi_driver_config, We use helm to install these drivers, Addons doesn't provide all the features ( ex: snapshot )  
 ##By Default the following Module Creats 
@@ -24,9 +38,8 @@ resource "google_compute_subnetwork" "cluster_subnet" {
 }
 
 module "gke" {
-  depends_on = [google_compute_subnetwork.cluster_subnet]
-  source     = "terraform-google-modules/kubernetes-engine/google//modules/private-cluster"
-  # source  = local.gke_source
+  depends_on                      = [google_compute_subnetwork.cluster_subnet]
+  source                          = "terraform-google-modules/kubernetes-engine/google//modules/private-cluster"
   version                         = "21.1.0"
   project_id                      = var.project_id
   name                            = var.cluster_name
@@ -45,7 +58,7 @@ module "gke" {
   initial_node_count              = var.initial_node_count ##How many instances should be launched in each zone
   node_pools                      = var.node_pools
   remove_default_node_pool        = var.remove_default_node_pool
-  cluster_resource_labels = merge(var.default_labels, var.labels)
+  cluster_resource_labels         = merge(var.default_labels, var.labels)
   //kubernetes_version = var.kubernetes_version
   /*Node Pool taints, Labels, tags */
   node_pools_labels         = var.node_pools_labels
