@@ -11,6 +11,24 @@ module "enabled_google_apis" {
   ]
 }
 
+resource "null_resource" "previous" {
+  depends_on = [module.enabled_google_apis]
+  provisioner "local-exec" {
+    command = "echo \"waiting for 30 seconds before starting resources creation\""
+  }
+}
+
+resource "time_sleep" "wait_30_seconds" {
+  depends_on = [module.enabled_google_apis]
+  create_duration = "30s"
+}
+
+resource "null_resource" "after" {
+  depends_on = [module.enabled_google_apis, time_sleep.wait_30_seconds]
+  provisioner "local-exec" {
+    command = "echo \"wait is over!!! starting resources creation\""
+  }
+}
 
 ##Not Passing Zone Parameter to Module, If We Don't Pass zone, default locations are selected.
 ##Not adding gcp_filestore_csi_driver, gce_persistent_disk_csi_driver_config, We use helm to install these drivers, Addons doesn't provide all the features ( ex: snapshot )  
@@ -19,6 +37,7 @@ module "enabled_google_apis" {
 ## These secondary subnets are mandatory if we would want to launch GKE cluster in VPC Native Cluster. 
 ## Ref: https://jayendrapatil.com/google-kubernetes-engine-networking/
 resource "google_compute_subnetwork" "cluster_subnet" {
+  depends_on = [null_resource.after]
   name                     = var.subnetwork_name
   ip_cidr_range            = var.subnetwork_cidr
   region                   = var.region
@@ -38,7 +57,7 @@ resource "google_compute_subnetwork" "cluster_subnet" {
 }
 
 module "gke" {
-  depends_on = [google_compute_subnetwork.cluster_subnet]
+  depends_on = [google_compute_subnetwork.cluster_subnet, null_resource.after]
   source     = "terraform-google-modules/kubernetes-engine/google//modules/private-cluster"
   version                         = "21.1.0"
   project_id                      = var.project_id
