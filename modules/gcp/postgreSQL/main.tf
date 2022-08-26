@@ -18,17 +18,17 @@ module "enabled_google_apis" {
 resource "null_resource" "previous" {
   depends_on = [module.enabled_google_apis]
   provisioner "local-exec" {
-    command = "echo \"waiting for 30 seconds before starting resources creation\""
+    command = "echo \"waiting for 60 seconds before starting resources creation\""
   }
 }
 
-resource "time_sleep" "wait_30_seconds" {
+resource "time_sleep" "wait_60_seconds" {
   depends_on = [module.enabled_google_apis, null_resource.previous]
-  create_duration = "30s"
+  create_duration = "60s"
 }
 
 resource "null_resource" "after" {
-  depends_on = [module.enabled_google_apis, time_sleep.wait_30_seconds]
+  depends_on = [module.enabled_google_apis, time_sleep.wait_60_seconds]
   provisioner "local-exec" {
     command = "echo \"wait is over!!! starting resources creation\""
   }
