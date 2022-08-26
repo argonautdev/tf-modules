@@ -39,12 +39,12 @@ resource "google_compute_subnetwork" "cluster_subnet" {
 
 module "gke" {
   depends_on = [google_compute_subnetwork.cluster_subnet]
-  source     = "terraform-google-modules/kubernetes-engine/google//modules/private-cluster"
-  version                         = "21.1.0"
+  source = "github.com/argonautdev/terraform-google-kubernetes-engine//modules/private-cluster?ref=v21.1.1"
   project_id                      = var.project_id
   name                            = var.cluster_name
   description                     = var.description
   region                          = var.region
+  zones                           = var.cluster_node_zones
   network                         = var.network_name
   subnetwork                      = var.subnetwork_name
   ip_range_pods                   = var.pod_subnet_name
