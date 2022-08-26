@@ -14,8 +14,28 @@ module "enabled_google_apis" {
   ]
 }
 
+resource "null_resource" "previous" {
+  depends_on = [module.enabled_google_apis]
+  provisioner "local-exec" {
+    command = "echo \"waiting for 30 seconds before starting resources creation\""
+  }
+}
+
+resource "time_sleep" "wait_30_seconds" {
+  depends_on = [module.enabled_google_apis, null_resource.previous]
+  create_duration = "30s"
+}
+
+resource "null_resource" "after" {
+  depends_on = [module.enabled_google_apis, time_sleep.wait_30_seconds]
+  provisioner "local-exec" {
+    command = "echo \"wait is over!!! starting resources creation\""
+  }
+}
+
 // Data Block for getting VPC self link
 data "google_compute_network" "my-network" {
+    depends_on = [null_resource.after]
     name = var.vpc_network_name
     project = var.project_id
 }
@@ -46,7 +66,7 @@ locals {
 }
 
 module "mysql" {
-    # depends_on = [google_service_networking_connection.private_service_access]
+    depends_on = [null_resource.after]
     source = "GoogleCloudPlatform/sql-db/google//modules/mysql"
     version = "11.0.0"
     project_id = var.project_id
