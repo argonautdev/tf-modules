@@ -13,8 +13,28 @@ module "enabled_google_apis" {
   ]
 }
 
+resource "null_resource" "previous" {
+  depends_on = [module.enabled_google_apis]
+  provisioner "local-exec" {
+    command = "echo \"waiting for 30 seconds before starting resources creation\""
+  }
+}
+
+resource "time_sleep" "wait_30_seconds" {
+  depends_on = [module.enabled_google_apis, null_resource.previous]
+  create_duration = "30s"
+}
+
+resource "null_resource" "after" {
+  depends_on = [module.enabled_google_apis, time_sleep.wait_30_seconds]
+  provisioner "local-exec" {
+    command = "echo \"wait is over!!! starting resources creation\""
+  }
+}
+
 module "gcs_bucket" {
   #source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
+  depends_on = [null_resource.after]
   source = "terraform-google-modules/cloud-storage/google"
   version = "3.2.0"
   project_id  = var.project_id

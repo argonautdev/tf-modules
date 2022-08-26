@@ -1,5 +1,4 @@
 ##To Work with cloudSQL module, The following APIs should be enabled.
-
 module "enabled_google_apis" {
   source  = "terraform-google-modules/project-factory/google//modules/project_services"
   version = "~> 11.3"
@@ -15,8 +14,30 @@ module "enabled_google_apis" {
   ]
 }
 
+
+resource "null_resource" "previous" {
+  depends_on = [module.enabled_google_apis]
+  provisioner "local-exec" {
+    command = "echo \"waiting for 60 seconds before starting resources creation\""
+  }
+}
+
+resource "time_sleep" "wait_60_seconds" {
+  depends_on = [module.enabled_google_apis, null_resource.previous]
+  create_duration = "60s"
+}
+
+resource "null_resource" "after" {
+  depends_on = [module.enabled_google_apis, time_sleep.wait_60_seconds]
+  provisioner "local-exec" {
+    command = "echo \"wait is over!!! starting resources creation\""
+  }
+}
+
+
 // Data Block for getting VPC self link
 data "google_compute_network" "my-network" {
+    depends_on = [null_resource.after]
     name = var.vpc_network_name
 }
 
@@ -46,6 +67,7 @@ locals {
 }
 
 module "postgresql" {
+    depends_on = [null_resource.after]
     source = "GoogleCloudPlatform/sql-db/google//modules/postgresql"
     version = "11.0.0"
     project_id = var.project_id
