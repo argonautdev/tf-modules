@@ -19,6 +19,12 @@ variable "region" {
   description = "Region in which to deploy the resources"
 }
 
+variable "regional" {
+  type        = bool
+  description = "Whether is a regional cluster (zonal cluster if set false. WARNING: changing this after cluster creation is destructive!)"
+  default     = true
+}
+
 variable "cluster_node_zones" {
   type        = list(string)
   description = "The list of zones in which the cluster's nodes are located."
