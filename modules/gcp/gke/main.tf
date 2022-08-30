@@ -36,8 +36,7 @@ resource "null_resource" "after" {
 
 module "gke" {
   depends_on = [null_resource.after]
-  #source = "github.com/argonautdev/terraform-google-kubernetes-engine//modules/private-cluster?ref=v21.1.1"
-  source = "../../../../../argo-public/terraform-google-kubernetes-engine/modules/private-cluster"
+  source = "github.com/argonautdev/terraform-google-kubernetes-engine//modules/private-cluster?ref=v21.1.2"
   project_id                      = var.project_id
   name                            = var.cluster_name
   description                     = var.description
