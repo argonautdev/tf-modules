@@ -130,12 +130,6 @@ variable "kubernetes_version" {
   default     = "latest"
 }
 
-variable "initial_node_count" {
-  type        = number
-  description = "The number of nodes to create in this cluster's default node pool."
-  default     = 1
-}
-
 ##Default labels
 variable "default_labels" {
   type = map(string)
@@ -166,9 +160,10 @@ variable "node_pools" {
       enable_gcfs = bool,##Set to true only if image streaming is required.
   }))
   description = "List of maps containing node pools"
+  ##Althoguh the default block is not mandatory, Just keeping it on safer side
   default = [
     {
-      name = "default-node-pool",
+      name = "argonaut-default-node-pool",
       machine_type    = "e2-medium",
       disk_size_gb = 50,
       disk_type       = "pd-balanced"
@@ -180,18 +175,10 @@ variable "node_pools" {
   ]
 }
 
-variable "remove_default_node_pool" {
-  type        = bool
-  description = "Remove default node pool while setting up the cluster"
-  default     = true
-}
-
 variable "node_pools_labels" {
   type        = map(map(string))
   description = "Map of maps containing node labels by node-pool name"
-  default = {
-    default-node-pool = {}
-  }
+  default = {}
 }
 
 variable "node_pools_taints" {

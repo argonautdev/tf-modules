@@ -11,6 +11,24 @@ module "enabled_google_apis" {
   ]
 }
 
+resource "null_resource" "previous" {
+  depends_on = [module.enabled_google_apis]
+  provisioner "local-exec" {
+    command = "echo \"waiting for 30 seconds before starting resources creation\""
+  }
+}
+
+resource "time_sleep" "wait_30_seconds" {
+  depends_on = [module.enabled_google_apis, null_resource.previous]
+  create_duration = "30s"
+}
+
+resource "null_resource" "after" {
+  depends_on = [module.enabled_google_apis, time_sleep.wait_30_seconds]
+  provisioner "local-exec" {
+    command = "echo \"wait is over!!! starting resources creation\""
+  }
+}
 
 ##Not Passing Zone Parameter to Module, If We Don't Pass zone, default locations are selected.
 ##Not adding gcp_filestore_csi_driver, gce_persistent_disk_csi_driver_config, We use helm to install these drivers, Addons doesn't provide all the features ( ex: snapshot )  
@@ -19,6 +37,7 @@ module "enabled_google_apis" {
 ## These secondary subnets are mandatory if we would want to launch GKE cluster in VPC Native Cluster. 
 ## Ref: https://jayendrapatil.com/google-kubernetes-engine-networking/
 resource "google_compute_subnetwork" "cluster_subnet" {
+  depends_on = [null_resource.after]
   name                     = var.subnetwork_name
   ip_cidr_range            = var.subnetwork_cidr
   region                   = var.region
@@ -39,7 +58,7 @@ resource "google_compute_subnetwork" "cluster_subnet" {
 
 module "gke" {
   depends_on = [google_compute_subnetwork.cluster_subnet]
-  source = "github.com/argonautdev/terraform-google-kubernetes-engine//modules/private-cluster?ref=v21.1.1"
+  source = "../../../../../argo-public/terraform-google-kubernetes-engine/modules/private-cluster"
   project_id                      = var.project_id
   name                            = var.cluster_name
   description                     = var.description
@@ -55,9 +74,7 @@ module "gke" {
   horizontal_pod_autoscaling      = var.horizontal_pod_autoscaling
   enable_vertical_pod_autoscaling = var.enable_vertical_pod_autoscaling
   kubernetes_version              = var.kubernetes_version
-  initial_node_count              = var.initial_node_count ##How many instances should be launched in each zone
   node_pools                      = var.node_pools
-  remove_default_node_pool        = var.remove_default_node_pool
   cluster_resource_labels = merge(var.default_labels, var.labels)
   //kubernetes_version = var.kubernetes_version
   /*Node Pool taints, Labels, tags */
