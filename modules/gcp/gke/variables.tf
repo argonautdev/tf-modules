@@ -41,31 +41,6 @@ variable "subnetwork_name" {
   type        = string
 }
 
-variable "pod_subnet_name" {
-  type        = string
-  description = "The _name_ of the secondary subnet to use for pods"
-}
-
-variable "service_subnet_name" {
-  type        = string
-  description = "The _name_ of the secondary subnet to use for services"
-}
-
-variable "subnetwork_cidr" {
-  description = "Cidr of the subnetwork"
-  type        = string
-}
-
-variable "pod_subnet_cidr_block" {
-  type        = string
-  description = "Pod subnetwork cidr block"
-}
-
-variable "service_subnet_cidr_block" {
-  type        = string
-  description = "Services subnetwork cidr block"
-}
-
 ##The variable value is important if you would want to create a private cluster
 ###################
 # Variables for Private Cluster
@@ -174,7 +149,8 @@ variable "node_pools" {
       disk_type       = "pd-balanced"
       image_type      = "COS_CONTAINERD"
       autoscaling     = false
-      auto_upgrade    = false,
+      auto_upgrade    = true,
+      auto_repair     = true,
       enable_gcfs     = false
     },
   ]
