@@ -21,26 +21,27 @@ variable "create_origin_access_identity" {
   default     = true
 }
 
-variable "comment" {
+variable "description" {
   description = "Any comments you want to include about the distribution."
   type        = string
   default     = "Cloudfront deployed by argonaut dev team"
 }
 
 /* CF Origin Bucket */
-
 variable "cf_origin_create_bucket" {
   description = "Whether or not create cf origin bucket. If say 'true' bucket would be created with the name what ever you give in 'cf_origin_bucket_name'"
   type        = bool
+  default     = true
 }
 
 variable "cf_origin_bucket_name" {
-  description = "Name for cf origin bucket to while creating or Pass an existing bucket name when 'cf_origin_create_bucket' is set to false"
+  description = "Name for cf origin bucket to create or Pass an existing bucket name when 'cf_origin_create_bucket' is set to false"
   type        = string
+  default     = ""
 }
 
 variable "attach_policy" {
-  description = "If your existing bucket has bucket policy and you want to append cf policy to s3 bucket say 'trre' else 'false'"
+  description = "If your existing bucket has bucket policy and you want to append cf policy to s3 bucket say 'true' else 'false'"
   type        = bool
   default     = false
 }
@@ -75,7 +76,6 @@ variable "assets_dir_path" {
   type        = string
 }
 
-
 variable "is_ipv6_enabled" {
   description = "Whether the IPv6 is enabled for the distribution."
   type        = bool
@@ -86,6 +86,10 @@ variable "price_class" {
   description = "The price class for this distribution. One of PriceClass_All, PriceClass_200, PriceClass_100"
   type        = string
   default     = "PriceClass_All"
+  validation {
+    condition     = var.price_class == "PriceClass_All" || var.price_class == "PriceClass_200" || var.price_class == "PriceClass_100"
+    error_message = "The value choosen is not in the list of ( PriceClass_All, PriceClass_200, PriceClass_100)."
+  }
 }
 
 variable "retain_on_delete" {
@@ -158,11 +162,13 @@ variable "logging" {
 variable "domain_name" {
   type = string
   description = "Name of the hostedzone/domainname which is present in route53"
+  default = ""
 }
 
 variable "subdomain" {
   type = string
   description = "Name of subdomain"
+  default = ""
 }
 
 variable "aliases" {

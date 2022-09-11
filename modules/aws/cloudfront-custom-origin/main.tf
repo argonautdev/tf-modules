@@ -1,7 +1,7 @@
 module "cloudfront" {
   source = "terraform-aws-modules/cloudfront/aws"
   version = "2.9.3"
-  comment             = var.comment
+  comment             = var.description
   is_ipv6_enabled     = var.is_ipv6_enabled
   price_class         = var.price_class
   retain_on_delete    = var.retain_on_delete

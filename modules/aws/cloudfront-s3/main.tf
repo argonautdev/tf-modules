@@ -12,7 +12,7 @@ module "cloudfront" {
   default_root_object = var.default_root_object
   ##Will create an identity with the description value
   origin_access_identities = var.create_origin_access_identity ? {
-    s3 = var.comment
+    s3 = var.description
   }: {}
   
   origin = {
@@ -71,7 +71,7 @@ data "aws_s3_bucket" "cf_origin_bucket" {
 ###########################
 data "aws_iam_policy_document" "s3_policy" {
   source_policy_documents = compact([
-    # Pull Policy from data block only when it satisfies "attach_policy is true and cf_origin_create_bucket = true"
+    # Pull Policy from data block only when it satisfies "attach_policy is true and cf_origin_create_bucket = false"
     !var.cf_origin_create_bucket && var.attach_policy ? data.aws_s3_bucket_policy.existing_bucket_policy[0].policy : ""
   ])
   statement {

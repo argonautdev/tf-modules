@@ -13,7 +13,7 @@ variable "app_name" {
   type        = string
 }
 
-variable "comment" {
+variable "description" {
   description = "Any comments you want to include about the distribution."
   type        = string
   default     = "Cloudfront deployed by argonaut dev team"
@@ -46,6 +46,7 @@ variable "wait_for_deployment" {
 variable "custom_origin_dns_name" {
   description = "The DNS domain name of web site of your custom origin."
   type        = string
+  default     = ""
 }
 
 ##To learn more about origin protocol policy
@@ -81,11 +82,13 @@ variable "logging" {
 variable "domain_name" {
   type = string
   description = "Name of the hostedzone/domainname which is present in route53"
+  default = ""
 }
 
 variable "subdomain" {
   type = string
   description = "Name of subdomain"
+  default = ""
 }
 
 variable "aliases" {
