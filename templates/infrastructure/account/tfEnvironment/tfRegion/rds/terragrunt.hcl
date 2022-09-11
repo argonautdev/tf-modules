@@ -1,4 +1,3 @@
-
 include {
   path = find_in_parent_folders()
 }
@@ -23,7 +22,6 @@ locals {
 # terraform {
 #   source = "git::git@github.com:gruntwork-io/terragrunt-infrastructure-modules-example.git//mysql?ref=v0.4.0"
 # }
-
 
 terraform {
 
@@ -63,26 +61,90 @@ inputs = {
   {{if eq .Spec.engine "postgres"}}
   // all values correspond to postgres
   engine         = "{{ .Spec.engine }}"
+  // enhanced monitoring
+  monitoring_interval = 60
+  create_monitoring_role = true
+  monitoring_role_name = "{{ .Spec.identifier }}-monitoring-role"
+  enabled_cloudwatch_logs_exports = ["postgresql", "upgrade"]
   {{if .Spec.engine_version}}engine_version = "{{ .Spec.engine_version }}"{{end}}
   {{if .Spec.family}}family       = "{{ .Spec.family }}"{{end}}
   {{if .Spec.major_engine_version}}major_engine_version       = "{{ .Spec.major_engine_version}}"{{end}}
   {{end}}
-
+  
+  
   {{if eq .Spec.engine "mysql"}}
   // all values correspond to mysql
   engine         = "{{ .Spec.engine }}"
+  // enhanced monitoring
+  monitoring_interval = 60
+  create_monitoring_role = true
+  monitoring_role_name = "{{ .Spec.identifier }}-monitoring-role"
+  enabled_cloudwatch_logs_exports = ["audit", "general", "error", "slowquery"]
+  // To enable enhance monitoring and write logs to cloudwatch should create custom parameter group and option group
+  parameters = [
+    {
+      "name": "slow_query_log",
+      "value": "true"
+    },
+    {
+      "name": "general_log",
+      "value": "true"
+    },
+    {
+      "name": "log_output",
+      "value": "FILE"
+    }
+  ]
+  options = [
+    {
+      option_name = "MARIADB_AUDIT_PLUGIN"
+    }
+  ]
   {{if .Spec.engine_version}}engine_version = "{{ .Spec.engine_version }}"{{else}}engine_version = "8.0.26"{{end}}
   {{if .Spec.family}}family       = "{{ .Spec.family }}"{{else}}family       = "mysql8.0"{{end}}
   {{if .Spec.major_engine_version}}major_engine_version       = "{{ .Spec.major_engine_version }}"{{else}}major_engine_version       = "8.0"{{end}}
   {{if or (eq .Spec.instance_class "db.t2.micro") (eq .Spec.instance_class "db.t2.small") (eq .Spec.instance_class "db.t3.micro") (eq .Spec.instance_class "db.t3.small")}}performance_insights_enabled=false{{else}}performance_insights_enabled=true{{end}}
   {{end}}
-
+  
+  {{if eq .Spec.engine "mariadb"}}
+  // all values correspond to mariadb
+  engine = "{{ .Spec.engine }}"
+  // enhanced monitoring
+  monitoring_interval = 60
+  create_monitoring_role = true
+  monitoring_role_name = "{{ .Spec.identifier }}-monitoring-role"
+  enabled_cloudwatch_logs_exports = ["audit", "general", "error", "slowquery"]
+  // To enable enhance monitoring and write logs to cloudwatch should create custom parameter group and option group
+  parameters = [
+    {
+      "name": "slow_query_log",
+      "value": "true"
+    },
+    {
+      "name": "general_log",
+      "value": "true"
+    },
+    {
+      "name": "log_output",
+      "value": "FILE"
+    }
+  ]
+  options = [
+    {
+      option_name = "MARIADB_AUDIT_PLUGIN"
+    }
+  ]
+  {{if eq .Spec.engine_version}}engine_version = "{{ .Spec.engine_version}}"{{else}}engine_version = "10.3.35"{{end}}
+  {{if eq .Spec.family}}family = "{{.Spec.family}}"{{else}}family = "mariadb10.3"{{end}}
+  {{if .Spec.major_engine_version}}major_engine_version       = "{{ .Spec.major_engine_version}}"{{end}}
+  {{if or (eq .Spec.instance_class "db.t2.micro") (eq .Spec.instance_class "db.t2.small") (eq .Spec.instance_class "db.t3.micro") (eq .Spec.instance_class "db.t3.small")}}performance_insights_enabled=false{{else}}performance_insights_enabled=true{{end}}
+  {{end}}
   storage        = {{ .Spec.storage }}
+  {{if eq .Spec.max_allocated_storage}}max_allocated_storage = "{{.Spec.max_allocated_storage}}"{{else}}max_allocated_storage = 1000{{end}}  
   instance_class = "{{ .Spec.instance_class }}"
   username       = "{{ .Spec.username }}"
   password       = "{{ .Spec.password }}"
   db_subnet_group_name = "{{ .Spec.name }}-db-subnet"
-
   vpc = {
     name    = "${local.env}"
     vpc_id      = dependency.vpc.outputs.vpc_id
@@ -92,5 +154,4 @@ inputs = {
     database_subnets = dependency.vpc.outputs.database_subnets
     default_security_group_id = dependency.vpc.outputs.default_security_group_id
   }
-
 }

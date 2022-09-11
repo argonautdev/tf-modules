@@ -92,6 +92,7 @@ module "db" {
   monitoring_interval                   = var.monitoring_interval
   create_monitoring_role                = var.create_monitoring_role
   monitoring_role_name                  = var.monitoring_role_name
+  monitoring_role_description           = var.monitoring_role_description
   
   /* Parameter group */
   parameter_group_name = var.parameter_group_name

@@ -21,8 +21,6 @@ module "vpc" {
   create_elasticache_subnet_group = true
   // create_private_subnet_group = true
 
-  
-
   manage_default_route_table = true
   default_route_table_tags   = { DefaultRouteTable = true }
 

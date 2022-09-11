@@ -220,7 +220,7 @@ variable "create_monitoring_role" {
 variable "monitoring_role_name" {
   description = "Name of the IAM role which will be created when create_monitoring_role is enabled"
   type        = string
-  # default    = null
+  default    = null
 }
 
 variable "monitoring_role_description" {
@@ -229,11 +229,11 @@ variable "monitoring_role_description" {
   default     = "DB Monitoring IAM Role"
 }
 
-variable "monitoring_role_arn" {
-  description = "The ARN for the IAM role that permits RDS to send enhanced monitoring metrics to CloudWatch Logs. Must be specified if monitoring_interval is non-zero"
-  type        = string
-  # default     = null
-}
+# variable "monitoring_role_arn" {
+#   description = "The ARN for the IAM role that permits RDS to send enhanced monitoring metrics to CloudWatch Logs. Must be specified if monitoring_interval is non-zero"
+#   type        = string
+#   # default     = null
+# }
 
 
 variable "enabled_cloudwatch_logs_exports" {
@@ -241,7 +241,6 @@ variable "enabled_cloudwatch_logs_exports" {
   type        = list(string)
   default     = ["general", "error", "slowquery"]
 }
-
 
 /* Performance Insights */
 variable "performance_insights_enabled" {
@@ -295,16 +294,18 @@ variable "family" {
 
 variable "parameters" {
   description = "A list of DB parameters (map) to apply"
-  type        = list(map(string))
+  type = object({
+    name  = string
+    value = string
+  })
   default     = []
 }
-
 
 # DB option group
 variable "create_db_option_group" {
   description = "(Optional) Create a database option group"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "option_group_name" {

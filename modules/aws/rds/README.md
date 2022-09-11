@@ -20,10 +20,17 @@ aws rds describe-orderable-db-instance-options --engine <engine> --engine-versio
 For example, the following command lists the supported DB instance classes for version 10.6.5 of the MariaDB DB engine in Mumbai.
 
 ```
-aws rds describe-orderable-db-instance-options --engine mariadb --engine-version 10.6.5 \
-    --query "OrderableDBInstanceOptions[].{DBInstanceClass:DBInstanceClass,SupportedEngineModes:SupportedEngineModes[0]}" \
-    --output table \
-    --region ap-south-1
+The following command outputs the following
+1. Supported instancetypes based on StorageClass
+2. Whether Instancetype supports StorageScaling or not
+3. Supported AvailabilityZones in a region
+```
+
+```
+aws rds describe-orderable-db-instance-options --engine engine --engine-version version \
+    --query "*[].{DBInstanceClass:DBInstanceClass, AvailabilityZones:AvailabilityZones, AutoScaling:SupportsStorageAutoscaling, StorageType:StorageType}|[?StorageType=='gp2']|[].{DBInstanceClass:DBInstanceClass}" \
+    --output text \
+    --region region
 ```
 
 ##ParameterGroups
@@ -34,7 +41,12 @@ aws rds describe-orderable-db-instance-options --engine mariadb --engine-version
   
   Ref: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Appendix.MariaDB.Parameters.html
   Refer above documentation to find available parameters that can be modified. and also list of available parameters for mariadb
+  run the following command to list all available parameters for family
   
+  aws rds describe-engine-default-parameters --db-parameter-group-family FAMILY --region REGION --output json --query 'EngineDefaults.Parameters[?IsModifiable==`true`]'
+  
+  command:
+  aws rds describe-engine-default-parameters --db-parameter-group-family mariadb10.3 --region ap-south-1 --output json --query 'EngineDefaults.Parameters[?IsModifiable==`true`]'
 ```
 
 ##OptionsGroup
