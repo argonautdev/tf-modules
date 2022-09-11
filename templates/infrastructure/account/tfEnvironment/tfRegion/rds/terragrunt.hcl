@@ -64,6 +64,7 @@ inputs = {
   // enhanced monitoring
   monitoring_interval = 60
   create_monitoring_role = true
+  skip_final_snapshot = false
   monitoring_role_name = "{{ .Spec.identifier }}-monitoring-role"
   enabled_cloudwatch_logs_exports = ["postgresql", "upgrade"]
   {{if .Spec.engine_version}}engine_version = "{{ .Spec.engine_version }}"{{end}}
@@ -78,17 +79,18 @@ inputs = {
   // enhanced monitoring
   monitoring_interval = 60
   create_monitoring_role = true
+  skip_final_snapshot = false
   monitoring_role_name = "{{ .Spec.identifier }}-monitoring-role"
   enabled_cloudwatch_logs_exports = ["audit", "general", "error", "slowquery"]
   // To enable enhance monitoring and write logs to cloudwatch should create custom parameter group and option group
   parameters = [
     {
       "name": "slow_query_log",
-      "value": "true"
+      "value": "1"
     },
     {
       "name": "general_log",
-      "value": "true"
+      "value": "1"
     },
     {
       "name": "log_output",
@@ -111,6 +113,7 @@ inputs = {
   engine = "{{ .Spec.engine }}"
   // enhanced monitoring
   monitoring_interval = 60
+  skip_final_snapshot = false
   create_monitoring_role = true
   monitoring_role_name = "{{ .Spec.identifier }}-monitoring-role"
   enabled_cloudwatch_logs_exports = ["audit", "general", "error", "slowquery"]
@@ -118,11 +121,11 @@ inputs = {
   parameters = [
     {
       "name": "slow_query_log",
-      "value": "true"
+      "value": "1"
     },
     {
       "name": "general_log",
-      "value": "true"
+      "value": "1"
     },
     {
       "name": "log_output",
@@ -136,7 +139,7 @@ inputs = {
   ]
   {{if eq .Spec.engine_version}}engine_version = "{{ .Spec.engine_version}}"{{else}}engine_version = "10.3.35"{{end}}
   {{if eq .Spec.family}}family = "{{.Spec.family}}"{{else}}family = "mariadb10.3"{{end}}
-  {{if .Spec.major_engine_version}}major_engine_version       = "{{ .Spec.major_engine_version}}"{{end}}
+  {{if .Spec.major_engine_version}}major_engine_version       = "{{ .Spec.major_engine_version}}"{{else}}major_engine_version="10.3"{{end}}
   {{if or (eq .Spec.instance_class "db.t2.micro") (eq .Spec.instance_class "db.t2.small") (eq .Spec.instance_class "db.t3.micro") (eq .Spec.instance_class "db.t3.small")}}performance_insights_enabled=false{{else}}performance_insights_enabled=true{{end}}
   {{end}}
   storage        = {{ .Spec.storage }}
@@ -144,7 +147,6 @@ inputs = {
   instance_class = "{{ .Spec.instance_class }}"
   username       = "{{ .Spec.username }}"
   password       = "{{ .Spec.password }}"
-  db_subnet_group_name = "{{ .Spec.name }}-db-subnet"
   vpc = {
     name    = "${local.env}"
     vpc_id      = dependency.vpc.outputs.vpc_id

@@ -6,18 +6,7 @@
         aws rds describe-db-engine-versions --engine mariadb --region ap-south-1 --query 'DBEngineVersions[].EngineVersion' --output text
 ```
 
-##Listing the DB instance classes that are supported by a specific DB engine version in an AWS Region
-
-To list the DB instance classes that are supported by a specific DB engine version in an AWS Region, run the following command.
-
-```
-aws rds describe-orderable-db-instance-options --engine <engine> --engine-version <version> \
-    --query "OrderableDBInstanceOptions[].{DBInstanceClass:DBInstanceClass,SupportedEngineModes:SupportedEngineModes[0]}" \
-    --output table \
-    --region region
-```
-
-For example, the following command lists the supported DB instance classes for version 10.6.5 of the MariaDB DB engine in Mumbai.
+##Listing the DB instance classes that are supported by a specific DB engine version in an AWS Regions
 
 ```
 The following command outputs the following

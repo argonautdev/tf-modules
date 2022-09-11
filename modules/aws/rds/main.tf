@@ -48,8 +48,8 @@ module "db" {
   identifier = var.identifier
   /* Subnets */
   create_db_subnet_group                = var.create_db_subnet_group
-  # db_subnet_group_name                  = var.db_subnet_group_name
-  db_subnet_group_description           = var.db_subnet_group_name
+  db_subnet_group_name                  = var.db_subnet_group_name
+  # db_subnet_group_description           = var.db_subnet_group_name
   # db_subnet_group_use_name_prefix       = var.db_subnet_group_use_name_prefix
   subnet_ids = var.vpc.database_subnets
   
@@ -88,7 +88,7 @@ module "db" {
   license_model                         = var.engine == "postgres" ? "postgresql-license" : ""
   
   /* Monitoring */
-  enabled_cloudwatch_logs_exports = var.engine == "postgres" ? ["postgresql", "upgrade"] :  ["general", "slowquery", "error"]
+  enabled_cloudwatch_logs_exports = var.engine == "postgres" ? ["postgresql", "upgrade"] :  var.enabled_cloudwatch_logs_exports
   monitoring_interval                   = var.monitoring_interval
   create_monitoring_role                = var.create_monitoring_role
   monitoring_role_name                  = var.monitoring_role_name

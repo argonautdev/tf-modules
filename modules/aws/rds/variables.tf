@@ -177,7 +177,7 @@ variable "vpc" {
 variable "create_db_subnet_group" {
   description = "Whether to create a database subnet group"
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "db_subnet_group_use_name_prefix" {
@@ -239,7 +239,7 @@ variable "monitoring_role_description" {
 variable "enabled_cloudwatch_logs_exports" {
   description = "List of log types to enable for exporting to CloudWatch logs. If omitted, no logs will be exported. Valid values (depending on engine): alert, audit, error, general, listener, slowquery, trace, postgresql (PostgreSQL), upgrade (PostgreSQL)."
   type        = list(string)
-  default     = ["general", "error", "slowquery"]
+  default     = ["audit", "general", "error", "slowquery"]
 }
 
 /* Performance Insights */
@@ -329,7 +329,7 @@ variable "option_group_description" {
 variable "major_engine_version" {
   description = "Specifies the major version of the engine that this option group should be associated with"
   type        = string
-  default     = ""
+  default     = null
 }
 
 variable "options" {
