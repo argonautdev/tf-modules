@@ -294,10 +294,10 @@ variable "family" {
 
 variable "parameters" {
   description = "A list of DB parameters (map) to apply"
-  type = object({
+  type = list(object({
     name  = string
     value = string
-  })
+  }))
   default     = []
 }
 
