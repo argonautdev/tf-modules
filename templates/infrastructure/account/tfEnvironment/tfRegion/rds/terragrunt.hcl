@@ -57,6 +57,7 @@ inputs = {
 
   identifier     = "{{ .Spec.identifier }}"
   name           = "{{ .Spec.name }}"
+  multi_az = "{{.Spec.multi_az }}"
 
   {{if eq .Spec.engine "postgres"}}
   // all values correspond to postgres
@@ -64,7 +65,9 @@ inputs = {
   // enhanced monitoring
   monitoring_interval = 60
   create_monitoring_role = true
-  skip_final_snapshot = false
+  // If true is specified, no DBSnapshot is created.
+  skip_final_snapshot = true
+  delete_automated_backups = true
   monitoring_role_name = "{{ .Spec.identifier }}-monitoring-role"
   enabled_cloudwatch_logs_exports = ["postgresql", "upgrade"]
   {{if .Spec.engine_version}}engine_version = "{{ .Spec.engine_version }}"{{end}}
@@ -79,7 +82,9 @@ inputs = {
   // enhanced monitoring
   monitoring_interval = 60
   create_monitoring_role = true
-  skip_final_snapshot = false
+  // If true is specified, no DBSnapshot is created.
+  skip_final_snapshot = true
+  delete_automated_backups = true
   monitoring_role_name = "{{ .Spec.identifier }}-monitoring-role"
   enabled_cloudwatch_logs_exports = ["audit", "general", "error", "slowquery"]
   // To enable enhance monitoring and write logs to cloudwatch should create custom parameter group and option group
@@ -113,8 +118,10 @@ inputs = {
   engine = "{{ .Spec.engine }}"
   // enhanced monitoring
   monitoring_interval = 60
-  skip_final_snapshot = false
   create_monitoring_role = true
+  // If true is specified, no DBSnapshot is created.
+  skip_final_snapshot = true
+  delete_automated_backups = true
   monitoring_role_name = "{{ .Spec.identifier }}-monitoring-role"
   enabled_cloudwatch_logs_exports = ["audit", "general", "error", "slowquery"]
   // To enable enhance monitoring and write logs to cloudwatch should create custom parameter group and option group
