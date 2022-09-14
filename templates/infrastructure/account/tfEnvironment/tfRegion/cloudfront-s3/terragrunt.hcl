@@ -1,4 +1,3 @@
-
 include {
   path = find_in_parent_folders()
 }
@@ -29,11 +28,8 @@ inputs = {
   }
   aws_region = "${local.region}"
   app_name = "{{.Spec.name}}"
-  create_origin_access_identity = true
   description = "{{.Spec.description }}"
-  cf_origin_create_bucket = "{{.Spec.cf_origin_create_bucket }}"
   cf_origin_bucket_name = "{{.Spec.cf_origin_bucket_name }}"
-  attach_policy = "{{.Spec.attach_policy }}"
   default_root_object = "{{.Spec.default_root_object }}"
   logging = "{{.Spec.logging }}"
   domain_name = "{{.Spec.domain_name }}"
