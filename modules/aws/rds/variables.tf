@@ -16,7 +16,7 @@ variable "engine" {
 
 variable "engine_version" {
   description = "The engine version to use"
-  default = ""
+  default = "13.4"
   type        = string
 }
 

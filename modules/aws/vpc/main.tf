@@ -5,8 +5,8 @@ module "vpc" {
   version = "v3.11.0"
 
   name = var.name
-  cidr = "10.0.0.0/16"
-  // cidr = var.cidr_block
+  # cidr = "10.0.0.0/16"
+  cidr = var.cidr_block
 
   azs             = data.aws_availability_zones.available.names
   // private_subnets = slice(var.private_subnet_cidr_blocks, 0, var.private_subnet_count)
@@ -41,8 +41,8 @@ module "vpc" {
   // default_security_group_egress  = []
 
   # VPC Flow Logs (Cloudwatch log group and IAM role will be created)
-  enable_flow_log                      = true
-  create_flow_log_cloudwatch_log_group = true
-  create_flow_log_cloudwatch_iam_role  = true
-  flow_log_max_aggregation_interval    = 60
+  enable_flow_log                      = var.enable_flow_log
+  create_flow_log_cloudwatch_log_group = var.create_flow_log_cloudwatch_log_group
+  create_flow_log_cloudwatch_iam_role  = var.create_flow_log_cloudwatch_iam_role
+  flow_log_max_aggregation_interval    = var.flow_log_max_aggregation_interval
 }
