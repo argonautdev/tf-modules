@@ -69,7 +69,7 @@ variable "backup_retention_period" {
 variable "create_db_subnet_group" {
   description = "Determines whether to create the database subnet group or use existing"
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "db_subnet_group_name" {
