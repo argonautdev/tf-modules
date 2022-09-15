@@ -7,42 +7,46 @@
 ## 2. No Maintaince window.
 
 
-resource "aws_rds_cluster_parameter_group" "auroradb-cluster" {
-  name        = var.db_cluster_parameter_group_name
-  family      = var.db_parameter_group_family
-  description = var.db_cluster_parameter_group_name
-  # tags        = var.default_tags
-  dynamic "parameter" {
-    for_each = var.db_cluster_parameter_group_parameters
-    content {
-      name         = parameter.value.name
-      value        = parameter.value.value
-      apply_method = lookup(parameter.value, "apply_method", null)
-    }
-  }
-  lifecycle {
-    create_before_destroy = true
-  }
-}
+# resource "aws_rds_cluster_parameter_group" "auroradb-cluster" {
+#   name        = var.db_cluster_parameter_group_name
+#   family      = var.db_parameter_group_family
+#   description = var.db_cluster_parameter_group_name
+#   # tags        = var.default_tags
+#   dynamic "parameter" {
+#     for_each = var.db_cluster_parameter_group_parameters
+#     content {
+#       name         = parameter.value.name
+#       value        = parameter.value.value
+#       apply_method = lookup(parameter.value, "apply_method", null)
+#     }
+#   }
+#   lifecycle {
+#     create_before_destroy = true
+#   }
+# }
 
 
 module "aurora_cluster" {
   source = "terraform-aws-modules/rds-aurora/aws"
-  version = "7.1.0"
+  version  = "7.5.1"
   name                    = var.cluster_name
   engine                  = var.cluster_engine
   engine_mode             = "serverless"
   storage_encrypted       = var.storage_encrypted
   database_name           = var.database_name
   master_username         = var.master_username
-  create_random_password  = false ##Setting to flase as we want to pass password as input. 
   master_password         = var.master_password
   deletion_protection     = var.deletion_protection
   backup_retention_period = var.backup_retention_period
   create_db_subnet_group  = var.create_db_subnet_group
-  vpc_id                  = var.vpc.vpc_id
+  db_subnet_group_name    = var.db_subnet_group_name
   subnets                 = var.vpc.database_subnets
-
+  create_db_cluster_parameter_group = var.create_db_cluster_parameter_group
+  db_cluster_parameter_group_family = var.db_cluster_parameter_group_family
+  db_cluster_parameter_group_parameters = var.db_cluster_parameter_group_parameters
+  vpc_id                  = var.vpc.vpc_id
+  
+  //* creating security group and allowing from vpc cidr block
   create_security_group = true
   allowed_cidr_blocks   = [var.vpc.vpc_cidr_block]
 
@@ -57,6 +61,4 @@ module "aurora_cluster" {
     seconds_until_auto_pause = 300
     timeout_action           = "ForceApplyCapacityChange"
   }
-  db_cluster_parameter_group_name = aws_rds_cluster_parameter_group.auroradb-cluster.id
-  iam_database_authentication_enabled = var.iam_database_authentication_enabled
 }

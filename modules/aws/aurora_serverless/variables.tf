@@ -25,6 +25,11 @@ variable "kms_key_id" {
 variable "cluster_engine" {
   description = "The name of the database engine to be used for this DB cluster. Valid Values: `aurora-mysql`, `aurora-postgresql`"
   type        = string
+  default     = "aurora-mysql"
+  validation {
+    condition     = var.cluster_engine == "aurora-mysql" || var.cluster_engine == "aurora-postgresql"  
+    error_message = "The value choosen is not in the list of ( aurora-mysql, aurora-postgresql )."
+  }
 }
 
 variable "cluster_name" {
@@ -48,6 +53,12 @@ variable "master_password" {
   sensitive   = true
 }
 
+variable "create_random_password" {
+  description = "Determines whether to create random password for RDS primary cluster"
+  type        = bool
+  default     = false
+}
+
 variable "backup_retention_period" {
   description = "The days to retain backups for. Default `9`"
   type        = number
@@ -59,6 +70,12 @@ variable "create_db_subnet_group" {
   description = "Determines whether to create the database subnet group or use existing"
   type        = bool
   default     = true
+}
+
+variable "db_subnet_group_name" {
+  description = "The name of the subnet group name (existing or created)"
+  type        = string
+  default     = ""
 }
 
 variable "vpc" {
@@ -74,34 +91,37 @@ variable "vpc" {
   })
 }
 
-/* DBClusterParametergroup */
-variable "db_cluster_parameter_group_name" {
-  description = "The name of the DB parameter group to associate with the cluster"
-  type        = string
-  default     = null
+
+variable "enabled_cloudwatch_logs_exports" {
+  description = "Set of log types to export to cloudwatch. If omitted, no logs will be exported. The following log types are supported: `audit`, `error`, `general`, `slowquery`, `postgresql`"
+  type        = list(string)
+  default     = ["audit", "error", "general", "slowquery"]
 }
 
-variable "db_cluster_parameter_group_parameters" {
-  description = "The parameters associated with the DB cluster parameter group"
-  type = list(object({
-    name  = string
-    value = string
-  }))
-  default     = []
-}
+################################################################################
+# Cluster Parameter Group
+################################################################################
 
-
-/*IAM Authentication for DB*/
-variable "iam_database_authentication_enabled" {
-  description = "Specifies whether or mappings of AWS Identity and Access Management (IAM) accounts to database accounts is enabled"
+variable "create_db_cluster_parameter_group" {
+  description = "Determines whether a cluster parameter should be created or use existing"
   type        = bool
   default     = true
 }
 
-variable "db_parameter_group_family" {
-  description = "The parameter group family to associate with the DB parameter group"
+variable "db_cluster_parameter_group_family" {
+  description = "The family of the DB cluster parameter group"
   type        = string
-  default     = "aurora-postgresql10"
+  default     = "aurora-mysql5.7"
+  validation {
+    condition     = var.db_cluster_parameter_group_family == "aurora-mysql5.7" || var.db_cluster_parameter_group_family == "aurora-postgresql10"
+    error_message = "The value choosen is not in the list of ( aurora-mysql5.7, aurora-postgresql10)."
+  }
+}
+
+variable "db_cluster_parameter_group_parameters" {
+  description = "A list of DB cluster parameters to apply. Note that parameters may differ from a family to an other"
+  type        = list(map(string))
+  default     = []
 }
 
 variable "apply_immediately" {
@@ -128,6 +148,7 @@ variable "copy_tags_to_snapshot" {
   default     = true
 }
 
+//for valid values of mysql, postgresql ACU see the following docs: https://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_ModifyCurrentDBClusterCapacity.html
 variable "cluster_min_capacity" {
   description = "Min cluster ACU"
   type        = number
@@ -137,5 +158,5 @@ variable "cluster_min_capacity" {
 variable "cluster_max_capacity" {
   description = "Max cluster ACU"
   type        = number
-  default     = 10
+  default     = 16
 }
