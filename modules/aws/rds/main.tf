@@ -46,7 +46,7 @@ module "db" {
   version = "v3.3.0"
 
   identifier = var.identifier
-  /* Subnets */
+  /* Subnet group */
   create_db_subnet_group                = var.create_db_subnet_group
   db_subnet_group_name                  = var.db_subnet_group_name
   # db_subnet_group_description           = var.db_subnet_group_name
