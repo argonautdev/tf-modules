@@ -10,8 +10,8 @@ remote_state {
     schema_name = "tf_{{ .Environment.Name }}_${replace(replace(path_relative_to_include(), "/", "__"), "..", "")}"
   }
   generate = {
-   path      = "backend.tf"
-   if_exists = "overwrite_terragrunt"
+    path      = "backend.tf"
+    if_exists = "overwrite_terragrunt"
   }
 }
 
