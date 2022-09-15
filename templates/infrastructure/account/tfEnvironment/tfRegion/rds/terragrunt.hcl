@@ -154,6 +154,8 @@ inputs = {
   instance_class = "{{ .Spec.instance_class }}"
   username       = "{{ .Spec.username }}"
   password       = "{{ .Spec.password }}"
+  // subnet group name
+  db_subnet_group_name = "{{ .Spec.name }}-db-subnet"
   vpc = {
     name    = "${local.env}"
     vpc_id      = dependency.vpc.outputs.vpc_id
