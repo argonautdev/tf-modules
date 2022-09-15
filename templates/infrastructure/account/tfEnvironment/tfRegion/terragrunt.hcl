@@ -15,7 +15,7 @@ remote_state {
   }
 }
 
-# a hook which deletes the resource folder after the deletion has completed
+#a hook which deletes the resource folder after the deletion has completed
 terraform {
   after_hook "delete_from_github" {
     commands = ["destroy"]
