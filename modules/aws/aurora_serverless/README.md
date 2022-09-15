@@ -4,6 +4,16 @@ aurora-mysql
 aurora-postgresql
 ```
 
+https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-serverless-v1.how-it-works.html#aurora-serverless.architecture
+
+
+```
+If we specify 
+   engine = aurora , then cluster instance creates with aurora5.6
+   engine = aurora-mysql, then cluster instance creates with aurora-mysql5.7
+   engine = aurora-postgresql,  then cluster instance creates with aurora-postgresql10.12 ( or later)
+```
+
 IMP Points:
 ```
 Any time if you would want to test locally ( meaning deploying cluster resources ), then checkout to examples folder for terraform.defaults in it's respective engine folder and move to root level
@@ -29,8 +39,23 @@ For aurora serverless these feature not present
    6. No Autoscaling ( Ref: https://blog.searce.com/amazon-aurora-serverless-features-limitations-glitches-d07f0374a2ab )
    7. Aurora Cluster level Parameters ( https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/AuroraPostgreSQL.Reference.ParameterGroups.html )
    
-   8. Aurora serverless currently doesn't support cloudwatch logs exports
+   #8. Aurora serverless ( postgresql ) currently doesn't support cloudwatch logs exports
    9. No Enhanced Monitoring
+   10. Aurora Serverless currently doesn't support IAM Authentication. 
+   
+   ```
+   for postgresql 
+   ╷
+    │ Error: error modifying DB Cluster Parameter Group: InvalidParameterValue: Could not find parameter with name: slow_query_log
+    │       status code: 400, request id: 4e36d8b3-4085-4def-877a-175a9d4ee5da
+    │ 
+    │   with module.aurora-serverless-postgres.module.aurora_cluster.aws_rds_cluster_parameter_group.this[0],
+    │   on .terraform/modules/aurora-serverless-postgres.aurora_cluster/main.tf line 382, in resource "aws_rds_cluster_parameter_group" "this":
+    │  382: resource "aws_rds_cluster_parameter_group" "this" {
+    │ 
+    ╵
+```
+   
    ```
    Error: error creating RDS cluster: InvalidParameterCombination: Aurora Serverless currently doesn't support CloudWatch Log Export.
 │       status code: 400, request id: 022ffe58-aa9e-4f5d-9928-bf2ffc87c56c
