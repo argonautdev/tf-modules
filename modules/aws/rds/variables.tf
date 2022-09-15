@@ -177,7 +177,7 @@ variable "vpc" {
 variable "create_db_subnet_group" {
   description = "Whether to create a database subnet group"
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "db_subnet_group_use_name_prefix" {
