@@ -99,7 +99,6 @@ variable "reserved_ip_range" {
 }
 
 ## Difference Between DirectPeering and Private Service access is seen here (https://cloud.google.com/memorystore/docs/redis/networking)
-
 variable "connect_mode" {
   description = "The connection mode of the Redis instance. Can be either DIRECT_PEERING or PRIVATE_SERVICE_ACCESS. The default connect mode if not provided is DIRECT_PEERING."
   type        = string
@@ -124,6 +123,9 @@ variable "default_labels" {
   description = "The key/value labels for the master instances."
 }
 
+
+##When you enable the AUTH feature on your Memorystore instance, incoming client connections must authenticate in order to connect.
+##Generated authstring can be grabbed from outputs 
 variable "auth_enabled" {
   description = "Indicates whether OSS Redis AUTH is enabled for the instance. If set to true AUTH is enabled on the instance."
   type        = bool

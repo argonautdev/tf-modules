@@ -18,3 +18,10 @@ module "memorystore" {
   auth_enabled = var.auth_enabled
   maintenance_policy = var.maintenance_policy
 }
+
+data "google_redis_instance" "export_redis_instance_info" {
+  depends_on = [module.memorystore]
+  name = var.name
+  region = var.region
+  project = var.project_id
+}
