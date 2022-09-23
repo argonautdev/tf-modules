@@ -30,8 +30,9 @@ output "persistence_iam_identity" {
 
 output "auth_string" {
   description = "AUTH String set on the instance. This field will only be populated if auth_enabled is true."
-  value       = module.memorystore.auth_string
-  sensitive   = true
+  value       = data.google_redis_instance.export_redis_instance_info.auth_string
+  # module.memorystore.auth_string
+  sensitive   = false
 }
 
 output "server_ca_certs" {
