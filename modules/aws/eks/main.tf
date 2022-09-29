@@ -28,26 +28,26 @@ module "eks" {
 
   node_groups_defaults = {
     ami_type  = var.ami_type
-    disk_size = var.node_group.disk_size
   }
 
   node_groups = {
-    "${var.cluster.name}" = {
-      # "
+    for_each = var.node_groups
+    "${each.value.name}" = {
       name_prefix      = "${var.cluster.name}-art-"
-      desired_capacity = var.node_group.desired_capacity
-      max_capacity     = var.node_group.max_capacity
-      min_capacity     = var.node_group.min_capacity
+      name = each.value.name
+      desired_capacity =  each.value.desired_capacity
+      max_capacity     = each.value.max_capacity
+      min_capacity     = each.value.min_capacity
+      disk_size        = each.value.disk_size
+      instance_types = [each.value.instance_type]
+      capacity_type  = each.value.spot ? "SPOT" : "ON_DEMAND"
 
-      instance_types = [var.node_group.instance_type]
-      capacity_type  = var.node_group.spot ? "SPOT" : "ON_DEMAND"
-
-      k8s_labels = {
+      k8s_labels = merge({
         Environment = var.env
-      }
+      }, each.value.labels)
 
-      additional_tags = var.node_group.spot ? merge(var.default_tags, var.spot_tags) : merge(var.default_tags, var.on_demand_tags)
-      taints          = []
+      additional_tags = each.value.spot ? merge(var.default_tags, var.spot_tags) : merge(var.default_tags, var.on_demand_tags)
+      taints          = each.value.taints
     }
   }
 

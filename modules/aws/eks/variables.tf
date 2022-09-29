@@ -20,6 +20,7 @@ variable "on_demand_tags" {
 variable "map_accounts" {
   description = "Additional AWS account numbers to add to the aws-auth configmap."
   type        = list(string)
+  default     = []
 }
 
 variable "cluster" {
@@ -43,17 +44,21 @@ variable "vpc" {
   })
 }
 
-variable "node_group" {
-  description = "All node_group info (singular)"
-  type = object({
+variable "node_groups" {
+  description = "list of nodegroups to create"
+  type = list(object({
     name_prefix      = string
+    name = string
     desired_capacity = number
     max_capacity     = number
     min_capacity     = number
     disk_size        = number
     instance_type    = string
     spot             = bool
-  })
+    labels           = optional(map(string))
+    taints           = optional(list(string))
+  }))
+  default     = []
 }
 
 variable "map_users" {
@@ -63,6 +68,7 @@ variable "map_users" {
     username = string
     groups   = list(string)
   }))
+  default = []
 }
 
 variable "map_roles" {
@@ -72,6 +78,7 @@ variable "map_roles" {
     username = string
     groups   = list(string)
   }))
+  default = []
 }
 
 variable "env" {
