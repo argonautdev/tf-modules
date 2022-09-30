@@ -58,7 +58,6 @@ variable "node_groups" {
     labels           = optional(map(string))
     taints           = optional(list(string))
   }))
-  default     = []
 }
 
 variable "map_users" {

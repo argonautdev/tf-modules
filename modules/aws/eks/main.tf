@@ -16,6 +16,22 @@ provider "kubernetes" {
 data "aws_availability_zones" "available" {
 }
 
+
+##The intention is to take list of nodegroups and convert into the format node_groups expects i.e map()
+##However, for_each loop only works inside a resource block and cannot do any operation inside node_groups variable
+##Hence, creating a null resource and convert the variable from list to map and reference in node_groups variable
+
+locals {
+  #it should be {node_groups = {ng1 = {} ng2 = {}}
+  #ref: https://stackoverflow.com/questions/62679195/terraform-looping-in-list-of-map How this local works
+  ng_list = { for ng in var.node_groups : ng.name => ng }
+  ng_list_replacements = { for k, v in local.ng_list : k => merge({
+    capacity_type = v.spot ? "SPOT" : "ON_DEMAND"
+    instance_types = [v.instance_type]
+    k8s_labels = merge(v.labels, { Environment = var.env })
+  }, v)}
+}
+
 module "eks" {
   source                   = "terraform-aws-modules/eks/aws"
   version                  = "v17.4.0"
@@ -29,27 +45,31 @@ module "eks" {
   node_groups_defaults = {
     ami_type  = var.ami_type
   }
+  
+  ##it should be {node_groups = {ng1 = {} ng2 = {}}
+  # node_groups = {
+  #   # for_each = var.node_groups
+  #   for_each = { for ng in var.node_groups : ng.name => ng }
+  #   "${each.key}" = {
+  #     name_prefix      = "${var.cluster.name}-art-"
+  #     name = each.value.name
+  #     desired_capacity =  each.value.desired_capacity
+  #     max_capacity     = each.value.max_capacity
+  #     min_capacity     = each.value.min_capacity
+  #     disk_size        = each.value.disk_size
+  #     instance_types = [each.value.instance_type]
+  #     capacity_type  = each.value.spot ? "SPOT" : "ON_DEMAND"
 
-  node_groups = {
-    for_each = var.node_groups
-    "${each.value.name}" = {
-      name_prefix      = "${var.cluster.name}-art-"
-      name = each.value.name
-      desired_capacity =  each.value.desired_capacity
-      max_capacity     = each.value.max_capacity
-      min_capacity     = each.value.min_capacity
-      disk_size        = each.value.disk_size
-      instance_types = [each.value.instance_type]
-      capacity_type  = each.value.spot ? "SPOT" : "ON_DEMAND"
+  #     k8s_labels = merge({
+  #       Environment = var.env
+  #     }, each.value.labels)
 
-      k8s_labels = merge({
-        Environment = var.env
-      }, each.value.labels)
-
-      additional_tags = each.value.spot ? merge(var.default_tags, var.spot_tags) : merge(var.default_tags, var.on_demand_tags)
-      taints          = each.value.taints
-    }
-  }
+  #     additional_tags = each.value.spot ? merge(var.default_tags, var.spot_tags) : merge(var.default_tags, var.on_demand_tags)
+  #     taints          = each.value.taints
+  #   }
+  # }
+  # node_groups = local.ng_list
+  node_groups = local.ng_list_replacements
 
   enable_irsa = true
 
