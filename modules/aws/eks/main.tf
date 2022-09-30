@@ -46,29 +46,6 @@ module "eks" {
     ami_type  = var.ami_type
   }
   
-  ##it should be {node_groups = {ng1 = {} ng2 = {}}
-  # node_groups = {
-  #   # for_each = var.node_groups
-  #   for_each = { for ng in var.node_groups : ng.name => ng }
-  #   "${each.key}" = {
-  #     name_prefix      = "${var.cluster.name}-art-"
-  #     name = each.value.name
-  #     desired_capacity =  each.value.desired_capacity
-  #     max_capacity     = each.value.max_capacity
-  #     min_capacity     = each.value.min_capacity
-  #     disk_size        = each.value.disk_size
-  #     instance_types = [each.value.instance_type]
-  #     capacity_type  = each.value.spot ? "SPOT" : "ON_DEMAND"
-
-  #     k8s_labels = merge({
-  #       Environment = var.env
-  #     }, each.value.labels)
-
-  #     additional_tags = each.value.spot ? merge(var.default_tags, var.spot_tags) : merge(var.default_tags, var.on_demand_tags)
-  #     taints          = each.value.taints
-  #   }
-  # }
-  # node_groups = local.ng_list
   node_groups = local.ng_list_replacements
 
   enable_irsa = true
