@@ -48,3 +48,12 @@ aws rds describe-orderable-db-instance-options --engine engine --engine-version 
   
   aws rds describe-option-group-options --engine-name mariadb --major-engine-version 10.6 --region ap-south-1 --query 'OptionGroupOptions[].OptionGroupOptionSettings[?IsModifiable==`true`]' --output table
 ```
+
+
+##DB Engine and it's InstanceTypes Class support for Performance Insights
+```
+Ref to following link to better know the followings.
+1. Which DB Engines Supports Performance Insights
+2. Which DB Engines support & doesn't support Performance Insights
+https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_PerfInsights.Overview.Engines.html
+```

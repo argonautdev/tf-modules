@@ -4,6 +4,10 @@ terraform.tfvars
 *.tfstate
 *.tfstate.backup
 
+## go files
+go.mod
+go.sum
+
 # OS X
 .history
 .DS_Store
