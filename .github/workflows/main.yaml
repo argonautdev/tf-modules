@@ -2,15 +2,24 @@ name: "Module testing using terratest"
 on:
   workflow_dispatch:
     inputs:
+      cloud_provider:
+        description: 'Select Which Cloud Provider Modules to test out'
+        type: choice
+        default: aws
+        options:
+        - aws
+        - gcp
+      
       tf_module:
         description: 'Select Terraform Module to test using Terratest'
         required: true
         default: 'warning' 
         type: choice
         options:
-        - aws/vpc
-        - aws/rds
-        - gcp/vpc
+        - vpc
+        - rds
+        - gke
+        - gcs
 jobs:
   terratest_all:
      name: init-and-apply
@@ -22,5 +31,5 @@ jobs:
         - name: change directory to list contents
           run: |
             echo "list the directory structure"
-            cd modules/${{ inputs.tf_module }}
+            cd modules/${{ inputs.cloud_provider }}/${{ inputs.tf_module }}
             ls -la
