@@ -1,0 +1,40 @@
+name: "Module testing using terratest"
+on:
+  workflow_dispatch:
+    inputs:
+      cloud_provider:
+        description: 'Select Which Cloud Provider Modules to test out'
+        type: choice
+        default: aws
+        options:
+        - aws
+        - gcp
+      
+      tf_module:
+        description: 'Select Terraform Module to test using Terratest'
+        required: true
+        default: 'warning' 
+        type: choice
+        options:
+        - vpc
+        - rds
+        - gke
+        - gcs
+jobs:
+  terratest_all:
+     name: init-and-apply
+     runs-on: ubuntu-20.04
+     steps:
+        - name: Check out repository
+          uses: actions/checkout@v3
+        - name: Terratest for aws modules
+          if:  ${{ inputs.cloud_provider }} == 'aws'
+          run: |
+            echo "list the directory structure"
+            cd modules/${{ inputs.cloud_provider }}/${{ inputs.tf_module }}/test
+            ls -la
+        - name: change directory to list contents
+          run: |
+            echo "list the directory structure"
+            cd modules/${{ inputs.cloud_provider }}/${{ inputs.tf_module }}
+            ls -la
