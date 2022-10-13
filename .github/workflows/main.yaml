@@ -1,0 +1,26 @@
+name: "Module testing using terratest"
+on:
+  workflow_dispatch:
+    inputs:
+      tf_module:
+        description: 'Select Terraform Module to test using Terratest'
+        required: true
+        default: 'warning' 
+        type: choice
+        options:
+        - aws/vpc
+        - aws/rds
+        - gcp/vpc
+jobs:
+  terratest_all:
+     name: init-and-apply
+     runs-on: ubuntu-20.04
+     steps:
+        - name: Check out repository
+          uses: actions/checkout@v3
+
+        - name: change directory to list contents
+          run: |
+            echo "list the directory structure"
+            cd modules/${{ inputs.tf_module }}
+            ls -la
