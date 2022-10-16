@@ -45,7 +45,7 @@ jobs:
         - name: Installing awscli
           uses: aws-actions/configure-aws-credentials@v1
           with:
-            aws-region: us-east-1
+            aws-region: ap-south-1
         - name: aws, go cli version
           run: |
             aws --version 
