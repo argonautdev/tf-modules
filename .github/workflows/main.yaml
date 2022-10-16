@@ -38,3 +38,14 @@ jobs:
             echo "list the directory structure"
             cd modules/${{ inputs.cloud_provider }}/${{ inputs.tf_module }}
             ls -la
+        - name: Installing GO
+          uses: actions/setup-go@v3
+          with:
+            go-version: '^1.18.6' # The Go version .
+        - name: Installing awscli
+          uses: aws-actions/configure-aws-credentials@v1
+        - name: aws, go cli version
+          run: |
+            aws --version 
+            go version
+            
