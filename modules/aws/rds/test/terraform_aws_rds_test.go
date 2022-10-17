@@ -105,7 +105,7 @@ func TestTerraformAwsRdsModule(t *testing.T) {
 	generalLogParameterValue := aws.GetParameterValueForParameterOfRdsInstance(t, "general_log", dbInstanceIdentifier, awsRegion)
 
 	// Lookup option values. All defined values are strings in the API call response
-	mariadbAuditPluginServerAuditEventsOptionValue := aws.GetOptionSettingForOfRdsInstance(t, "MARIADB_AUDIT_PLUGIN", "SERVER_AUDIT_EVENTS", dbInstanceIdentifier, awsRegion)
+	//mariadbAuditPluginServerAuditEventsOptionValue := aws.GetOptionSettingForOfRdsInstance(t, "MARIADB_AUDIT_PLUGIN", "SERVER_AUDIT_EVENTS", dbInstanceIdentifier, awsRegion)
 
 	// Verify that the address is not null
 	assert.NotNil(t, address)
