@@ -121,5 +121,5 @@ func TestTerraformAwsRdsModule(t *testing.T) {
 	// Booleans are (string) "0", "1"
 	assert.Equal(t, "0", generalLogParameterValue)
 	// assert.Equal(t, "", mariadbAuditPluginServerAuditEventsOptionValue)
-	assert.Equal(t, "CONNECT", mariadbAuditPluginServerAuditEventsOptionValue)
+	//assert.Equal(t, "CONNECT", mariadbAuditPluginServerAuditEventsOptionValue)
 }
