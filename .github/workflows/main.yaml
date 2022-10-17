@@ -43,9 +43,8 @@ jobs:
           with:
             go-version: '^1.18.6' # The Go version .
         - name: Installing awscli
-          uses: aws-actions/configure-aws-credentials@v1
-          with:
-            aws-region: ap-south-1
+          ##It can be Java script files or public docker images. I am using awscli public docker images 
+          uses: amazon/aws-cli@2.7.24
         - name: aws, go cli version
           run: |
             aws --version 
