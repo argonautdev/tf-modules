@@ -113,6 +113,9 @@ func TestTerraformAwsRdsModule(t *testing.T) {
 	assert.NotNil(t, dbInstancePort)
 	// Verify that the DB InstanceName is not null
 	assert.NotNil(t, dbInstanceIdentifier)
+	// Verify that the DB InstanceUserName is not null
+	assert.NotNil(t, dbInstanceUserName)
+
 	// Verify that the DB instance is listening on the port mentioned
 	assert.Equal(t, expectedPort, dbInstancePort)
 	// Booleans are (string) "0", "1"
