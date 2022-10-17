@@ -16,6 +16,6 @@ output "rds_instance_username" {
 
 output "rds_instance_identifier" {
   description = "RDS Instance Identifier"
-  value       = module.db.db_instance_name
+  value       = var.identifier
 }
 
