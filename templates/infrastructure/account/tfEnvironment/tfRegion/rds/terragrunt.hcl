@@ -92,5 +92,4 @@ inputs = {
     database_subnets = dependency.vpc.outputs.database_subnets
     default_security_group_id = dependency.vpc.outputs.default_security_group_id
   }
-
 }

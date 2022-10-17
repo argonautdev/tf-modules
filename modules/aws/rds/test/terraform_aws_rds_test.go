@@ -21,7 +21,7 @@ func TestTerraformAwsRdsModule(t *testing.T) {
 	// Give this RDS Instance a unique ID for a name tag so we can distinguish it from any other RDS Instance running
 	// in your AWS account
 	// expectedName := fmt.Sprintf("terratest-aws-rds-example-%s", strings.ToLower(random.UniqueId()))
-	expectedPort := int64(3306)
+	// expectedPort := int64(3306)
 	db_name := "argonautdev"
 	username := "argoadmin"
 	password := "argoadmin123#"
@@ -29,14 +29,13 @@ func TestTerraformAwsRdsModule(t *testing.T) {
 	db_engine_version := "10.3.35"
 	db_instance_family := "mariadb10.3"
 	db_storage := 40
+	skip_final_snapshot := true
+	create_db_option_group := true
+	major_engine_version := 10.3
+	create_db_parameter_group := true
 	db_max_storage := 1000
-	// 	default_tags{
-	// 		"argonaut.dev/name":       "mariadb-test",
-	// 		"argonaut.dev/type":       "RDS",
-	// 		"argonaut.dev/manager":    "argonaut.dev",
-	// 		"argonaut.dev/rds-engine": "ap-south-1",
-	// 		"argonaut.dev/env/dev":    "true",
-	// 	}
+	cloudwatch_log_exports := "[\"audit\", \"general\", \"error\", \"slowquery\"]"
+	default_tags := "{ \"argonaut.dev/name\":  \"mariadb-test\", \"argonaut.dev/type\": \"RDS\", \"argonaut.dev/manager\":  \"argonaut.dev\", \"argonaut.dev/rds-engine\": \"ap-south-1\", \"argonaut.dev/env/dev\":  \"true\"}"
 	db_instance_identifier := fmt.Sprintf("terratest-rds-instance-%s", strings.ToLower(random.UniqueId()))
 	db_monitoring_role_name := fmt.Sprintf("terratest-rds-monitor-role-%s", strings.ToLower(random.UniqueId()))
 	// Pick a random AWS region to test in. This helps ensure your code works in all regions.
@@ -54,37 +53,34 @@ func TestTerraformAwsRdsModule(t *testing.T) {
 		// Variables to pass to our Terraform code using -var options
 		// "username" and "password" should not be passed from here in a production scenario.
 		Vars: map[string]interface{}{
-			"engine":                 db_engine,
-			"identifier":             db_instance_identifier,
-			"username":               username,
-			"password":               password,
-			"create_db_subnet_group": false,
-			"storage":                db_storage,
-			"max_allocated_storage":  db_max_storage,
-			"name":                   db_name,
-			"engine_version":         db_engine_version,
-			// 			"vpc": {
-			// 				"name":                      "prmysqlenv",
-			// 				"vpc_id":                    "vpc-03ef38c6bc6095c45",
-			// 				"public_subnets":            "[\"subnet-09665f45a62377279\", \"subnet-0d68da8317f0f5768\", \"subnet-027621393dd2dc918\"]",
-			// 				"private_subnets":           "[\"subnet-00e2c4935318f4280\", \"subnet-0d28ea8521dfe3859\", \"subnet-02b8b817473097c04\"]",
-			// 				"database_subnets":          "[\"subnet-0af91ed21e175340c\", \"subnet-00da575fa010bf99c\", \"subnet-03cd3c8b9f874b91e\"]",
-			// 				"default_security_group_id": "sg-09a9a80fbeed7300f",
-			// 				"vpc_cidr_block":            "10.0.0.0/16",
-			// 			},
+			"engine":                          db_engine,
+			"identifier":                      db_instance_identifier,
+			"username":                        username,
+			"password":                        password,
+			"create_db_subnet_group":          false,
+			"storage":                         db_storage,
+			"max_allocated_storage":           db_max_storage,
+			"name":                            db_name,
+			"engine_version":                  db_engine_version,
+			"parameters":                      "[{\"name\": \"slow_query_log\", \"value\": \"1\"}, {\"name\": \"general_log\", \"value\": \"1\" }, {\"name\": \"log_output\", \"value\": \"FILE\" }]",
+			"options":                         "[{\"option_name\": \"MARIADB_AUDIT_PLUGIN\"}]",
+			"vpc":                             "{ \"name\": \"prmysqlenv\", \"vpc_id\": \"vpc-03ef38c6bc6095c45\", \"public_subnets\": [\"subnet-09665f45a62377279\", \"subnet-0d68da8317f0f5768\", \"subnet-027621393dd2dc918\"], \"private_subnets\": [\"subnet-00e2c4935318f4280\", \"subnet-0d28ea8521dfe3859\", \"subnet-02b8b817473097c04\"], \"database_subnets\": [\"subnet-0af91ed21e175340c\", \"subnet-00da575fa010bf99c\", \"subnet-03cd3c8b9f874b91e\"], \"default_security_group_id\": \"sg-09a9a80fbeed7300f\", \"vpc_cidr_block\": \"10.0.0.0/16\"}",
 			"visibility":                      "public",
 			"instance_class":                  instanceType,
 			"aws_region":                      awsRegion,
-			"skip_final_snapshot":             true,
+			"skip_final_snapshot":             skip_final_snapshot,
 			"db_subnet_group_name":            "prmysqlenv",
-			"enabled_cloudwatch_logs_exports": "[]",
-			"create_db_parameter_group":       false,
+			"enabled_cloudwatch_logs_exports": cloudwatch_log_exports,
+			"create_db_parameter_group":       create_db_parameter_group,
 			"create_monitoring_role":          true,
 			"monitoring_role_name":            db_monitoring_role_name,
-			"create_db_option_group":          false,
+			"create_db_option_group":          create_db_option_group,
 			"family":                          db_instance_family,
-			// 			"default_tags":                    default_tags,
+			"major_engine_version":            major_engine_version,
+			"default_tags":                    default_tags,
 		},
+		NoColor:     true,
+		Reconfigure: true,
 	})
 
 	// At the end of the test, run `terraform destroy` to clean up any resources that were created
@@ -94,32 +90,42 @@ func TestTerraformAwsRdsModule(t *testing.T) {
 	terraform.InitAndApply(t, terraformOptions)
 
 	// Run `terraform output` to get the value of an output variable
-	dbInstanceIdentifier := terraform.Output(t, terraformOptions, "rds_instance_identifier")
+	dbInstanceID := terraform.Output(t, terraformOptions, "db_instance_id")
 	dbInstancePort := terraform.Output(t, terraformOptions, "rds_instance_port")
 	dbInstanceUserName := terraform.Output(t, terraformOptions, "rds_instance_username")
 
 	// Look up the endpoint address and port of the RDS instance
-	address := aws.GetAddressOfRdsInstance(t, dbInstanceIdentifier, awsRegion)
+	address := aws.GetAddressOfRdsInstance(t, dbInstanceID, awsRegion)
 
 	// Lookup parameter values. All defined values are strings in the API call response
-	generalLogParameterValue := aws.GetParameterValueForParameterOfRdsInstance(t, "general_log", dbInstanceIdentifier, awsRegion)
+	generalLogParameterValue := aws.GetParameterValueForParameterOfRdsInstance(t, "general_log", dbInstanceID, awsRegion)
+	// slowqueryLogParameterValue := aws.GetParameterValueForParameterOfRdsInstance(t, "slow_query_log", dbInstanceID, awsRegion)
+	//logoutputformatParameterValue := aws.GetParameterValueForParameterOfRdsInstance(t, "log_output", dbInstanceID, awsRegion)
 
 	// Lookup option values. All defined values are strings in the API call response
-	//mariadbAuditPluginServerAuditEventsOptionValue := aws.GetOptionSettingForOfRdsInstance(t, "MARIADB_AUDIT_PLUGIN", "SERVER_AUDIT_EVENTS", dbInstanceIdentifier, awsRegion)
+	mariadbAuditPluginServerAuditEventsOptionValue := aws.GetOptionSettingForOfRdsInstance(t, "MARIADB_AUDIT_PLUGIN", "SERVER_AUDIT_LOGGING", dbInstanceID, awsRegion)
 
 	// Verify that the address is not null
 	assert.NotNil(t, address)
 	// Verify that the DB InstancePort is not null
 	assert.NotNil(t, dbInstancePort)
 	// Verify that the DB InstanceName is not null
-	assert.NotNil(t, dbInstanceIdentifier)
+	assert.NotNil(t, dbInstanceID)
 	// Verify that the DB InstanceUserName is not null
 	assert.NotNil(t, dbInstanceUserName)
 
 	// Verify that the DB instance is listening on the port mentioned
-	assert.Equal(t, expectedPort, dbInstancePort)
+	// assert.Equal(t, expectedPort, int64(dbInstancePort))
+
+	//since we are enabling cloudwatch log exports, the following Parameters should be verified ( Validations )
 	// Booleans are (string) "0", "1"
-	assert.Equal(t, "0", generalLogParameterValue)
+	assert.Equal(t, "1", generalLogParameterValue)
+	// assert.Equal(t, "1", slowqueryLogParameterValue)
+	// assert.Equal(t, "FILE", logoutputformatParameterValue)
+
+	//the following Parameter should be true, otherwise the module deletion fail because we are creating custom option group
+	assert.Equal(t, true, skip_final_snapshot)
+
 	// assert.Equal(t, "", mariadbAuditPluginServerAuditEventsOptionValue)
-	//assert.Equal(t, "CONNECT", mariadbAuditPluginServerAuditEventsOptionValue)
+	assert.Equal(t, "ON", mariadbAuditPluginServerAuditEventsOptionValue)
 }

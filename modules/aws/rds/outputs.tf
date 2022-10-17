@@ -19,3 +19,7 @@ output "rds_instance_identifier" {
   value       = var.identifier
 }
 
+output "db_instance_id" {
+  description = "The RDS instance ID"
+  value       = module.db.db_instance_id
+}

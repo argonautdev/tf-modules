@@ -95,6 +95,7 @@ module "db" {
   # monitoring_role_description           = var.monitoring_role_description
   
   /* Parameter group */
+  create_db_parameter_group  = var.create_db_parameter_group
   parameter_group_name = var.parameter_group_name
   parameter_group_description = var.parameter_group_description
   parameters                  = var.parameters

@@ -112,7 +112,7 @@ variable "backup_window" {
 variable "delete_automated_backups" {
   description = "Specifies whether to remove automated backups immediately after the DB instance is deleted"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "deletion_protection" {
@@ -174,15 +174,16 @@ variable "vpc" {
     default_security_group_id = string
     vpc_cidr_block = string
   })
-  default = {
-		name = "prmysqlenv"
-		vpc_id = "vpc-03ef38c6bc6095c45"
-		public_subnets = ["subnet-09665f45a62377279", "subnet-0d68da8317f0f5768", "subnet-027621393dd2dc918"]
-		private_subnets = ["subnet-00e2c4935318f4280", "subnet-0d28ea8521dfe3859", "subnet-02b8b817473097c04"]
-		database_subnets = ["subnet-0af91ed21e175340c", "subnet-00da575fa010bf99c", "subnet-03cd3c8b9f874b91e"]
-		default_security_group_id = "sg-09a9a80fbeed7300f"
-		vpc_cidr_block = "10.0.0.0/16"
-	}
+#   default = {
+# 		name = "prmysqlenv"
+# 		vpc_id = "vpc-03ef38c6bc6095c45"
+# 		public_subnets = ["subnet-09665f45a62377279", "subnet-0d68da8317f0f5768", "subnet-027621393dd2dc918"]
+# 		private_subnets = ["subnet-00e2c4935318f4280", "subnet-0d28ea8521dfe3859", "subnet-02b8b817473097c04"]
+# 		database_subnets = ["subnet-0af91ed21e175340c", "subnet-00da575fa010bf99c", "subnet-03cd3c8b9f874b91e"]
+# 		default_security_group_id = "sg-09a9a80fbeed7300f"
+# 		vpc_cidr_block = "10.0.0.0/16"
+# 	}
+  # default = {} 
 }
 
 # DB subnet group
