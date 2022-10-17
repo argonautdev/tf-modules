@@ -27,20 +27,7 @@ jobs:
      steps:
         - name: Check out repository
           uses: actions/checkout@v3
-        
-        - name: Terratest for aws modules
-          if:  ${{ inputs.cloud_provider }} == 'aws'
-          run: |
-            echo "list the directory structure"
-            cd modules/${{ inputs.cloud_provider }}/${{ inputs.tf_module }}/test
-            ls -la
-        
-        - name: change directory to list contents
-          run: |
-            echo "list the directory structure"
-            cd modules/${{ inputs.cloud_provider }}/${{ inputs.tf_module }}
-            ls -la
-        
+          
         - name: Installing GO
           uses: actions/setup-go@v3
           with:
@@ -55,10 +42,16 @@ jobs:
         - name: aws, go cli version
           run: |
             aws --version 
-            go version
-            
-        # Runs a aws cli command to list ecr repos
-        - name: Runs a aws cli to see account information
-          id: retrieve_account_information 
+            go version  
+        
+        - name: Terratest for aws modules
+          # if:  ${{ inputs.cloud_provider }} == 'aws'
           run: |
-            aws s3 ls
+            echo "running go commands"
+            cd modules/${{ inputs.cloud_provider }}/${{ inputs.tf_module }}/test
+            echo "module init"
+            go mod init "${{ inputs.tf_module }}"
+            echo "Add Missing and Remove unused modules"
+            go mod tidy
+            echo "Testing the module"
+            go test terraform_${{ inputs.cloud_provider }}_${{ inputs.tf_module }}_test.go -v -timeout 30m
