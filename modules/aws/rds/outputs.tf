@@ -13,3 +13,9 @@ output "rds_instance_username" {
   value       = module.db.db_instance_username
   sensitive = true
 }
+
+output "rds_instance_identifier" {
+  description = "RDS Instance Identifier"
+  value       = module.db.db_instance_name
+}
+

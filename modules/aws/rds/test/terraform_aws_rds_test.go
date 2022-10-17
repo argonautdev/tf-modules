@@ -94,28 +94,27 @@ func TestTerraformAwsRdsModule(t *testing.T) {
 	terraform.InitAndApply(t, terraformOptions)
 
 	// Run `terraform output` to get the value of an output variable
-	dbInstanceID := terraform.Output(t, terraformOptions, "rds_instance_address")
+	dbInstanceIdentifier := terraform.Output(t, terraformOptions, "rds_instance_identifier")
 	dbInstancePort := terraform.Output(t, terraformOptions, "rds_instance_port")
-	dbInstanceName := terraform.Output(t, terraformOptions, "rds_instance_username")
+	dbInstanceUserName := terraform.Output(t, terraformOptions, "rds_instance_username")
 
 	// Look up the endpoint address and port of the RDS instance
-	address := aws.GetAddressOfRdsInstance(t, dbInstanceID, awsRegion)
-	port := aws.GetPortOfRdsInstance(t, dbInstanceID, awsRegion)
+	address := aws.GetAddressOfRdsInstance(t, dbInstanceIdentifier, awsRegion)
 
 	// Lookup parameter values. All defined values are strings in the API call response
-	generalLogParameterValue := aws.GetParameterValueForParameterOfRdsInstance(t, "general_log", dbInstanceID, awsRegion)
+	generalLogParameterValue := aws.GetParameterValueForParameterOfRdsInstance(t, "general_log", dbInstanceIdentifier, awsRegion)
 
 	// Lookup option values. All defined values are strings in the API call response
-	mariadbAuditPluginServerAuditEventsOptionValue := aws.GetOptionSettingForOfRdsInstance(t, "MARIADB_AUDIT_PLUGIN", "SERVER_AUDIT_EVENTS", dbInstanceID, awsRegion)
+	mariadbAuditPluginServerAuditEventsOptionValue := aws.GetOptionSettingForOfRdsInstance(t, "MARIADB_AUDIT_PLUGIN", "SERVER_AUDIT_EVENTS", dbInstanceIdentifier, awsRegion)
 
 	// Verify that the address is not null
 	assert.NotNil(t, address)
 	// Verify that the DB InstancePort is not null
 	assert.NotNil(t, dbInstancePort)
 	// Verify that the DB InstanceName is not null
-	assert.NotNil(t, dbInstanceName)
+	assert.NotNil(t, dbInstanceIdentifier)
 	// Verify that the DB instance is listening on the port mentioned
-	assert.Equal(t, expectedPort, port)
+	assert.Equal(t, expectedPort, dbInstancePort)
 	// Booleans are (string) "0", "1"
 	assert.Equal(t, "0", generalLogParameterValue)
 	// assert.Equal(t, "", mariadbAuditPluginServerAuditEventsOptionValue)
