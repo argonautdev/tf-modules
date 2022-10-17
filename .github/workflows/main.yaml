@@ -52,3 +52,14 @@ jobs:
       - name: account info
         run: |
           aws sts get-caller-identity
+      
+      - name: module testing
+        run: |
+          echo "running go commands"
+          cd modules/${{ inputs.cloud_provider }}/${{ inputs.tf_module }}/test
+          echo "module init"
+          go mod init "${{ inputs.tf_module }}"
+          echo "Add Missing and Remove unused modules"
+          go mod tidy
+          echo "Testing the module"
+          go test terraform_${{ inputs.cloud_provider }}_${{ inputs.tf_module }}_test.go -v -timeout 30m
