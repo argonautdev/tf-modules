@@ -61,4 +61,4 @@ jobs:
         - name: Runs a aws cli to see account information
           id: retrieve_account_information 
           run: |
-            aws sts get-caller-identity
+            aws s3 ls
