@@ -23,7 +23,7 @@ on:
 jobs:
   terratest_all:
      name: init-and-apply
-     runs-on: ubuntu-20.04
+     runs-on: ubuntu-22.04
      steps:
         - name: Check out repository
           uses: actions/checkout@v3
@@ -45,6 +45,7 @@ jobs:
         - name: Installing awscli
           ##It can be Java script files or public docker images. I am using awscli public docker images 
           uses: amazon/aws-cli@2.7.24
+          
         - name: aws, go cli version
           run: |
             aws --version 
