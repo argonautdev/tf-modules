@@ -65,7 +65,6 @@ variable "default_tags" {
   description = "Default Tags"
   type = map(string)
   default = {
-    name = "mariadb-test"
     env = "demo"
   }
 }
