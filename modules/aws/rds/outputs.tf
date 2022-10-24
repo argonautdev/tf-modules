@@ -14,6 +14,12 @@ output "rds_instance_username" {
   sensitive = true
 }
 
+output "rds_instance_password" {
+  description = "The master password"
+  value       = module.db.db_master_password
+  sensitive   = true
+}
+
 output "rds_instance_identifier" {
   description = "RDS Instance Identifier"
   value       = var.identifier
@@ -22,4 +28,9 @@ output "rds_instance_identifier" {
 output "db_instance_id" {
   description = "The RDS instance ID"
   value       = module.db.db_instance_id
+}
+
+output "db_instance_database_name" {
+  description = "The database name"
+  value       = module.db.db_instance_name
 }

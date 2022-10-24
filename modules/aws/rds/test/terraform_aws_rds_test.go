@@ -1,11 +1,15 @@
 package test
 
 import (
+	// "context"
 	"fmt"
 	"github.com/gruntwork-io/terratest/modules/aws"
 	"github.com/gruntwork-io/terratest/modules/random"
 	"github.com/gruntwork-io/terratest/modules/terraform"
 	"github.com/stretchr/testify/assert"
+	// "gocloud.dev/mysql"
+	"database/sql"
+	_ "github.com/go-sql-driver/mysql"
 	"strings"
 	"testing"
 )
@@ -34,6 +38,7 @@ func TestTerraformAwsRdsModule(t *testing.T) {
 	major_engine_version := 10.3
 	create_db_parameter_group := true
 	db_max_storage := 1000
+	visibility := "public"
 	cloudwatch_log_exports := "[\"audit\", \"general\", \"error\", \"slowquery\"]"
 	default_tags := "{ \"argonaut.dev/name\":  \"mariadb-test\", \"argonaut.dev/type\": \"RDS\", \"argonaut.dev/manager\":  \"argonaut.dev\", \"argonaut.dev/rds-engine\": \"ap-south-1\", \"argonaut.dev/env/dev\":  \"true\"}"
 	db_instance_identifier := fmt.Sprintf("terratest-rds-instance-%s", strings.ToLower(random.UniqueId()))
@@ -65,7 +70,7 @@ func TestTerraformAwsRdsModule(t *testing.T) {
 			"parameters":                      "[{\"name\": \"slow_query_log\", \"value\": \"1\"}, {\"name\": \"general_log\", \"value\": \"1\" }, {\"name\": \"log_output\", \"value\": \"FILE\" }]",
 			"options":                         "[{\"option_name\": \"MARIADB_AUDIT_PLUGIN\"}]",
 			"vpc":                             "{ \"name\": \"prmysqlenv\", \"vpc_id\": \"vpc-03ef38c6bc6095c45\", \"public_subnets\": [\"subnet-09665f45a62377279\", \"subnet-0d68da8317f0f5768\", \"subnet-027621393dd2dc918\"], \"private_subnets\": [\"subnet-00e2c4935318f4280\", \"subnet-0d28ea8521dfe3859\", \"subnet-02b8b817473097c04\"], \"database_subnets\": [\"subnet-0af91ed21e175340c\", \"subnet-00da575fa010bf99c\", \"subnet-03cd3c8b9f874b91e\"], \"default_security_group_id\": \"sg-09a9a80fbeed7300f\", \"vpc_cidr_block\": \"10.0.0.0/16\"}",
-			"visibility":                      "public",
+			"visibility":                      visibility,
 			"instance_class":                  instanceType,
 			"aws_region":                      awsRegion,
 			"skip_final_snapshot":             skip_final_snapshot,
@@ -90,12 +95,67 @@ func TestTerraformAwsRdsModule(t *testing.T) {
 	terraform.InitAndApply(t, terraformOptions)
 
 	// Run `terraform output` to get the value of an output variable
-	dbInstanceID := terraform.Output(t, terraformOptions, "db_instance_id")
-	dbInstancePort := terraform.Output(t, terraformOptions, "rds_instance_port")
-	dbInstanceUserName := terraform.Output(t, terraformOptions, "rds_instance_username")
-
 	// Look up the endpoint address and port of the RDS instance
-	address := aws.GetAddressOfRdsInstance(t, dbInstanceID, awsRegion)
+	dbInstanceID := terraform.Output(t, terraformOptions, "db_instance_id")
+	dbInstanceUserName := terraform.Output(t, terraformOptions, "rds_instance_username")
+	dbInstancePassword := terraform.Output(t, terraformOptions, "rds_instance_password")
+	dbInstanceAddress := aws.GetAddressOfRdsInstance(t, dbInstanceID, awsRegion)
+	dbInstancePort := aws.GetPortOfRdsInstance(t, dbInstanceID, awsRegion)
+	// dbInstanceDataBaseName := terraform.Output(t, terraformOptions, "db_instance_database_name")
+	//connecting to database
+	t.Log("Connecting to databases")
+	// ctx := context.Background()
+	urlstr := fmt.Sprintf("%s:%s@tcp(%s:%d)/", dbInstanceUserName, dbInstancePassword, dbInstanceAddress, dbInstancePort)
+	// "awsmysql://%s:%s@%s/%s", dbInstanceUserName, dbInstancePassword, dbInstanceAddress, databaseName)
+	t.Log("Connecting to:", urlstr)
+	db, err := sql.Open("mysql", urlstr)
+	if err != nil {
+		t.Log("Failed connection!!!")
+		t.Fatal(err)
+	} else {
+		t.Log("Connected to DB Successfully...!!!")
+	}
+	defer db.Close()
+
+	//DB Ping
+	t.Log("DB Ping....")
+	err = db.Ping()
+	if err != nil {
+		t.Log("Error verifying connection with db.Ping")
+		t.Fatal(err)
+	} else {
+		fmt.Println("DB Ping is successfull...!!!")
+	}
+
+	// List all Databases;
+	t.Log("List all databases from DB Instances")
+	sql_query_command := "SHOW DATABASES;"
+	res, err := db.Exec(sql_query_command)
+	if err != nil {
+		t.Fatal(err)
+	} else {
+		fmt.Println(res)
+	}
+
+	// Query DB Engine Version
+	var version string
+	t.Log("Finding DB Engine Version")
+	err = db.QueryRow("SELECT VERSION()").Scan(&version)
+	if err != nil {
+		t.Fatal(err)
+	} else {
+		fmt.Println(version)
+	}
+
+	// err2 = db.QueryRow("SELECT VERSION()").Scan(&version)
+
+	//   if err2 != nil {
+	//       t.Fatal(err2)
+	//   }
+
+	//   fmt.Println(version)
+
+	// defer res.Close()
 
 	// Lookup parameter values. All defined values are strings in the API call response
 	generalLogParameterValue := aws.GetParameterValueForParameterOfRdsInstance(t, "general_log", dbInstanceID, awsRegion)
@@ -106,13 +166,15 @@ func TestTerraformAwsRdsModule(t *testing.T) {
 	mariadbAuditPluginServerAuditEventsOptionValue := aws.GetOptionSettingForOfRdsInstance(t, "MARIADB_AUDIT_PLUGIN", "SERVER_AUDIT_LOGGING", dbInstanceID, awsRegion)
 
 	// Verify that the address is not null
-	assert.NotNil(t, address)
+	assert.NotNil(t, dbInstanceAddress)
 	// Verify that the DB InstancePort is not null
 	assert.NotNil(t, dbInstancePort)
 	// Verify that the DB InstanceName is not null
 	assert.NotNil(t, dbInstanceID)
 	// Verify that the DB InstanceUserName is not null
 	assert.NotNil(t, dbInstanceUserName)
+	// Verify that the DB InstanceAddresss is not null
+	assert.NotNil(t, dbInstanceAddress)
 
 	// Verify that the DB instance is listening on the port mentioned
 	// assert.Equal(t, expectedPort, int64(dbInstancePort))
