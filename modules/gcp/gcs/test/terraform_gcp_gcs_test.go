@@ -1,12 +1,16 @@
-package gcs
+package gcp
 
 import (
+	"bytes"
 	"cloud.google.com/go/storage"
 	"context"
 	"fmt"
+	"github.com/gruntwork-io/terratest/modules/gcp"
+	// "github.com/gruntwork-io/terratest/modules/logger"
 	"github.com/gruntwork-io/terratest/modules/random"
 	"github.com/gruntwork-io/terratest/modules/terraform"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"log"
 	"strings"
 	"testing"
@@ -38,6 +42,9 @@ func TestTerraformModule(t *testing.T) {
 	bucket_access_level := "private"
 	prefix := "terratest"
 	project_id := "playground-351903"
+	testFilePath := fmt.Sprintf("test-file-%s.txt", random.UniqueId())
+	testFileBody := "Argonaut first file"
+
 	//default_labels := "{ \"argonaut.dev/name\":  \"gcs-test\", \"argonaut.dev/type\": \"GCS\", \"argonaut.dev/manager\":  \"argonaut.dev\", \"argonaut.dev/GCS\": \"region\", \"argonaut.dev/env/dev\":  \"true\"}"
 
 	// Construct the terraform options with default retryable errors to handle the most common retryable errors in
@@ -57,7 +64,8 @@ func TestTerraformModule(t *testing.T) {
 			"storage_class":       storage_class,
 			"bucket_access_level": bucket_access_level,
 			//"default_labels":      default_labels,
-			"location": region,
+			"force_destroy": fmt.Sprintf("{\"%s\": \"true\"}", bucketname),
+			"location":      region,
 		},
 		Lock: false,
 	})
@@ -68,10 +76,25 @@ func TestTerraformModule(t *testing.T) {
 	// This will run `terraform init` and `terraform apply` and fail the test if there are any errors
 	terraform.InitAndApply(t, terraformOptions)
 
+	// Get applied bucket properties.
 	getbucketmetadata, err := getBucketMetadata(t, fmt.Sprintf("%s-%s-%s", prefix, region, bucketname))
 	if err != nil {
 		t.Fatal(err)
 	}
+
+	// Write a test file to the storage bucket
+	t.Log("Write a test file to the storage bucket")
+	objectURL := gcp.WriteBucketObject(t, getbucketmetadata.Name, testFilePath, strings.NewReader(testFileBody), "text/plain")
+	log.Printf("Got URL: %s", objectURL)
+
+	// Then verify its contents matches the expected result
+	fileReader := gcp.ReadBucketObject(t, getbucketmetadata.Name, testFilePath)
+
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(fileReader)
+	result := buf.String()
+	t.Log("Verifying object content")
+	require.Equal(t, testFileBody, result)
 
 	//Applied StorageClass should be "STANDARD"
 	assert.Equal(t, "STANDARD", getbucketmetadata.StorageClass)
