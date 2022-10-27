@@ -37,7 +37,6 @@ variable "vpc_network_name" {
   type        = string
 }
 
-
 /* When we use want to use private DB we should actually reservice /16 Internal IP for service provider */ 
 /* The Service provider then create subnet on their end and establish peering with our vpc and the good vpc */
 /* Note: What ever the IP we reserve here and can't be used with subnetwork or with secondary ranges anymore */
