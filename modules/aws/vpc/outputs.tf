@@ -22,3 +22,7 @@ output "private_subnets" {
 output "database_subnets" {
   value = var.import_resource ? var.database_subnet_cidr_blocks : one(module.vpc[*].database_subnets)
 }
+
+output "elasticache_subnets" {
+  value = var.import_resource ? var.elasticache_subnet_cidr_blocks : one(module.vpc[*].elasticache_subnets)
+}

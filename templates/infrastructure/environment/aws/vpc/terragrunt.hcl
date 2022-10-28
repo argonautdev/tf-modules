@@ -36,16 +36,10 @@ inputs = {
   aws_region                 = "${local.region}"
   # vpc name should be same as env name
   name                       = "${local.env}"
-  cidr_block                 = "10.0.0.0/16" 
   enable_vpn_gateway         = true
   public_subnet_count        = 3
   private_subnet_count       = 3
-  public_subnet_cidr_blocks  = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
-  private_subnet_cidr_blocks = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]
-  elasticache_subnet_cidr_blocks = ["10.0.10.0/24", "10.0.11.0/24", "10.0.12.0/24"]
   
-  
-  database_subnet_cidr_blocks = ["10.0.7.0/24", "10.0.8.0/24", "10.0.9.0/24"]
   create_database_subnet_group = true
   create_database_subnet_route_table     = true
   enable_dns_hostnames       = true
@@ -60,6 +54,7 @@ inputs = {
   public_subnet_cidr_blocks = {{if .Spec.import_resource}}[{{ range .Spec.public_subnet_cidr_blocks}}"{{.}}", {{end}}]{{else}}["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]{{end}}
   private_subnet_cidr_blocks = {{if .Spec.import_resource}}[{{ range .Spec.private_subnet_cidr_blocks}}"{{.}}", {{end}}]{{else}}["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]{{end}}
   database_subnet_cidr_blocks = {{if .Spec.import_resource}}[{{ range .Spec.database_subnet_cidr_blocks}}"{{.}}", {{end}}]{{else}}["10.0.7.0/24", "10.0.8.0/24", "10.0.9.0/24"]{{end}}
+  elasticache_subnet_cidr_blocks = {{if .Spec.import_resource}}[{{ range .Spec.elasticache_subnet_cidr_blocks}}"{{.}}", {{end}}]{{else}}["10.0.10.0/24", "10.0.11.0/24", "10.0.12.0/24"]{{end}}
 
   {{if .Spec.import_resource}}import_security_group_id = "{{ .Spec.import_security_group_id}}"{{end}}
 
