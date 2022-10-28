@@ -1,3 +1,9 @@
+variable "import_resource" {
+  description = "pass true if tf module creation should be mocked"
+  type        = bool
+  default     = false
+}
+
 variable "default_tags" {
   description = "Default Tags for s3"
   type        = map(string)
@@ -121,4 +127,10 @@ variable "flow_log_max_aggregation_interval" {
   description = "The maximum interval of time during which a flow of packets is captured and aggregated into a flow log record. Valid Values: `60` seconds or `600` seconds."
   type        = number
   default     = 600
+}
+
+variable "import_security_group_id" {
+  description = "Default security group id, pass this value in case of vpc is imported"
+  type        = string
+  default     = ""
 }

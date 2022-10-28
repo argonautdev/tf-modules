@@ -26,6 +26,7 @@ terraform {
 
 # These are the variables we have to pass in to use the module specified in the terragrunt configuration above
 inputs = {
+  import_resource = {{.Spec.import_resource}}
   default_tags = {
     "argonaut.dev/name"        = "${local.env}"
     "argonaut.dev/type"        = "VPC"
@@ -54,4 +55,12 @@ inputs = {
   create_database_internet_gateway_route = true
 
   map_public_ip_on_launch = true
+
+  cidr_block = {{if .Spec.import_resource}}"{{ .Spec.cidr_block}}"{{else}}"10.0.0.0/16"{{end}}
+  public_subnet_cidr_blocks = {{if .Spec.import_resource}}[{{ range .Spec.public_subnet_cidr_blocks}}"{{.}}", {{end}}]{{else}}["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]{{end}}
+  private_subnet_cidr_blocks = {{if .Spec.import_resource}}[{{ range .Spec.private_subnet_cidr_blocks}}"{{.}}", {{end}}]{{else}}["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]{{end}}
+  database_subnet_cidr_blocks = {{if .Spec.import_resource}}[{{ range .Spec.database_subnet_cidr_blocks}}"{{.}}", {{end}}]{{else}}["10.0.7.0/24", "10.0.8.0/24", "10.0.9.0/24"]{{end}}
+
+  {{if .Spec.import_resource}}import_security_group_id = "{{ .Spec.import_security_group_id}}"{{end}}
+
 }
