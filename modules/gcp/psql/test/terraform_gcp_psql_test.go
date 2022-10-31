@@ -1,27 +1,41 @@
 package gcppsql
 
 import (
-	// "cloud.google.com/go/storage"
-	// "context"
+	_ "cloud.google.com/go/storage"
+	"context"
 	"fmt"
 	// "github.com/gruntwork-io/terratest/modules/logger"
 	"github.com/gruntwork-io/terratest/modules/random"
 	"github.com/gruntwork-io/terratest/modules/terraform"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	// sqladmin "google.golang.org/api/sqladmin/v1beta4"
 	// "golang.org/x/net/context"
+	sqladmin "google.golang.org/api/sqladmin/v1beta4"
 	// "golang.org/x/oauth2/google"
 	"database/sql"
 	// ref: https://pkg.go.dev/github.com/lib/pq#section-readme
 	_ "github.com/lib/pq" //A pure Go postgres driver for Go's database/sql package
 	// "google.golang.org/api/sqladmin/v1beta4"
-	// "log"
+	"log"
 	"strings"
 	"testing"
 )
 
 // https://cloud.google.com/storage/docs/getting-bucket-information#storage-get-bucket-metadata-go ---> Reference for following funciton
+func getDBInstanceAttributes(t *testing.T, projectid string, instance_name string) (*sqladmin.DatabaseInstance, error) {
+	ctx := context.Background()
+
+	sqladminService, err := sqladmin.NewService(ctx)
+
+	attr, err := sqladminService.Instances.Get(projectid, instance_name).Do()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return attr, err
+}
+
 // func getDBInstanceAttributes(t *testing.T, projectid string, instance_name string) (*sqladmin.DatabaseInstance, error) {
 // 	ctx := context.Background()
 
@@ -73,9 +87,9 @@ func TestTerraformGcpPsqlModule(t *testing.T) {
 	db_name := "argonautdev"
 	user_name := "argoadmin"
 	user_password := "argoadmin123"
-	// authorized_networks := []map[string]interface{}{
-	// 	{"name": "allow_all", "value": "0.0.0.0/32"},
-	// }
+	authorized_networks := []map[string]string{
+		{"name": "allow_all", "value": "0.0.0.0/32"},
+	}
 
 	terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		// The path to where our Terraform code is located
@@ -97,7 +111,7 @@ func TestTerraformGcpPsqlModule(t *testing.T) {
 			"db_name":                  db_name,
 			"user_name":                user_name,
 			"user_password":            user_password,
-			// "authorized_networks":      authorized_networks,
+			"authorized_networks":      authorized_networks,
 		},
 		Reconfigure: true,
 		NoColor:     true,
@@ -114,15 +128,30 @@ func TestTerraformGcpPsqlModule(t *testing.T) {
 	// Verify that the address is not null
 	assert.NotNil(t, db_instance_ip)
 
-	// getinstancemetadata, err := getDBInstanceAttributes(t, project_id, name)
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// t.Log("Checking if backups enabled or not")
-	// assert.Equal(t, "POSTGRES_12", getinstancemetadata.DatabaseVersion)
+	getinstancemetadata, _ := getDBInstanceAttributes(t, project_id, name)
+	t.Log("Checking activation policy")
+	assert.Equal(t, "ALWAYS", getinstancemetadata.Settings.ActivationPolicy)
 
-	// t.Log("Checking Database Engine AZ ")
-	// assert.Equal(t, zone, getinstancemetadata.GceZone)
+	t.Log("Checking availability_type")
+	assert.Equal(t, "ZONAL", getinstancemetadata.Settings.AvailabilityType)
+
+	t.Log("Comparing postgres version")
+	assert.Equal(t, "POSTGRES_12", getinstancemetadata.DatabaseVersion)
+
+	t.Log("Comparing deletion protection policy")
+	assert.Equal(t, false, getinstancemetadata.Settings.DeletionProtectionEnabled)
+
+	t.Log("Comparing deletion protection policy")
+	assert.Equal(t, false, getinstancemetadata.Settings.DeletionProtectionEnabled)
+
+	t.Log("Checking Database Engine AZ ")
+	assert.Equal(t, zone, getinstancemetadata.GceZone)
+
+	t.Log("Comparing pricing plan")
+	assert.Equal(t, "PER_USE", getinstancemetadata.Settings.PricingPlan)
+
+	// t.Log("comparing Instancetype")
+	// assert.Equal(t, db_compute_instance_size, getinstancemetadata.InstanceType)
 
 	t.Log("DB Connection Testing...")
 	connectionString := fmt.Sprintf("postgres://%s:%s@%s/%s?sslmode=disable", user_name, user_password, db_instance_ip, db_name)
