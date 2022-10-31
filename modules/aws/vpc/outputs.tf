@@ -1,5 +1,5 @@
 output "vpc_id" {
-  value = var.import_resource ? "" : one(module.vpc[*].vpc_id)
+  value = var.import_resource ? var.import_vpc_id : one(module.vpc[*].vpc_id)
 }
 
 output "vpc_cidr_block" {

@@ -134,3 +134,10 @@ variable "import_security_group_id" {
   type        = string
   default     = ""
 }
+
+
+variable "import_vpc_id" {
+  description = "vpc id to be imported, pass this value in case of vpc is imported"
+  type        = string
+  default     = ""
+}

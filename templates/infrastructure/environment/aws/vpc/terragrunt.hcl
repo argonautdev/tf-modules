@@ -57,5 +57,6 @@ inputs = {
   elasticache_subnet_cidr_blocks = {{if .Spec.import_resource}}[{{ range .Spec.elasticache_subnet_cidr_blocks}}"{{.}}", {{end}}]{{else}}["10.0.10.0/24", "10.0.11.0/24", "10.0.12.0/24"]{{end}}
 
   {{if .Spec.import_resource}}import_security_group_id = "{{ .Spec.import_security_group_id}}"{{end}}
+  {{if .Spec.import_resource}}import_vpc_id = "{{ .Spec.import_vpc_id}}"{{end}}
 
 }
