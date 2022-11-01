@@ -24,11 +24,13 @@ data "aws_availability_zones" "available" {
 locals {
   #it should be {node_groups = {ng1 = {} ng2 = {}}
   #ref: https://stackoverflow.com/questions/62679195/terraform-looping-in-list-of-map How this local works
-  ng_list = { for ng in var.node_groups : ng.name => ng }
+  ##either name or nameprefix 
+  ng_list = { for ng in var.node_groups : ng.ng_name => ng }
   ng_list_replacements = { for k, v in local.ng_list : k => merge({
     capacity_type = v.spot ? "SPOT" : "ON_DEMAND"
     instance_types = [v.instance_type]
-    k8s_labels = merge(v.labels, { Environment = var.env })
+    name_prefix   = "${v.ng_name}-art-"
+    k8s_labels = merge(v.k8_labels, { Environment = var.env })
   }, v)}
 }
 
@@ -42,9 +44,9 @@ module "eks" {
 
   vpc_id = var.vpc.id
 
-  node_groups_defaults = {
-    ami_type  = var.ami_type
-  }
+  # node_groups_defaults = {
+  #   ami_type  = var.ami_type
+  # }
   
   node_groups = local.ng_list_replacements
 

@@ -47,15 +47,16 @@ variable "vpc" {
 variable "node_groups" {
   description = "list of nodegroups to create"
   type = list(object({
-    name_prefix      = string
-    name = string
+    # name_prefix      = string
+    ng_name = string
     desired_capacity = number
     max_capacity     = number
     min_capacity     = number
     disk_size        = number
     instance_type    = string
     spot             = bool
-    labels           = optional(map(string))
+    k8_labels        = optional(map(string))
+    ami_type         = string
     taints           = optional(list(string))
   }))
 }
@@ -88,10 +89,10 @@ variable "k8s_service_account_name" {
   type = string
 }
 
-variable "ami_type" {
-  default = "AL2_x86_64"
-  type    = string
-}
+# variable "ami_type" {
+#   default = "AL2_x86_64"
+#   type    = string
+# }
 
 variable "k8s_service_account_namespace" {
   default = "tools"
