@@ -141,9 +141,6 @@ func TestTerraformGcpPsqlModule(t *testing.T) {
 	t.Log("Comparing deletion protection policy")
 	assert.Equal(t, false, getinstancemetadata.Settings.DeletionProtectionEnabled)
 
-	t.Log("Comparing deletion protection policy")
-	assert.Equal(t, false, getinstancemetadata.Settings.DeletionProtectionEnabled)
-
 	t.Log("Checking Database Engine AZ ")
 	assert.Equal(t, zone, getinstancemetadata.GceZone)
 
