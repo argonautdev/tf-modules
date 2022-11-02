@@ -55,7 +55,7 @@ variable "node_groups" {
     disk_size        = number
     instance_type    = string
     spot             = bool
-    k8_labels        = optional(map(string))
+    k8s_labels        = optional(map(string))
     ami_type         = string
     taints           = optional(list(string))
   }))

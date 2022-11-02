@@ -30,7 +30,7 @@ locals {
     capacity_type = v.spot ? "SPOT" : "ON_DEMAND"
     instance_types = [v.instance_type]
     name_prefix   = "${v.ng_name}-art-"
-    k8s_labels = merge(v.k8_labels, { Environment = var.env })
+    k8s_labels = merge(v.k8s_labels, { Environment = var.env })
   }, v)}
 }
 
