@@ -1,3 +1,9 @@
+variable "import_resource" {
+  description = "pass true if tf module creation should be mocked"
+  type        = bool
+  default     = false
+}
+
 variable "project_id" {
   type        = string
   description = "The ID of the project where this VPC will be created"

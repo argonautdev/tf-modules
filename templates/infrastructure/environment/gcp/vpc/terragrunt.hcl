@@ -8,6 +8,7 @@ terraform {
 }
 
 inputs = {
+  import_resource = {{.Spec.import_resource}}
   default_labels= {
     "argonaut-id"          = "{{.Spec.id}}"
     "argonaut-name"        = "{{.Spec.name}}"
