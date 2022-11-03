@@ -29,8 +29,7 @@ locals {
   ng_list_replacements = { for k, v in local.ng_list : k => merge({
     capacity_type = v.spot ? "SPOT" : "ON_DEMAND"
     instance_types = [v.instance_type]
-    # name_prefix   = "${v.ng_name}-art-"
-    name_prefix = "${var.cluster.name}-art-"
+    name_prefix   = "${v.ng_name}-art-"
     k8s_labels = merge(v.k8s_labels, { Environment = var.env })
   }, v)}
 }
