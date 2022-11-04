@@ -1,4 +1,4 @@
-variable "import_resource" {
+variable "is_imported" {
   description = "pass true if tf module creation should be mocked"
   type        = bool
   default     = false
