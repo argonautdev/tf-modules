@@ -57,7 +57,7 @@ variable "node_groups" {
     spot             = bool
     k8s_labels        = optional(map(string))
     ami_type         = string
-    taints           = optional(list(string))
+    #taints           = optional(list(string))
   }))
 }
 
