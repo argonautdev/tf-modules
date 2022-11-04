@@ -1,0 +1,17 @@
+meta:
+  resource_name: memcached
+  description: Google memorystore
+  provider_file_path: /modules/gcp/memorystore-memcache
+
+options:
+  cpu_count:
+  - value: 1
+    description: 1 cpu per node
+  - value: 2
+    description: 2 cpu per node
+  
+  memory_size_mb:
+  - value: 1024
+    description: 1 GB memory 
+  - value: 2048
+    description: 2 GB memory 
