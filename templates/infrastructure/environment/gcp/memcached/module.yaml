@@ -4,14 +4,16 @@ meta:
   provider_file_path: /modules/gcp/memorystore-memcache
 
 options:
-  cpu_count:
-  - value: 1
-    description: 1 cpu per node
-  - value: 2
-    description: 2 cpu per node
+  - variable: cpu_count
+    values:
+      - value: 1
+        description: 1 cpu per node
+      - value: 2
+        description: 2 cpu per node
   
-  memory_size_mb:
-  - value: 1024
-    description: 1 GB memory 
-  - value: 2048
-    description: 2 GB memory 
+  - variable: memory_size_mb
+    values:
+      - value: 1024
+        description: 1 GB memory 
+      - value: 2048
+        description: 2 GB memory 
