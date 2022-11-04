@@ -78,7 +78,7 @@ inputs = {
       instance_type = "{{$n.instance_type}}"
       spot = {{$n.spot}}
       ami_type = "{{$n.ami_type}}"
-      {{if .Spec.k8s_labels}}k8s_labels = {{.Spec.k8s_labels}}{{end}}
+      {{if $n.k8s_labels}}k8s_labels = {{$n.k8s_labels}}{{end}}
     },
   {{ end }}
   ]
