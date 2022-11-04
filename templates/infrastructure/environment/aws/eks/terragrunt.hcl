@@ -90,5 +90,7 @@ inputs = {
   map_roles = local.map_roles
 
   aws_region = "${local.region}"
+  
+  node_groups = {{.Spec.node_groups}}
 }
 
