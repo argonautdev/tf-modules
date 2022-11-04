@@ -90,6 +90,18 @@ inputs = {
   map_roles = local.map_roles
 
   aws_region = "${local.region}"
-  
+
+  node_groups = [{{ range $n := .Spec.node_groups }}
+    {
+      ng_name = "{{$n.ng_name}}"
+      desired_capacity = {{$n.number_of_instance}}
+      max_capacity = {{$n.number_of_instance_max}}
+      min_capacity = {{$n.number_of_instance_min}}
+      disk_size = {{$n.disk_size}}
+      instance_type = "{{$n.instance_type}}"
+      spot = {{$n.spot}}
+    },
+  {{ end }}
+  ]
 }
 
