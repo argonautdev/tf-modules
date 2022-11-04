@@ -1,7 +1,7 @@
 meta:
-  resource_name: memcached
+  resourceName: memcached
   description: Google memorystore
-  provider_file_path: /modules/gcp/memorystore-memcache
+  providerFilePath: /modules/gcp/memorystore-memcache
 
 options:
   - variable: cpu_count
