@@ -84,15 +84,7 @@ inputs = {
 
   k8s_service_account_name = "{{.Spec.name}}-argonaut-sa"
 
-  node_group = {
-    name_prefix = "{{.Spec.node_group.name}}"
-    desired_capacity = {{.Spec.node_group.number_of_instance}}
-    max_capacity = {{.Spec.node_group.number_of_instance_max}}
-    min_capacity = {{.Spec.node_group.number_of_instance_min}}
-    disk_size = {{.Spec.node_group.disk_size}}
-    instance_type = "{{.Spec.node_group.instance_type}}"
-    spot = {{.Spec.node_group.spot}}
-  }
+  node_groups = "{{.Spec.node_groups}}"
 
   # account level spec kept at account level
   map_users = local.map_users
