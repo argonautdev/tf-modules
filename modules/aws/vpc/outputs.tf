@@ -22,3 +22,7 @@ output "private_subnets" {
 output "database_subnets" {
   value = module.vpc.database_subnets
 }
+
+output "elasticache_subnets" {
+  value = module.vpc.elasticache_subnets
+}
