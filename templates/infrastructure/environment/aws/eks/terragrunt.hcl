@@ -90,5 +90,6 @@ inputs = {
   map_roles = local.map_roles
 
   aws_region = "${local.region}"
+  
 }
 
