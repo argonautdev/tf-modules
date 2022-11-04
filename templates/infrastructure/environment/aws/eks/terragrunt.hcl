@@ -84,8 +84,6 @@ inputs = {
 
   k8s_service_account_name = "{{.Spec.name}}-argonaut-sa"
 
-  node_groups = "{{.Spec.node_groups}}"
-
   # account level spec kept at account level
   map_users = local.map_users
   map_accounts = local.map_accounts
