@@ -14,7 +14,6 @@ module "enabled_google_apis" {
 module "vpc" {
   source           = "terraform-google-modules/network/google"
   version          = "~> 4.0"
-  count            = var.import_resource ? 0 : 1
   project_id       = var.project_id
   network_name     = var.network_name
   description      = var.description
@@ -29,7 +28,6 @@ module "cloud_router" {
   depends_on  = [module.vpc]
   source      = "terraform-google-modules/cloud-router/google"
   version     = "2.0.0"
-  count       = var.import_resource ? 0 : 1
   name        = var.router_name
   description = var.router_description
   project     = var.project_id
@@ -49,7 +47,6 @@ module "private-service-access" {
   depends_on = [module.vpc]
   source      = "GoogleCloudPlatform/sql-db/google//modules/private_service_access"
   version     = "11.0.0"
-  count       = var.import_resource ? 0 : 1
   project_id  = var.project_id
   vpc_network = var.network_name
   description = "private service access for vpc ${var.network_name}"
