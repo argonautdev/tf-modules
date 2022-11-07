@@ -33,4 +33,6 @@ inputs = {
   logging = "{{.Spec.logging }}"
   domain_name = "{{.Spec.domain_name }}"
   subdomain   = "{{.Spec.subdomain }}"
+  # TODO: List (array) of alias domains
+  aliases = "{{ .Spec.aliases }}"
 }

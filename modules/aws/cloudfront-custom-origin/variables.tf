@@ -54,7 +54,7 @@ variable "custom_origin_dns_name" {
 variable "origin_protocol_policy" {
   description = "Protocol that cloudfront to use when connecting to the origin. Supported values (http-only, https-only, or match-viewer)"
   type        = string
-  default = "https-only"
+  default = "match-viewer"
 }
 
 ##Cache Behavior Arguments###
@@ -62,7 +62,7 @@ variable "origin_protocol_policy" {
 variable "allowed_methods" {
   description = "Controls which HTTP methods CloudFront processes and forwards to your custom origin, for ex: 'DELETE', 'GET', 'HEAD', 'OPTIONS', 'PATCH', 'POST', 'PUT'"
   type        = list(any)
-  default = ["GET", "HEAD", "OPTIONS"]
+  default = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "OPTIONS", "PATCH", "DELETE"]
 }
 
 variable "cached_methods" {
@@ -70,6 +70,28 @@ variable "cached_methods" {
   type        = list(any)
   default = ["GET", "HEAD"]
 }
+
+# This is id for SecurityHeadersPolicy copied from https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-response-headers-policies.html
+variable "response_headers_policy_id" {
+  description = "Policy ID for managed response headers policies that you can attach to cache behaviors in your CloudFront distributions."
+  type        = string
+  default = "eaab4381-ed33-4a86-88ca-d9558dc6cd63"
+}
+
+# https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-cache-policies.html
+variable "cache_policy_id" {
+  description = "Policy ID for cache behaviors in your CloudFront distributions."
+  type        = string
+  default = "658327ea-f89d-4fab-a63d-7e88639e58f6"
+}
+
+# https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-origin-request-policies.html
+variable "origin_request_policy_id" {
+  description = "Policy ID for origin request behaviors in your CloudFront distributions."
+  type        = string
+  default = "216adef6-5c7f-47e4-b989-5492eafa07d3"
+}
+
 
 /* CF logging */
 variable "logging" {
@@ -96,3 +118,4 @@ variable "aliases" {
   type        = list(string)
   default     = []
 }
+

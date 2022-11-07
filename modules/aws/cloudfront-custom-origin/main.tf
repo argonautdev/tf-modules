@@ -1,6 +1,6 @@
 module "cloudfront" {
   source = "terraform-aws-modules/cloudfront/aws"
-  version = "2.9.3"
+  version = "3.0.1"
   comment             = var.description
   is_ipv6_enabled     = var.is_ipv6_enabled
   price_class         = var.price_class
@@ -26,7 +26,14 @@ module "cloudfront" {
     allowed_methods = var.allowed_methods
     cached_methods  = var.cached_methods
     compress        = true
-    query_string    = true
+
+    # cache policies
+    use_forwarded_values = false
+    # query_string    = true
+    response_headers_policy_id = var.response_headers_policy_id
+    cache_policy_id = var.cache_policy_id
+    origin_request_policy_id = var.origin_request_policy_id
+    
   }
   
   ##If Logging is enabled it will get the value from module s3 outputs
