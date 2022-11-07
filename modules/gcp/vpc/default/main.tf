@@ -46,7 +46,7 @@ module "cloud_router" {
 module "private-service-access" {
   depends_on = [module.vpc]
   source      = "GoogleCloudPlatform/sql-db/google//modules/private_service_access"
-  version     = "11.0.0"
+  version = "11.0.0"
   project_id  = var.project_id
   vpc_network = var.network_name
   description = "private service access for vpc ${var.network_name}"
