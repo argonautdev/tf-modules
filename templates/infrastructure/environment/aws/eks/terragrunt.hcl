@@ -79,13 +79,12 @@ inputs = {
       spot = {{$n.spot}}
       ami_type = "{{$n.ami_type}}"
       {{if $n.k8s_labels}}
-        k8s_labels = {{{ range $labelKey,$labelValue := $n.k8s_labels }}
-          {
+        k8s_labels = {
+          {{ range $labelKey,$labelValue := $n.k8s_labels }}
             "{{$labelKey}}" = "{{$labelValue}}"
+          {{ end }}
           }
-          {{end}}
-        }
-      {{end}}
+      {{ end }}
     },
   {{ end }}
   ]
