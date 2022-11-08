@@ -41,7 +41,7 @@ module "cloudfront" {
      bucket = module.cf-logging-bucket.s3_bucket_bucket_domain_name
      prefix = "${var.app_name}-cloudfront" 
   } : {}
-  aliases = concat(var.aliases, ["${var.subdomain}.${var.domain_name}"])
+  aliases = var.subdomain != "" ? concat(var.aliases, ["${var.subdomain}.${var.domain_name}"]) : concat(var.aliases, [var.domain_name])
   viewer_certificate = {
     acm_certificate_arn = module.acm.acm_certificate_arn
     minimum_protocol_version = "TLSv1.2_2021"
@@ -147,15 +147,15 @@ module "acm" {
   providers = {
     aws = aws.acm ##Only Provision in "us-east-1" due it's limitation
   }
-  domain_name  = "${var.domain_name}"
+  domain_name  = "${var.subdomain}.${var.domain_name}"
   zone_id      = data.aws_route53_zone.hostedzone.zone_id
-  subject_alternative_names = "${concat(var.aliases, ["${var.subdomain}.${var.domain_name}", "*.${var.domain_name}"])}"
+  subject_alternative_names = var.subdomain != "" ? "${concat(var.aliases, ["*.${var.subdomain}.${var.domain_name}"])}" : "${concat(var.aliases, ["*.${var.domain_name}"])}"
 }
 
 ##Route53 Record entry for cloudfront dns
 resource "aws_route53_record" "cf_record_entry_wildcard" {
   zone_id = data.aws_route53_zone.hostedzone.zone_id
-  name = "*.${var.domain_name}"
+  name = var.subdomain != "" ? "*.${var.subdomain}.${var.domain_name}" : "*.${var.domain_name}"
   type = "A"
   alias  {
     name = module.cloudfront.cloudfront_distribution_domain_name
@@ -166,7 +166,7 @@ resource "aws_route53_record" "cf_record_entry_wildcard" {
 
 resource "aws_route53_record" "cf_record_entry" {
   zone_id = data.aws_route53_zone.hostedzone.zone_id
-  name = "${var.domain_name}"
+  name = var.subdomain != "" ? "${var.subdomain}.${var.domain_name}" : "${var.domain_name}"
   type = "A"
   alias  {
     name = module.cloudfront.cloudfront_distribution_domain_name
