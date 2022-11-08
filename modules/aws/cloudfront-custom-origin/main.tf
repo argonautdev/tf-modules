@@ -147,18 +147,43 @@ module "acm" {
   providers = {
     aws = aws.acm ##Only Provision in "us-east-1" due it's limitation
   }
-  domain_name  = "${var.subdomain}.${var.domain_name}"
+  domain_name  = "${var.domain_name}"
   zone_id      = data.aws_route53_zone.hostedzone.zone_id
+  subject_alternative_names = "${concat(var.aliases, ["${var.subdomain}.${var.domain_name}", "*.${var.domain_name}"])}"
 }
 
 ##Route53 Record entry for cloudfront dns
+resource "aws_route53_record" "cf_record_entry_wildcard" {
+  zone_id = data.aws_route53_zone.hostedzone.zone_id
+  name = "*.${var.domain_name}"
+  type = "A"
+  alias  {
+    name = module.cloudfront.cloudfront_distribution_domain_name
+    zone_id = module.cloudfront.cloudfront_distribution_hosted_zone_id
+    evaluate_target_health = false
+  }
+}
+
 resource "aws_route53_record" "cf_record_entry" {
-    zone_id = data.aws_route53_zone.hostedzone.zone_id
-    name = var.subdomain
-    type = "A"
-    alias  {
-      name = module.cloudfront.cloudfront_distribution_domain_name
-      zone_id = module.cloudfront.cloudfront_distribution_hosted_zone_id
-      evaluate_target_health = false
-    }
+  zone_id = data.aws_route53_zone.hostedzone.zone_id
+  name = "${var.domain_name}"
+  type = "A"
+  alias  {
+    name = module.cloudfront.cloudfront_distribution_domain_name
+    zone_id = module.cloudfront.cloudfront_distribution_hosted_zone_id
+    evaluate_target_health = false
+  }
+}
+
+##Route53 Record entry for cloudfront dns
+resource "aws_route53_record" "cf_record_entry_aliases" {
+  for_each = {for idx, value in var.aliases: idx => value} 
+  name = "${each.value}"
+  zone_id = data.aws_route53_zone.hostedzone.zone_id
+  type = "A"
+  alias  {
+    name = module.cloudfront.cloudfront_distribution_domain_name
+    zone_id = module.cloudfront.cloudfront_distribution_hosted_zone_id
+    evaluate_target_health = false
+  }
 }
