@@ -17,3 +17,9 @@ output "cloudfront_distribution_domain_name" {
   description = "The domain name corresponding to the distribution."
   value       = module.cloudfront.cloudfront_distribution_domain_name
 }
+
+
+output "cloudfront_origin_dns" {
+  description = "The (laodbalancer) origin DNS instance fronted by the cloudfront distribution."
+  value       = var.custom_origin_dns_name
+}

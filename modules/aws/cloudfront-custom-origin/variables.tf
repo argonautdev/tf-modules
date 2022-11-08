@@ -119,3 +119,9 @@ variable "aliases" {
   default     = []
 }
 
+# DNS records
+variable "create_dns_records" {
+  description = "Set to true to create DNS records corresponding to the domains, subdomains, and aliases"
+  type        = bool
+  default     = false
+}
