@@ -1,10 +1,8 @@
 apiVersion: module.argonaut.dev/v1
-
 metadata:
   resourceName: memcached
   description: Google memorystore
   providerFilePath: /modules/gcp/memorystore-memcache
-
 spec:
   attributeDefinitions:
     - name: cpu_count
@@ -16,6 +14,6 @@ spec:
     - name: memory_size_mb
       values:
         - value: 1024
-          description: 1 GB memory 
+          description: 1 GB memory
         - value: 2048
-          description: 2 GB memory 
+          description: 2 GB memory
