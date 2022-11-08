@@ -7,13 +7,13 @@ metadata:
 
 spec:
   attributeDefinitions:
-    - key: cpu_count
+    - name: cpu_count
       values:
         - value: 1
           description: 1 cpu per node
         - value: 2
           description: 2 cpu per node
-    - key: memory_size_mb
+    - name: memory_size_mb
       values:
         - value: 1024
           description: 1 GB memory 
