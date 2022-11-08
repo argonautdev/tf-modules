@@ -41,7 +41,7 @@ module "cloudfront" {
      bucket = module.cf-logging-bucket.s3_bucket_bucket_domain_name
      prefix = "${var.app_name}-cloudfront" 
   } : {}
-  aliases = var.subdomain != "" ? concat(var.aliases, ["${var.subdomain}.${var.domain_name}"]) : concat(var.aliases, [var.domain_name])
+  aliases = var.subdomain != "" ? concat(var.aliases, ["${var.subdomain}.${var.domain_name}", "*.${var.subdomain}.${var.domain_name}"]) : concat(var.aliases, [var.domain_name, "*.${var.domain_name}"])
   viewer_certificate = {
     acm_certificate_arn = module.acm.acm_certificate_arn
     minimum_protocol_version = "TLSv1.2_2021"
