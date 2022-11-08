@@ -75,7 +75,7 @@ variable "cached_methods" {
 variable "response_headers_policy_id" {
   description = "Policy ID for managed response headers policies that you can attach to cache behaviors in your CloudFront distributions."
   type        = string
-  default = "eaab4381-ed33-4a86-88ca-d9558dc6cd63"
+  default = "60669652-455b-4ae9-85a4-c4c02393f86c"
 }
 
 # https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-cache-policies.html
