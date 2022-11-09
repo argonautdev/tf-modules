@@ -68,7 +68,26 @@ inputs = {
     "aws.amazon.com/spot": "true"
   }
 
-  {{if .Spec.ami_type}}ami_type = "{{.Spec.ami_type}}"{{end}}
+  node_groups = [{{ range $n := .Spec.node_groups }}
+    {
+      ng_name = "{{$n.ng_name}}"
+      desired_capacity = {{$n.number_of_instance}}
+      max_capacity = {{$n.number_of_instance_max}}
+      min_capacity = {{$n.number_of_instance_min}}
+      disk_size = {{$n.disk_size}}
+      instance_type = "{{$n.instance_type}}"
+      spot = {{$n.spot}}
+      ami_type = "{{$n.ami_type}}"
+      {{if $n.k8s_labels}}
+      k8s_labels = {
+        {{ range $labelKey,$labelValue := $n.k8s_labels }}
+        "{{$labelKey}}" = "{{$labelValue}}"
+        {{ end }}
+      }
+      {{ end }}
+    },
+  {{ end }}
+  ]
 
   env = "${local.env}"
   vpc = {
@@ -90,6 +109,5 @@ inputs = {
   map_roles = local.map_roles
 
   aws_region = "${local.region}"
-  
 }
 
