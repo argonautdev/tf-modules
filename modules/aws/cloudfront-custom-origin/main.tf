@@ -1,6 +1,6 @@
 module "cloudfront" {
   source = "terraform-aws-modules/cloudfront/aws"
-  version = "2.9.3"
+  version = "3.0.1"
   comment             = var.description
   is_ipv6_enabled     = var.is_ipv6_enabled
   price_class         = var.price_class
@@ -26,7 +26,14 @@ module "cloudfront" {
     allowed_methods = var.allowed_methods
     cached_methods  = var.cached_methods
     compress        = true
-    query_string    = true
+
+    # cache policies
+    use_forwarded_values = false
+    # query_string    = true
+    response_headers_policy_id = var.response_headers_policy_id
+    cache_policy_id = var.cache_policy_id
+    origin_request_policy_id = var.origin_request_policy_id
+    
   }
   
   ##If Logging is enabled it will get the value from module s3 outputs
@@ -34,7 +41,7 @@ module "cloudfront" {
      bucket = module.cf-logging-bucket.s3_bucket_bucket_domain_name
      prefix = "${var.app_name}-cloudfront" 
   } : {}
-  aliases = concat(var.aliases, ["${var.subdomain}.${var.domain_name}"])
+  aliases = var.subdomain != "" ? concat(var.aliases, ["${var.subdomain}.${var.domain_name}", "*.${var.subdomain}.${var.domain_name}"]) : concat(var.aliases, [var.domain_name, "*.${var.domain_name}"])
   viewer_certificate = {
     acm_certificate_arn = module.acm.acm_certificate_arn
     minimum_protocol_version = "TLSv1.2_2021"
@@ -140,18 +147,45 @@ module "acm" {
   providers = {
     aws = aws.acm ##Only Provision in "us-east-1" due it's limitation
   }
-  domain_name  = "${var.subdomain}.${var.domain_name}"
+  domain_name  = var.subdomain != "" ? "${var.subdomain}.${var.domain_name}" : "${var.domain_name}"
   zone_id      = data.aws_route53_zone.hostedzone.zone_id
+  subject_alternative_names = var.subdomain != "" ? "${concat(var.aliases, ["*.${var.subdomain}.${var.domain_name}"])}" : "${concat(var.aliases, ["*.${var.domain_name}"])}"
 }
 
 ##Route53 Record entry for cloudfront dns
+resource "aws_route53_record" "cf_record_entry_wildcard" {
+  count = var.create_dns_records ? 1 : 0
+  zone_id = data.aws_route53_zone.hostedzone.zone_id
+  name = var.subdomain != "" ? "*.${var.subdomain}.${var.domain_name}" : "*.${var.domain_name}"
+  type = "A"
+  alias  {
+    name = module.cloudfront.cloudfront_distribution_domain_name
+    zone_id = module.cloudfront.cloudfront_distribution_hosted_zone_id
+    evaluate_target_health = false
+  }
+}
+
 resource "aws_route53_record" "cf_record_entry" {
-    zone_id = data.aws_route53_zone.hostedzone.zone_id
-    name = var.subdomain
-    type = "A"
-    alias  {
-      name = module.cloudfront.cloudfront_distribution_domain_name
-      zone_id = module.cloudfront.cloudfront_distribution_hosted_zone_id
-      evaluate_target_health = false
-    }
+  count = var.create_dns_records ? 1 : 0
+  zone_id = data.aws_route53_zone.hostedzone.zone_id
+  name = var.subdomain != "" ? "${var.subdomain}.${var.domain_name}" : "${var.domain_name}"
+  type = "A"
+  alias  {
+    name = module.cloudfront.cloudfront_distribution_domain_name
+    zone_id = module.cloudfront.cloudfront_distribution_hosted_zone_id
+    evaluate_target_health = false
+  }
+}
+
+##Route53 Record entry for cloudfront dns
+resource "aws_route53_record" "cf_record_entry_aliases" {
+  for_each = var.create_dns_records ? {for idx, value in var.aliases: idx => value} : {}
+  name = "${each.value}"
+  zone_id = data.aws_route53_zone.hostedzone.zone_id
+  type = "A"
+  alias  {
+    name = module.cloudfront.cloudfront_distribution_domain_name
+    zone_id = module.cloudfront.cloudfront_distribution_hosted_zone_id
+    evaluate_target_health = false
+  }
 }
