@@ -1,7 +1,7 @@
 apiVersion: module.argonaut.dev/v1
 metadata:
   resourceName: memcached
-  description: Google memorystore
+  description: Memorystore for Memcached
   providerFilePath: "/modules/gcp/memorystore-memcache"
 spec:
   attributeDefinitions:
