@@ -42,3 +42,8 @@ output "subnets_regions" {
   value       = module.vpc.subnets_regions
   description = "The region where the subnets will be created"
 }
+
+output "private_service_access_name" {
+  value       = module.private-service-access.google_compute_global_address_name
+  description = "The name of the private service access created"
+}

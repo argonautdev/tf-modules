@@ -44,7 +44,7 @@ data "google_compute_network" "my-network" {
 locals {
   ip_configuration = {
       ipv4_enabled = var.db_connectivity_type == "private" ? false : true
-      allocated_ip_range = var.db_connectivity_type == "private" ? "google-managed-services-${var.vpc_network_name}": null
+      allocated_ip_range = var.db_connectivity_type == "private" ? var.private_service_access_name : null
       authorized_networks = var.authorized_networks
       //The VPC network from which the Cloud SQL instance is accessible for private IP
       private_network = var.db_connectivity_type == "private" ? data.google_compute_network.my-network.self_link : null
