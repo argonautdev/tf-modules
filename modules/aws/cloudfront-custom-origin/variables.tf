@@ -82,7 +82,7 @@ variable "response_headers_policy_id" {
 variable "cache_policy_id" {
   description = "Policy ID for cache behaviors in your CloudFront distributions."
   type        = string
-  default = "658327ea-f89d-4fab-a63d-7e88639e58f6"
+  default = "4135ea2d-6df8-44a3-9df3-4b5a84be39ad"
 }
 
 # https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-origin-request-policies.html
