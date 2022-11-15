@@ -13,7 +13,7 @@ output "nodes" {
   value       = module.memcache.memcache_nodes
 }
 
-output "discovery" {
+output "discovery_endpoint" {
   description = "The memorystore discovery endpoint."
-  value       = module.memcache.discovery_endpoint
+  value       = module.memcache.discovery
 }
