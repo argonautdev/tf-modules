@@ -24,7 +24,7 @@ variable "vpc_network_name" {
 variable "tier" {
   description = "The service tier of the instance. https://cloud.google.com/memorystore/docs/redis/reference/rest/v1/projects.locations.instances#Tier"
   type        = string
-  default     = "STANDARD_HA"
+  default     = "BASIC"
   
   validation {
     condition     = var.tier == "BASIC" || var.tier == "STANDARD_HA" 
@@ -102,7 +102,7 @@ variable "reserved_ip_range" {
 variable "connect_mode" {
   description = "The connection mode of the Redis instance. Can be either DIRECT_PEERING or PRIVATE_SERVICE_ACCESS. The default connect mode if not provided is DIRECT_PEERING."
   type        = string
-  default     = "PRIVATE_SERVICE_ACCESS"
+  default     = "DIRECT_PEERING"
   
   validation {
     condition     = var.connect_mode == "DIRECT_PEERING" || var.connect_mode == "PRIVATE_SERVICE_ACCESS"
@@ -132,10 +132,18 @@ variable "auth_enabled" {
   default     = false
 }
 
+##By Default encryption mode is disabled. 
+##If enabled, Certificate should be downloaded to your instance and run the commands to check ( ref below ) to connect to instance using tls certificate
+## Download certificate from Redis Instance Page ---> Security
+## Ref: https://stackoverflow.com/questions/71785724/gcp-memorystore-redis-protocol-error-got-x15-as-reply-type-byte
 variable "transit_encryption_mode" {
   description = "The TLS mode of the Redis instance, If not provided, TLS is enabled for the instance."
   type        = string
-  default     = "SERVER_AUTHENTICATION"
+  default     = "DISABLED"
+  validation {
+    condition     = var.transit_encryption_mode == "DISABLED" || var.transit_encryption_mode == "SERVER_AUTHENTICATION"
+    error_message = "The value choosen is not in the list of ( DISABLED, SERVER_AUTHENTICATION)."
+  }
 }
 
 variable "maintenance_policy" {
@@ -150,7 +158,15 @@ variable "maintenance_policy" {
       nanos   = number
     })
   })
-  default = null
+  default = {
+    day = "SUNDAY"
+    start_time = {
+      hours   = 23
+      minutes = 11
+      seconds = 10
+      nanos   = 10
+    }
+  }
 }
 
 variable "customer_managed_key" {

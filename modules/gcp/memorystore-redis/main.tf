@@ -17,6 +17,7 @@ module "memorystore" {
   labels = merge(var.labels, var.default_labels)
   auth_enabled = var.auth_enabled
   maintenance_policy = var.maintenance_policy
+  transit_encryption_mode = var.transit_encryption_mode
 }
 
 data "google_redis_instance" "export_redis_instance_info" {
