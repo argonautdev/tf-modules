@@ -19,7 +19,7 @@ module "memcache" {
   region = var.region
   project = var.project_id
   name    = var.name
-  enable_apis = var.enable_apis
+  # enable_apis = var.enable_apis
   authorized_network = "projects/${var.project_id}/global/networks/${var.vpc_network_name}"
   node_count = var.node_count
   cpu_count = var.cpu_count
