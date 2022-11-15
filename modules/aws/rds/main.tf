@@ -89,3 +89,4 @@ module "db" {
   enabled_cloudwatch_logs_exports = var.engine == "postgres" ? ["postgresql", "upgrade"] :  ["general"]
 
 }
+
