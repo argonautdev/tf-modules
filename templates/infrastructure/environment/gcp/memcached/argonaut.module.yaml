@@ -1,10 +1,9 @@
-apiVersion: module.argonaut.dev/v1
 metadata:
-  resourceName: memcached
+  resource_name: memcached
   description: Memorystore for Memcached
-  providerFilePath: "/modules/gcp/memorystore-memcache"
+  provider_file_path: "/modules/gcp/memorystore-memcache"
 spec:
-  attributeDefinitions:
+  attribute_definitions:
     - name: cpu_count
       values:
         - value: 1
