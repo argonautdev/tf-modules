@@ -20,7 +20,6 @@ variable "on_demand_tags" {
 variable "map_accounts" {
   description = "Additional AWS account numbers to add to the aws-auth configmap."
   type        = list(string)
-  default     = []
 }
 
 variable "cluster" {
@@ -68,7 +67,6 @@ variable "map_users" {
     username = string
     groups   = list(string)
   }))
-  default = []
 }
 
 variable "map_roles" {
@@ -78,7 +76,6 @@ variable "map_roles" {
     username = string
     groups   = list(string)
   }))
-  default = []
 }
 
 variable "env" {
