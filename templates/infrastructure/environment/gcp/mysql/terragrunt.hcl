@@ -21,5 +21,5 @@ inputs = {
   }
   
   vpc_network_name               = dependency.{{ .Spec.vpc_id }}.outputs.network_name
-  
+  private_service_access_name    = dependency.{{ .Spec.vpc_id }}.outputs.private_service_access_name
 }

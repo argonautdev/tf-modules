@@ -4,7 +4,7 @@ include {
 
 terraform {
   # the below config is an example of what the config should like
-  source = "github.com/argonautdev/tf-modules.git//modules/gcp/vpc?ref={{.RefVersion}}"
+  source = "github.com/argonautdev/tf-modules.git//modules/gcp/vpc/{{if .Spec.is_imported}}{{.Spec.import_kind}}{{else}}default{{end}}?ref={{.RefVersion}}"
 }
 
 inputs = {
@@ -41,4 +41,6 @@ inputs = {
     },
     {{ end }}
   ]
+
+  {{if .Spec.is_imported}}private_service_access_name = "{{ .Spec.private_service_access_name}}"{{end}}
 }

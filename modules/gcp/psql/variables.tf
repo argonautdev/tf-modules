@@ -37,6 +37,11 @@ variable "vpc_network_name" {
   type        = string
 }
 
+variable "private_service_access_name" {
+  description = "The private service access name"
+  type        = string
+}
+
 
 /* When we use want to use private DB we should actually reservice /16 Internal IP for service provider */ 
 /* The Service provider then create subnet on their end and establish peering with our vpc and the good vpc */
