@@ -1,0 +1,4 @@
+metadata:
+  resource_name: memcached
+  description: Memorystore for Memcached
+  provider_file_path: "/modules/gcp/memorystore-memcache"
