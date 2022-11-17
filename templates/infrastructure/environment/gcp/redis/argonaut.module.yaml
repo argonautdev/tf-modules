@@ -47,25 +47,3 @@ metadata:
           - display_value: Redis 6.X
             value: REDIS_6_X
             description: Redis Version 6.X
-
-
-      - name: connect_mode
-        values:
-          - display_value: Direct Peering
-            value: DIRECT_PEERING
-            description: When using the direct peering mode, Memorystore creates a VPC peering between the customer VPC network and the VPC network in the Google managed project.
-            href: https://cloud.google.com/memorystore/docs/redis/networking
-
-          - display_value: Private Service Access
-            value: PRIVATE_SERVICE_ACCESS
-            description: Establishing a private services access connection for a VPC network creates a peering between that VPC network and the Google services network.
-            href: https://cloud.google.com/memorystore/docs/redis/networking
-
-
-      - name: transit_encryption_mode
-        values:
-          - display_value: Disabled
-            value: DISABLED
-
-          - display_value: Server Authentication
-            value: SERVER_AUTHENTICATION
