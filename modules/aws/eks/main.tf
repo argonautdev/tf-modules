@@ -16,6 +16,24 @@ provider "kubernetes" {
 data "aws_availability_zones" "available" {
 }
 
+
+##The intention is to take list of nodegroups and convert into the format node_groups expects i.e map()
+##However, for_each loop only works inside a resource block and cannot do any operation inside node_groups variable
+##Hence, creating a null resource and convert the variable from list to map and reference in node_groups variable
+
+locals {
+  #it should be {node_groups = {ng1 = {} ng2 = {}}
+  #ref: https://stackoverflow.com/questions/62679195/terraform-looping-in-list-of-map How this local works
+  ##either name or nameprefix 
+  ng_list = { for ng in var.node_groups : ng.ng_name => ng }
+  ng_list_replacements = { for k, v in local.ng_list : k => merge({
+    capacity_type = v.spot ? "SPOT" : "ON_DEMAND"
+    instance_types = [v.instance_type]
+    name_prefix   = "${v.ng_name}-art-"
+    k8s_labels = merge(v.k8s_labels, { Environment = var.env })
+  }, v)}
+}
+
 module "eks" {
   source                   = "terraform-aws-modules/eks/aws"
   version                  = "v17.4.0"
@@ -26,30 +44,11 @@ module "eks" {
 
   vpc_id = var.vpc.id
 
-  node_groups_defaults = {
-    ami_type  = var.ami_type
-    disk_size = var.node_group.disk_size
-  }
-
-  node_groups = {
-    "${var.cluster.name}" = {
-      # "
-      name_prefix      = "${var.cluster.name}-art-"
-      desired_capacity = var.node_group.desired_capacity
-      max_capacity     = var.node_group.max_capacity
-      min_capacity     = var.node_group.min_capacity
-
-      instance_types = [var.node_group.instance_type]
-      capacity_type  = var.node_group.spot ? "SPOT" : "ON_DEMAND"
-
-      k8s_labels = {
-        Environment = var.env
-      }
-
-      additional_tags = var.node_group.spot ? merge(var.default_tags, var.spot_tags) : merge(var.default_tags, var.on_demand_tags)
-      taints          = []
-    }
-  }
+  # node_groups_defaults = {
+  #   ami_type  = var.ami_type
+  # }
+  
+  node_groups = local.ng_list_replacements
 
   enable_irsa = true
 
