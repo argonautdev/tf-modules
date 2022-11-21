@@ -10,7 +10,7 @@ output "region" {
 
 output "nodes" {
   description = "Data about the memcache nodes"
-  value       = module.memcache.memcache_nodes
+  value       = module.memcache.nodes
 }
 
 output "discovery_endpoint" {
