@@ -19,12 +19,6 @@ inputs = {
     "argonaut-manager"     = "argonautdev"
     "argonaut-environment" = "{{.Environment.Name}}"
   }
-  project_id   = "{{.Spec.project_id}}"
-  region       = "{{.Spec.region}}"
-  name         = "{{.Spec.cluster_instance_name}}"
-  node_count   = "{{.Spec.node_count}}"
-  cpu_count    = "{{.Spec.cpu_count}}"
-  memory_size_mb = "{{.Spec.memory_size_mb}}"
-  zones       = "{{.Spec.zones}}"
+  
   vpc_network_name = dependency.{{ .Spec.vpc_id }}.outputs.network_name
 }
