@@ -42,7 +42,7 @@ variable "memory_size_mb" {
 variable "zones" {
   description = "Zones where memcache nodes should be provisioned. If not provided, all zones will be used."
   type        = list(string)
-  default     = null
+  default     = []
 }
 
 variable "labels" {
@@ -60,5 +60,5 @@ variable "default_labels" {
 variable "params" {
   description = "Parameters for the memcache process"
   type        = map(string)
-  default     = null
+  default     = {}
 }
