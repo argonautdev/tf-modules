@@ -111,6 +111,25 @@ variable "performance_insights_enabled" {
   default     = true
 }
 
+# DB subnet group
+variable "create_db_subnet_group" {
+  description = "Whether to create a database subnet group"
+  type        = bool
+  default     = true
+}
+
+variable "create_random_password" {
+  description = "Whether to create random password for RDS primary cluster"
+  type        = bool
+  default     = false
+}
+
+variable "allow_major_version_upgrade" {
+  description = "Indicates that major version upgrades are allowed. Changing this parameter does not result in an outage and the change is asynchronously applied as soon as possible"
+  type        = bool
+  default     = false
+}
+
 variable "vpc" {
   description = "All vpc info"
   type = object({
