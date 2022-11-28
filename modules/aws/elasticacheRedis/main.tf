@@ -1,6 +1,7 @@
 module "redis" {
   source = "cloudposse/elasticache-redis/aws"
-  version = "v0.40.0"
+  # version = "v0.40.0"
+  version = "v0.48.0"
   // version = "v0.41.2"
 
   // availability_zones               = var.availability_zones
@@ -16,8 +17,8 @@ module "redis" {
   at_rest_encryption_enabled       = var.at_rest_encryption_enabled
   transit_encryption_enabled       = var.transit_encryption_enabled
   cloudwatch_metric_alarms_enabled = var.cloudwatch_metric_alarms_enabled
-
-  security_group_rules = [
+  allow_all_egress = false
+  additional_security_group_rules = [
     {
       type                     = "egress"
       from_port                = 0
