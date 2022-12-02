@@ -13,6 +13,10 @@ provider "kubernetes" {
   # load_config_file       = false
 }
 
+data "aws_availability_zones" "available" {
+}
+
+
 ##The intention is to take list of nodegroups and convert into the format node_groups expects i.e map()
 ##However, for_each loop only works inside a resource block and cannot do any operation inside node_groups variable
 ##Hence, creating a null resource and convert the variable from list to map and reference in node_groups variable
