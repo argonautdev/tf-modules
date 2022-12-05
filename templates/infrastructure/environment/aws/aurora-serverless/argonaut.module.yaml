@@ -1,0 +1,13 @@
+metadata:
+  resource_name: aurora-serverless
+  description: Aurora Serverless
+  provider_file_path: "/modules/aws/aurora_serverless"
+spec:
+  attribute_definitions:
+    - name: cluster_engine
+      values:
+        - display_value: MySQL
+          value: aurora-mysql
+
+        - display_value: PostgreSQL
+          value: aurora-postgresql
