@@ -1,7 +1,7 @@
 metadata:
   resource_name: aurora-serverless
   description: Aurora Serverless
-  provider_file_path: "/modules/aws/aurora_serverless"
+  provider_file_path: "/modules/aws/aurora-serverless"
 spec:
   attribute_definitions:
     - name: cluster_engine
