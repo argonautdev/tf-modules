@@ -21,7 +21,7 @@ locals {
 terraform {
 
   # the below config is an example of what the config should like
-  source = "github.com/argonautdev/tf-modules.git//modules/aws/aurora_serverless?ref={{.RefVersion}}"
+  source = "github.com/argonautdev/tf-modules.git//modules/aws/aurora-serverless?ref={{.RefVersion}}"
 }
 
 dependency "vpc" {
