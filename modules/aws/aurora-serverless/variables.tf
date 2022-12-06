@@ -91,6 +91,7 @@ variable "vpc" {
     default_security_group_id = string
     vpc_cidr_block            = string
   })
+  default = {}
 }
 
 
