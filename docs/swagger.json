@@ -15,7 +15,8 @@
     },
     "aws_region": {
      "description": "aws region",
-     "type": "string"
+     "type": "string",
+     "default": ""
     },
     "backup_retention_period": {
      "description": "The days to retain backups for. Default `9`",
@@ -26,7 +27,11 @@
     "cluster_engine": {
      "description": "The name of the database engine to be used for this DB cluster. Valid Values: `aurora-mysql`, `aurora-postgresql`",
      "type": "string",
-     "default": "aurora-mysql"
+     "default": "aurora-mysql",
+     "enum": [
+      "aurora-mysql",
+      "aurora-postgresql"
+     ]
     },
     "cluster_max_capacity": {
      "description": "Max cluster ACU",
@@ -71,7 +76,7 @@
     "db_cluster_parameter_group_family": {
      "description": "The family of the DB cluster parameter group",
      "type": "string",
-     "default": "aurora-mysql57"
+     "default": "aurora-mysql5.7"
     },
     "db_cluster_parameter_group_parameters": {
      "description": "A list of DB cluster parameters to apply. Note that parameters may differ from a family to an other",
@@ -87,6 +92,7 @@
     "default_tags": {
      "description": "Default Tags",
      "type": "object",
+     "default": {},
      "additionalProperties": {}
     },
     "deletion_protection": {
@@ -130,6 +136,21 @@
     "vpc": {
      "description": "All vpc info",
      "type": "object",
+     "default": {
+      "database_subnets": [
+       "value"
+      ],
+      "default_security_group_id": "value",
+      "name": "value",
+      "private_subnets": [
+       "value"
+      ],
+      "public_subnets": [
+       "value"
+      ],
+      "vpc_cidr_block": "value",
+      "vpc_id": "value"
+     },
      "additionalProperties": {}
     }
    }
@@ -269,7 +290,11 @@
     "read_replicas_mode": {
      "description": "Read replicas mode. https://cloud.google.com/memorystore/docs/redis/reference/rest/v1/projects.locations.instances#readreplicasmode ",
      "type": "string",
-     "default": "READ_REPLICAS_DISABLED"
+     "default": "READ_REPLICAS_DISABLED",
+     "enum": [
+      "READ_REPLICAS_DISABLED",
+      "READ_REPLICAS_ENABLED"
+     ]
     },
     "redis_configs": {
      "description": "The Redis configuration parameters. See [more details](https://cloud.google.com/memorystore/docs/redis/reference/rest/v1/projects.locations.instances#Instance.FIELDS.redis_configs)",
@@ -280,7 +305,13 @@
     "redis_version": {
      "description": "The version of Redis software.",
      "type": "string",
-     "default": "REDIS_6_X"
+     "default": "REDIS_6_X",
+     "enum": [
+      "REDIS_3_2",
+      "REDIS_4_0",
+      "REDIS_5_0",
+      "REDIS_6_X"
+     ]
     },
     "region": {
      "description": "The region of the Cloud SQL resources",
@@ -299,7 +330,11 @@
     "tier": {
      "description": "The service tier of the instance. https://cloud.google.com/memorystore/docs/redis/reference/rest/v1/projects.locations.instances#Tier",
      "type": "string",
-     "default": "BASIC"
+     "default": "BASIC",
+     "enum": [
+      "BASIC",
+      "STANDARD_HA"
+     ]
     },
     "transit_encryption_mode": {
      "description": "The TLS mode of the Redis instance, If not provided, TLS is enabled for the instance.",
