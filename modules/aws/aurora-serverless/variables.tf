@@ -91,15 +91,6 @@ variable "vpc" {
     default_security_group_id = string
     vpc_cidr_block            = string
   })
-  default ={
-    database_subnets = [ "value" ]
-    default_security_group_id = "value"
-    name = "value"
-    private_subnets = [ "value" ]
-    public_subnets = [ "value" ]
-    vpc_cidr_block = "value"
-    vpc_id = "value"
-  }
 }
 
 

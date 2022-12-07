@@ -18,6 +18,7 @@ variable "name" {
 variable "vpc_network_name" {
   description = "The VPC Network name"
   type        = string
+  default = ""
 }
 
 ## Comparision between tiers ( https://cloud.google.com/memorystore/docs/redis/redis-tiers )

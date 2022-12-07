@@ -18,6 +18,7 @@ variable "name" {
 variable "vpc_network_name" {
   description = "The VPC Network name"
   type        = string
+  default = ""
 }
 
 //fundamental unit of memcached instance.
