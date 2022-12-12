@@ -7,6 +7,12 @@
  "definitions": {
   "aws.aurora-serverless": {
    "type": "object",
+   "required": [
+    "master_password",
+    "cluster_name",
+    "master_username",
+    "database_name"
+   ],
    "properties": {
     "apply_immediately": {
      "description": "Specifies whether any cluster modifications are applied immediately, or during the next maintenance window. Default is `false`",
@@ -136,27 +142,16 @@
     "vpc": {
      "description": "All vpc info",
      "type": "object",
-     "default": {
-      "database_subnets": [
-       "value"
-      ],
-      "default_security_group_id": "value",
-      "name": "value",
-      "private_subnets": [
-       "value"
-      ],
-      "public_subnets": [
-       "value"
-      ],
-      "vpc_cidr_block": "value",
-      "vpc_id": "value"
-     },
      "additionalProperties": {}
     }
    }
   },
   "gcp.memcached": {
    "type": "object",
+   "required": [
+    "project_id",
+    "name"
+   ],
    "properties": {
     "cpu_count": {
      "description": "Number of CPUs per node",
@@ -209,7 +204,8 @@
     },
     "vpc_network_name": {
      "description": "The VPC Network name",
-     "type": "string"
+     "type": "string",
+     "default": ""
     },
     "zones": {
      "description": "Zones where memcache nodes should be provisioned. If not provided, all zones will be used.",
@@ -221,6 +217,10 @@
   },
   "gcp.redis": {
    "type": "object",
+   "required": [
+    "project_id",
+    "name"
+   ],
    "properties": {
     "alternative_location_id": {
      "description": "The alternative zone where the instance will be provisioned. a.k.a ( secondary availability zone )",
@@ -343,7 +343,8 @@
     },
     "vpc_network_name": {
      "description": "The VPC Network name",
-     "type": "string"
+     "type": "string",
+     "default": ""
     }
    }
   }
