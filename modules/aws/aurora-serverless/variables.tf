@@ -34,6 +34,11 @@ variable "cluster_engine" {
   }
 }
 
+variable "cluster_name" {
+  description = "The name of the database cluster"
+  type        = string
+}
+
 variable "database_name" {
   description = "Name for an automatically created database on cluster creation"
   type        = string
