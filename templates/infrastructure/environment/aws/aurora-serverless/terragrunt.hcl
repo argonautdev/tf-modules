@@ -85,9 +85,9 @@ inputs = {
   ]
   skip_final_snapshot = true
   {{end}}
-  database_name = "{{ .Spec.name }}"
-  master_username = "{{ .Spec.username }}"
-  master_password = "{{ .Spec.password }}"
+  database_name = "{{ .Spec.database_name }}"
+  master_username = "{{ .Spec.master_username }}"
+  master_password = "{{ .Spec.master_password }}"
   db_subnet_group_name = "${local.env}"
   cluster_min_capacity = "{{ .Spec.cluster_min_capacity }}"
   cluster_max_capacity = "{{ .Spec.cluster_max_capacity }}"
