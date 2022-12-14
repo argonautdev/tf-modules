@@ -1,9 +1,11 @@
 data "aws_eks_cluster" "cluster" {
-  name = module.eks.cluster_id
+  # name = module.eks.cluster_id
+  name = module.eks.cluster_name
 }
 
 data "aws_eks_cluster_auth" "cluster" {
-  name = module.eks.cluster_id
+  # name = module.eks.cluster_id
+  name = module.eks.cluster_name
 }
 
 provider "kubernetes" {
@@ -31,17 +33,21 @@ locals {
     instance_types = [v.instance_type]
     name_prefix   = "${v.ng_name}-art-"
     version = var.cluster.version
+    create_launch_template = false
+    use_custom_launch_template = false
     k8s_labels = merge(v.k8s_labels, { Environment = var.env })
   }, v)}
 }
 
 module "eks" {
-  source                   = "terraform-aws-modules/eks/aws"
-  version                  = "v17.4.0"
+  # source                   = "terraform-aws-modules/eks/aws"
+  # version                  = "v17.4.0"
+  source = "/home/ec2-user/environment/terraform-aws-eks/"
   cluster_name             = var.cluster.name
   cluster_version          = var.cluster.version
-  wait_for_cluster_timeout = 900
-  subnets                  = var.vpc.subnets
+  # wait_for_cluster_timeout = 900
+  # subnets                  = var.vpc.subnets
+  subnet_ids = var.vpc.subnets
 
   vpc_id = var.vpc.id
 
@@ -49,7 +55,8 @@ module "eks" {
   #   ami_type  = var.ami_type
   # }
   
-  node_groups = local.ng_list_replacements
+  # node_groups = local.ng_list_replacements
+  eks_managed_node_groups = local.ng_list_replacements
 
   enable_irsa = true
 
@@ -68,7 +75,7 @@ module "eks" {
   #   }
   # ]
 
-  map_roles = concat(var.map_roles, [
+  aws_auth_roles = concat(var.map_roles, [
     {
       rolearn  = aws_iam_role.eks_admin_role.arn
       username = "aws_iam_auth_admin"
@@ -79,15 +86,38 @@ module "eks" {
       ]
     }
   ])
-  map_users    = var.map_users
-  map_accounts = var.map_accounts
+  aws_auth_users    = var.map_users
+  aws_auth_accounts = var.map_accounts
+  # map_roles = concat(var.map_roles, [
+  #   {
+  #     rolearn  = aws_iam_role.eks_admin_role.arn
+  #     username = "aws_iam_auth_admin"
+  #     groups = [
+  #       "system:masters",
+  #       "system:bootstrappers",
+  #       "system:nodes"
+  #     ]
+  #   }
+  # ])
+  # map_users    = var.map_users
+  # map_accounts = var.map_accounts
+  manage_aws_auth_configmap = true
+  create_aws_auth_configmap = false
+  create_cloudwatch_log_group = false
+  create_kms_key = false
+  cluster_endpoint_private_access = false
+  cluster_endpoint_public_access = true
+  cluster_enabled_log_types = []
+  cluster_encryption_config = []
+  cluster_security_group_description = "EKS cluster security group."
 }
 
 module "iam_assumable_role_admin" {
   source                        = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
   version                       = "3.6.0"
   create_role                   = true
-  role_name                     = "${data.aws_eks_cluster.cluster.name}-role"
+  #role_name                     = "${data.aws_eks_cluster.cluster.name}-role"
+  role_name                     = "${module.eks.cluster_name}-role"
   provider_url                  = replace(module.eks.cluster_oidc_issuer_url, "https://", "")
   role_policy_arns              = [aws_iam_policy.cluster_autoscaler.arn]
   oidc_fully_qualified_subjects = ["system:serviceaccount:${var.k8s_service_account_namespace}:${var.k8s_service_account_name}"]
@@ -95,7 +125,8 @@ module "iam_assumable_role_admin" {
 
 resource "aws_iam_policy" "cluster_autoscaler" {
   name_prefix = "cluster-autoscaler"
-  description = "EKS cluster-autoscaler policy for cluster ${module.eks.cluster_id}"
+  # description = "EKS cluster-autoscaler policy for cluster ${module.eks.cluster_id}"
+  description = "EKS cluster-autoscaler policy for cluster ${module.eks.cluster_name}"
   policy      = data.aws_iam_policy_document.cluster_autoscaler.json
 }
 
@@ -129,7 +160,8 @@ data "aws_iam_policy_document" "cluster_autoscaler" {
 
     condition {
       test     = "StringEquals"
-      variable = "autoscaling:ResourceTag/kubernetes.io/cluster/${module.eks.cluster_id}"
+      # variable = "autoscaling:ResourceTag/kubernetes.io/cluster/${module.eks.cluster_id}"
+      variable = "autoscaling:ResourceTag/kubernetes.io/cluster/${module.eks.cluster_name}"
       values   = ["owned"]
     }
 
