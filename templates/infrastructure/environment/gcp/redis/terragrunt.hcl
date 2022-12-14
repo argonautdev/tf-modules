@@ -23,6 +23,6 @@ inputs = {
   tier                   = "{{.Spec.tier}}"
   memory_size_gb         = "{{.Spec.memory_size_gb}}"
   redis_version          = "{{.Spec.redis_version}}"
-  name                   = "{{.Spec.redis_version}}"
-  auth_enabled           = "{{.Spec.auth_enabled}}"
+  name                   = "{{.Spec.name}}"
+  auth_enabled           = {{.Spec.auth_enabled}}
 }

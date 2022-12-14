@@ -44,7 +44,8 @@ inputs = {
     "argonaut.dev/type"        = "RDS"
     "argonaut.dev/manager"     = "argonaut.dev"
     "argonaut.dev/rds-engine"  = "{{ .Spec.cluster_engine }}"
-    "argonaut.dev/env/${local.env}" = "true"
+    "argonaut.dev/env" = "${local.env}"
+    "env" = "${local.env}"
   }
   aws_region = "${local.region}"
   

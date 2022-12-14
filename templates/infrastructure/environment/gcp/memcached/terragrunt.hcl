@@ -19,6 +19,10 @@ inputs = {
     "argonaut-manager"     = "argonautdev"
     "argonaut-environment" = "{{.Environment.Name}}"
   }
-  
+  name    = "{{ .Spec.name }}"
+  node_count = "{{ .Spec.node_count }}"
+  cpu_count = "{{ .Spec.cpu_count }}"
+  memory_size_mb = "{{ .Spec.memory_size_mb }}"
+
   vpc_network_name = dependency.{{ .Spec.vpc_id }}.outputs.network_name
 }
