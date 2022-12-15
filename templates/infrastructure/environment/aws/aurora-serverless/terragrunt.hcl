@@ -51,17 +51,15 @@ inputs = {
   
   cluster_name = "{{ .Spec.cluster_name }}"
   
-  {{if eq .Spec.engine "postgres"}}
+  {{if eq .Spec.cluster_engine "aurora-postgresql"}}
   // all values correspond to postgres
-  cluster_engine = "aurora-postgresql"
   create_db_cluster_parameter_group = true
   db_cluster_parameter_group_family = "aurora-postgresql10"
   enabled_cloudwatch_logs_exports = ["postgres"]
   {{end}}
   
-  {{if eq .Spec.engine "mysql"}}
+  {{if eq .Spec.cluster_engine "aurora-mysql"}}
   // all values correspond to mysql
-  cluster_engine = "aurora-mysql"
   //As we know enabling logs to cloudwatch requires custom parameter group. Hence, creating one
   create_db_cluster_parameter_group = true
   db_cluster_parameter_group_family = "aurora-mysql5.7"
