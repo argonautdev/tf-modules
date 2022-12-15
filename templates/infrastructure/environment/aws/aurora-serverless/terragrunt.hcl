@@ -84,6 +84,8 @@ inputs = {
   ]
   skip_final_snapshot = true
   {{end}}
+
+  cluster_engine = "{{ .Spec.cluster_engine }}"
   database_name = "{{ .Spec.database_name }}"
   master_username = "{{ .Spec.master_username }}"
   master_password = "{{ .Spec.master_password }}"
