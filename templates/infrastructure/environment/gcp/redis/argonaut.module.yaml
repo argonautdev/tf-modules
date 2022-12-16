@@ -1,0 +1,47 @@
+metadata:
+  resource_name: redis
+  description: Memorystore for Redis
+  provider_file_path: "/modules/gcp/memorystore-redis"
+spec:
+  attribute_definitions:
+    - name: tier
+      values:
+        - display_value: Basic
+          value: BASIC
+          description: BASIC Tier - standalone instance
+          href: https://cloud.google.com/memorystore/docs/redis/reference/rest/v1/projects.locations.instances#Tier
+
+        - display_value: Standard Highly Available
+          value: STANDARD_HA
+          description: STANDARD_HA Tier - highly available primary/replica instances
+          href: https://cloud.google.com/memorystore/docs/redis/reference/rest/v1/projects.locations.instances#Tier
+
+    - name: read_replicas_mode
+      values:
+        - display_value: Disabled
+          value: READ_REPLICAS_DISABLED
+          description: If disabled, read endpoint will not be provided and the instance cannot scale up or down the number of replicas.
+          href: https://cloud.google.com/memorystore/docs/redis/reference/rest/v1/projects.locations.instances#readreplicasmode
+
+        - display_value: Enabled
+          value: READ_REPLICAS_ENABLED
+          description: If enabled, read endpoint will be provided and the instance can scale up and down the number of replicas. Not valid for basic tier.
+          href: https://cloud.google.com/memorystore/docs/redis/reference/rest/v1/projects.locations.instances#readreplicasmode
+
+    - name: redis_version
+      values:
+        - display_value: Redis 3.2
+          value: REDIS_3_2
+          description: Redis Version 3.2
+
+        - display_value: Redis 4.0
+          value: REDIS_4_0
+          description: Redis Version 4.0
+
+        - display_value: Redis 5.0
+          value: REDIS_5_0
+          description: Redis Version 5.0
+
+        - display_value: Redis 6.X
+          value: REDIS_6_X
+          description: Redis Version 6.X

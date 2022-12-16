@@ -1,0 +1,26 @@
+default_tags = {
+    "argonaut.dev/env"        = "dev"
+    "env" = "dev"
+}
+aws_region = "<REGION>"
+storage_encrypted = true
+cluster_engine = "aurora-postgresql"
+cluster_name = "<DB_CLUSTER_NAME>"
+database_name = "<DB_NAME>"
+master_username = "<USERNAME>"
+master_password = "<PASSWORD>"
+backup_retention_period = 7
+create_db_subnet_group = true
+vpc = {
+    name                      = "vpc-2"
+    vpc_id                    = "vpc-xxxxxx"
+    public_subnets            = []
+    private_subnets           = []
+    database_subnets          = []
+    default_security_group_id = "sg-xxxxxx"
+    vpc_cidr_block            = "10.1.xx.xx/16"
+}
+cluster_min_capacity = 2
+cluster_max_capacity = 4
+db_cluster_parameter_group_name = "aurora-cluster-db-param"
+db_parameter_group_family = "aurora-postgresql10"
