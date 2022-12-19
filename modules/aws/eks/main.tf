@@ -182,3 +182,10 @@ resource "aws_iam_group_policy" "eks_admin_group_policy" {
   })
 }
 
+##Resource for adding EBSCSI Driver Policy to Node Role
+resource "aws_iam_role_policy_attachment" "ebs_csi_policy_attach" {
+  role       = module.eks.worker_iam_role_name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
+}
+
+
