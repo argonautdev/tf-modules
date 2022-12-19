@@ -1,0 +1,352 @@
+{
+ "swagger": "2.0",
+ "info": {
+  "title": "Terraform module definitions"
+ },
+ "paths": {},
+ "definitions": {
+  "aws.aurora-serverless": {
+   "type": "object",
+   "required": [
+    "master_password",
+    "cluster_name",
+    "master_username",
+    "database_name"
+   ],
+   "properties": {
+    "apply_immediately": {
+     "description": "Specifies whether any cluster modifications are applied immediately, or during the next maintenance window. Default is `false`",
+     "type": "boolean",
+     "default": true
+    },
+    "aws_region": {
+     "description": "aws region",
+     "type": "string",
+     "default": ""
+    },
+    "backup_retention_period": {
+     "description": "The days to retain backups for. Default `9`",
+     "type": "number",
+     "format": "double",
+     "default": 9
+    },
+    "cluster_engine": {
+     "description": "The name of the database engine to be used for this DB cluster. Valid Values: `aurora-mysql`, `aurora-postgresql`",
+     "type": "string",
+     "default": "aurora-mysql",
+     "enum": [
+      "aurora-mysql",
+      "aurora-postgresql"
+     ]
+    },
+    "cluster_max_capacity": {
+     "description": "Max cluster ACU",
+     "type": "number",
+     "format": "double",
+     "default": 16
+    },
+    "cluster_min_capacity": {
+     "description": "Min cluster ACU",
+     "type": "number",
+     "format": "double",
+     "default": 2
+    },
+    "cluster_name": {
+     "description": "The name of the database cluster",
+     "type": "string"
+    },
+    "copy_tags_to_snapshot": {
+     "description": "Copy all Cluster `tags` to snapshots",
+     "type": "boolean",
+     "default": true
+    },
+    "create_db_cluster_parameter_group": {
+     "description": "Determines whether a cluster parameter should be created or use existing",
+     "type": "boolean",
+     "default": true
+    },
+    "create_db_subnet_group": {
+     "description": "Determines whether to create the database subnet group or use existing",
+     "type": "boolean",
+     "default": false
+    },
+    "create_random_password": {
+     "description": "Determines whether to create random password for RDS primary cluster",
+     "type": "boolean",
+     "default": false
+    },
+    "database_name": {
+     "description": "Name for an automatically created database on cluster creation",
+     "type": "string"
+    },
+    "db_cluster_parameter_group_family": {
+     "description": "The family of the DB cluster parameter group",
+     "type": "string",
+     "default": "aurora-mysql5.7"
+    },
+    "db_cluster_parameter_group_parameters": {
+     "description": "A list of DB cluster parameters to apply. Note that parameters may differ from a family to an other",
+     "type": "array",
+     "default": [],
+     "items": {}
+    },
+    "db_subnet_group_name": {
+     "description": "The name of the subnet group name (existing or created)",
+     "type": "string",
+     "default": ""
+    },
+    "default_tags": {
+     "description": "Default Tags",
+     "type": "object",
+     "default": {},
+     "additionalProperties": {}
+    },
+    "deletion_protection": {
+     "description": "If the DB instance should have deletion protection enabled. The database can't be deleted when this value is set to `true`. The default is `false`",
+     "type": "boolean",
+     "default": false
+    },
+    "enabled_cloudwatch_logs_exports": {
+     "description": "Set of log types to export to cloudwatch. If omitted, no logs will be exported. The following log types are supported: `audit`, `error`, `general`, `slowquery`, `postgresql`",
+     "type": "array",
+     "default": [
+      "audit",
+      "error",
+      "general",
+      "slowquery"
+     ],
+     "items": {}
+    },
+    "kms_key_id": {
+     "description": "The ARN for the KMS encryption key. When specifying `kms_key_id`, `storage_encrypted` needs to be set to `true`",
+     "type": "string"
+    },
+    "master_password": {
+     "description": "Password for the master DB user. Note - when specifying a value here, 'create_random_password' should be set to `false`",
+     "type": "string"
+    },
+    "master_username": {
+     "description": "Username for the master DB user",
+     "type": "string"
+    },
+    "skip_final_snapshot": {
+     "description": "Determines whether a final snapshot is created before the cluster is deleted. If true is specified, no snapshot is created",
+     "type": "boolean",
+     "default": false
+    },
+    "storage_encrypted": {
+     "description": "Specifies whether the DB cluster storage is encrypted. The default is `true`",
+     "type": "boolean",
+     "default": true
+    },
+    "vpc": {
+     "description": "All vpc info",
+     "type": "object",
+     "additionalProperties": {}
+    }
+   }
+  },
+  "gcp.memcached": {
+   "type": "object",
+   "required": [
+    "project_id",
+    "name"
+   ],
+   "properties": {
+    "cpu_count": {
+     "description": "Number of CPUs per node",
+     "type": "number",
+     "format": "double",
+     "default": 1
+    },
+    "default_labels": {
+     "description": "The key/value labels for the master instances.",
+     "type": "object",
+     "default": {},
+     "additionalProperties": {}
+    },
+    "labels": {
+     "description": "The resource labels to represent user provided metadata.",
+     "type": "object",
+     "default": {},
+     "additionalProperties": {}
+    },
+    "memory_size_mb": {
+     "description": "Memcache memory size in MiB. Defaulted to 1024",
+     "type": "number",
+     "format": "double",
+     "default": 1024
+    },
+    "name": {
+     "description": "The ID of the instance or a fully qualified identifier for the instance.",
+     "type": "string"
+    },
+    "node_count": {
+     "description": "Number of nodes in the memcache instance.",
+     "type": "number",
+     "format": "double",
+     "default": 1
+    },
+    "params": {
+     "description": "Parameters for the memcache process",
+     "type": "object",
+     "default": {},
+     "additionalProperties": {}
+    },
+    "project_id": {
+     "description": "The project ID to manage the Cloud SQL resources",
+     "type": "string"
+    },
+    "region": {
+     "description": "The region of the Cloud SQL resources",
+     "type": "string",
+     "default": "us-east4"
+    },
+    "vpc_network_name": {
+     "description": "The VPC Network name",
+     "type": "string",
+     "default": ""
+    },
+    "zones": {
+     "description": "Zones where memcache nodes should be provisioned. If not provided, all zones will be used.",
+     "type": "array",
+     "default": [],
+     "items": {}
+    }
+   }
+  },
+  "gcp.redis": {
+   "type": "object",
+   "required": [
+    "project_id",
+    "name"
+   ],
+   "properties": {
+    "alternative_location_id": {
+     "description": "The alternative zone where the instance will be provisioned. a.k.a ( secondary availability zone )",
+     "type": "string"
+    },
+    "auth_enabled": {
+     "description": "Indicates whether OSS Redis AUTH is enabled for the instance. If set to true AUTH is enabled on the instance.",
+     "type": "boolean",
+     "default": false
+    },
+    "connect_mode": {
+     "description": "The connection mode of the Redis instance. Can be either DIRECT_PEERING or PRIVATE_SERVICE_ACCESS. The default connect mode if not provided is DIRECT_PEERING.",
+     "type": "string",
+     "default": "DIRECT_PEERING"
+    },
+    "customer_managed_key": {
+     "description": "Default encryption key to apply to the Redis instance. Defaults to null (Google-managed).",
+     "type": "string"
+    },
+    "default_labels": {
+     "description": "The key/value labels for the master instances.",
+     "type": "object",
+     "default": {},
+     "additionalProperties": {}
+    },
+    "display_name": {
+     "description": "An arbitrary and optional user-provided name for the instance.",
+     "type": "string"
+    },
+    "labels": {
+     "description": "The resource labels to represent user provided metadata.",
+     "type": "object",
+     "additionalProperties": {}
+    },
+    "location_id": {
+     "description": "The zone where the instance will be provisioned. If not provided, the service will choose a zone for the instance. For STANDARD_HA tier, instances will be created across two zones for protection against zonal failures. If [alternativeLocationId] is also provided, it must be different from [locationId].",
+     "type": "string"
+    },
+    "maintenance_policy": {
+     "description": "The maintenance policy for an instance.",
+     "type": "object",
+     "default": {
+      "day": "SUNDAY",
+      "start_time": {
+       "hours": 23,
+       "minutes": 11,
+       "nanos": 10,
+       "seconds": 10
+      }
+     },
+     "additionalProperties": {}
+    },
+    "memory_size_gb": {
+     "description": "Redis memory size in GiB. Defaulted to 1 GiB",
+     "type": "number",
+     "format": "double",
+     "default": 1
+    },
+    "name": {
+     "description": "The ID of the instance or a fully qualified identifier for the instance.",
+     "type": "string"
+    },
+    "project_id": {
+     "description": "The project ID to manage the Cloud SQL resources",
+     "type": "string"
+    },
+    "read_replicas_mode": {
+     "description": "Read replicas mode. https://cloud.google.com/memorystore/docs/redis/reference/rest/v1/projects.locations.instances#readreplicasmode ",
+     "type": "string",
+     "default": "READ_REPLICAS_DISABLED",
+     "enum": [
+      "READ_REPLICAS_DISABLED",
+      "READ_REPLICAS_ENABLED"
+     ]
+    },
+    "redis_configs": {
+     "description": "The Redis configuration parameters. See [more details](https://cloud.google.com/memorystore/docs/redis/reference/rest/v1/projects.locations.instances#Instance.FIELDS.redis_configs)",
+     "type": "object",
+     "default": {},
+     "additionalProperties": {}
+    },
+    "redis_version": {
+     "description": "The version of Redis software.",
+     "type": "string",
+     "default": "REDIS_6_X",
+     "enum": [
+      "REDIS_3_2",
+      "REDIS_4_0",
+      "REDIS_5_0",
+      "REDIS_6_X"
+     ]
+    },
+    "region": {
+     "description": "The region of the Cloud SQL resources",
+     "type": "string",
+     "default": "us-east4"
+    },
+    "replica_count": {
+     "description": "The number of replicas. Valid only when 'READ_REPLICAS_DISABLED' Disabled",
+     "type": "number",
+     "format": "double"
+    },
+    "reserved_ip_range": {
+     "description": "The CIDR range of internal addresses that are reserved for this instance.",
+     "type": "string"
+    },
+    "tier": {
+     "description": "The service tier of the instance. https://cloud.google.com/memorystore/docs/redis/reference/rest/v1/projects.locations.instances#Tier",
+     "type": "string",
+     "default": "BASIC",
+     "enum": [
+      "BASIC",
+      "STANDARD_HA"
+     ]
+    },
+    "transit_encryption_mode": {
+     "description": "The TLS mode of the Redis instance, If not provided, TLS is enabled for the instance.",
+     "type": "string",
+     "default": "DISABLED"
+    },
+    "vpc_network_name": {
+     "description": "The VPC Network name",
+     "type": "string",
+     "default": ""
+    }
+   }
+  }
+ }
+}
