@@ -1,6 +1,6 @@
 module "sqs_queue" {
   source  = "terraform-aws-modules/sqs/aws"
-  version = "3.5.0"
+  version = "3.4.0"
 
   create = var.create
   name = var.name

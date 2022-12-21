@@ -33,7 +33,7 @@ inputs = {
     "argonaut.dev/name" = "{{.Spec.name}}"
     "argonaut.dev/manager" = "argonaut.dev"
     "argonaut.dev/type" = "sqs queue"
-    "argonaut.dev/env/${local.env}" = "true"
+    "argonaut.dev/env" = "${local.env}"
   }
 
   aws_region = "${local.region}"

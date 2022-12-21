@@ -58,7 +58,7 @@ variable "policy" {
 }
 
 variable "redrive_policy" {
-  description = "The JSON policy to set up the Dead Letter Queue, see AWS docs. Note: when specifying maxReceiveCount, you must specify it as an integer (5), and not a string (\"5\")"
+  description = "Arn of the existing queue to receive undeliverable messages."
   type        = object({
     deadLetterTargetArn = string
   })
@@ -68,7 +68,7 @@ variable "redrive_policy" {
 }
 
 variable "redrive_allow_policy" {
-  description = "The JSON policy to set up the Dead Letter Queue redrive permission, see AWS docs."
+  description = "Arn of the source queues can use this queue as the dead-letter queue. "
   type        = object({
     sourceQueueArns   = string
   })
@@ -98,7 +98,7 @@ variable "kms_master_key_id" {
 variable "sqs_managed_sse_enabled" {
   description = "Boolean to enable server-side encryption (SSE) of message content with SQS-owned encryption keys"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "default_tags" {
