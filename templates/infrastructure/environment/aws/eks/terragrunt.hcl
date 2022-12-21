@@ -98,7 +98,7 @@ inputs = {
 
   cluster = {
     name = "{{.Spec.name}}"
-    version = "1.21" # "{ {.Spec.PlatformVersion} }" TODO: add platform version
+    version = "{{.Spec.platform_version}}"
   }
 
   k8s_service_account_name = "{{.Spec.name}}-argonaut-sa"
