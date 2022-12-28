@@ -43,7 +43,7 @@ module "security_group" {
 
 module "db" {
   source  = "terraform-aws-modules/rds/aws"
-  version = "v3.3.0"
+  version = "v5.1.1"
 
   identifier = var.identifier
   /* Subnet group */
@@ -55,10 +55,10 @@ module "db" {
   
   vpc_security_group_ids = [module.security_group.security_group_id]
   
-  name                                  = var.name
+  db_name                                  = var.name
   engine                                = var.engine
   engine_version                        = var.engine_version
-  
+  allow_major_version_upgrade           = var.allow_major_version_upgrade
   /*Storage*/
   storage_encrypted                     = var.storage_encrypted
   storage_type                          = var.storage_type

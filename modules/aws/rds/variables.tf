@@ -190,7 +190,7 @@ variable "vpc" {
 variable "create_db_subnet_group" {
   description = "Whether to create a database subnet group"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "db_subnet_group_use_name_prefix" {
@@ -351,4 +351,8 @@ variable "options" {
   default     = []
 }
 
-
+variable "allow_major_version_upgrade" {
+  description = "Indicates that major version upgrades are allowed. Changing this parameter does not result in an outage and the change is asynchronously applied as soon as possible"
+  type        = bool
+  default     = false
+}
