@@ -43,11 +43,12 @@ module "security_group" {
 
 module "db" {
   source  = "terraform-aws-modules/rds/aws"
-  version = "v3.3.0"
+  # version = "v3.3.0"
+  version = "v5.1.1"
 
   identifier = var.identifier
 
-  name                                  = var.name
+  db_name                                  = var.name
   allocated_storage                     = var.storage
   engine                                = var.engine
   engine_version                        = var.engine_version
@@ -62,7 +63,8 @@ module "db" {
 
   subnet_ids = var.vpc.database_subnets
   vpc_security_group_ids = [module.security_group.security_group_id]
-
+  create_db_subnet_group = var.create_db_subnet_group
+  create_random_password = var.create_random_password
   apply_immediately                     = true
   skip_final_snapshot                   = false
   auto_minor_version_upgrade            = true
@@ -87,6 +89,6 @@ module "db" {
   performance_insights_enabled          = var.performance_insights_enabled
   performance_insights_retention_period = 7
   enabled_cloudwatch_logs_exports = var.engine == "postgres" ? ["postgresql", "upgrade"] :  ["general"]
-
+  allow_major_version_upgrade = var.allow_major_version_upgrade
 }
 
