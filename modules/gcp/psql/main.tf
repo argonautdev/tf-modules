@@ -68,8 +68,7 @@ locals {
 
 module "postgresql" {
     depends_on = [null_resource.after]
-    source = "GoogleCloudPlatform/sql-db/google//modules/postgresql"
-    version = "11.0.0"
+    source = "github.com/argonautdev/terraform-google-sql-db//modules/postgresql?ref=v11.0.1"
     project_id = var.project_id
     region = var.region
     zone = var.zone
