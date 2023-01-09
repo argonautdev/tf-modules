@@ -163,7 +163,9 @@ variable "node_pools" {
       auto_repair = optional(bool),
       auto_upgrade = bool,
       preemptible = optional(bool),
-      enable_gcfs = bool,##Set to true only if image streaming is required.
+      enable_gcfs = bool,##Set to true only if image streaming is required.
+      accelerator_type = optional(string),
+      accelerator_count = optional(number),
   }))
   description = "List of maps containing node pools"
   default = [
@@ -176,7 +178,7 @@ variable "node_pools" {
       autoscaling     = false
       auto_upgrade    = false,
       enable_gcfs     = false
-    },
+    }
   ]
 }
 
