@@ -166,6 +166,7 @@ variable "node_pools" {
       enable_gcfs = bool,##Set to true only if image streaming is required.
       accelerator_type = optional(string),
       accelerator_count = optional(number),
+      zones = optional(list(string)),
   }))
   description = "List of maps containing node pools"
   default = [
