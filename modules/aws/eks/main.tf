@@ -205,5 +205,6 @@ module "karpenter" {
   # we can re-use the role that was created for the node group
   create_iam_role = false
   create_instance_profile = true
+  irsa_tag_key="kubernetes.io/cluster"
 }
 
