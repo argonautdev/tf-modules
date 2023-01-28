@@ -189,3 +189,21 @@ resource "aws_iam_role_policy_attachment" "ebs_csi_policy_attach" {
 }
 
 
+##Karpenter sub-module for easily enabling Karpenter on EKS 
+module "karpenter" {
+  source  = "terraform-aws-modules/eks/aws//modules/karpenter"
+  version = "19.0.4"
+
+  cluster_name = module.eks.cluster_id
+
+  irsa_oidc_provider_arn          = module.eks.oidc_provider_arn
+  irsa_namespace_service_accounts = ["karpenter:karpenter"]
+  enable_spot_termination = false ##AWS SQS queue and EventBridge rules for node termination handling
+  create = true
+  iam_role_arn = module.eks.worker_iam_role_arn
+  # Since Karpenter is running on an EKS Managed Node group,
+  # we can re-use the role that was created for the node group
+  create_iam_role = false
+  create_instance_profile = true
+}
+
