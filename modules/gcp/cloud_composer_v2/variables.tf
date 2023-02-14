@@ -225,6 +225,6 @@ variable "master_authorized_networks" {
 
 variable "grant_sa_agent_permission" {
   type        = bool
-  default     = true
+  default     = false
   description = "Cloud Composer relies on Workload Identity as Google API authentication mechanism for Airflow. "
 }
