@@ -73,7 +73,6 @@ module "db" {
   copy_tags_to_snapshot                 = true
   delete_automated_backups              = false
   deletion_protection                   = false
-  iam_database_authentication_enabled   = false
   license_model                         = var.engine == "postgres" ? "postgresql-license" : ""
   maintenance_window                    = "tue:04:29-tue:04:59"
   
@@ -90,5 +89,6 @@ module "db" {
   performance_insights_retention_period = 7
   enabled_cloudwatch_logs_exports = var.engine == "postgres" ? ["postgresql", "upgrade"] :  ["general"]
   allow_major_version_upgrade = var.allow_major_version_upgrade
+  iam_database_authentication_enabled = var.iam_database_authentication_enabled
 }
 

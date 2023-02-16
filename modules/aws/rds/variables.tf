@@ -84,7 +84,7 @@ variable "storage_encrypted" {
 variable "storage_type" {
   description = "Storage type"
   type        = string
-  default     = "gp2"
+  default     = "gp3"
 }
 
 variable "multi_az" {
@@ -96,7 +96,7 @@ variable "multi_az" {
 variable "max_allocated_storage" {
   description = "Max allocated storage for db, in GB"
   type        = number
-  default     = 1000
+  default     = 10000
 }
 
 variable "iops" {
@@ -141,4 +141,10 @@ variable "vpc" {
     default_security_group_id = string
     vpc_cidr_block = string
   })
+}
+
+variable "iam_database_authentication_enabled" {
+  description = "Specifies whether or not the mappings of AWS Identity and Access Management (IAM) accounts to database accounts are enabled"
+  type        = bool
+  default     = true
 }
