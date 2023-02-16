@@ -4,7 +4,7 @@ include {
 
 terraform {
   # the below config is an example of what the config should like
-  source = "github.com/argonautdev/tf-modules.git//modules/gcp/gke?ref={{.RefVersion}}"
+  source = "github.com/argonautdev/tf-modules.git//modules/gcp/cloud_composer_v2?ref={{.RefVersion}}"
 }
 
 dependency "{{.Spec.vpc_id}}" {
