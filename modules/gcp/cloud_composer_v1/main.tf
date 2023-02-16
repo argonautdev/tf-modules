@@ -13,6 +13,7 @@ module "enabled_google_apis" {
 }
 
 module "composer" {
+  depends_on = [module.enabled_google_apis]
   source = "terraform-google-modules/composer/google//modules/create_environment_v1"
   version = "v3.4.0"
   project_id = var.project_id
