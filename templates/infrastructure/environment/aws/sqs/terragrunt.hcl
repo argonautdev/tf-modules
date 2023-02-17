@@ -44,9 +44,13 @@ inputs = {
   fifo_queue = "{{.Spec.fifo_queue}}"
   {{ end }}
   {{ if .Spec.redrive_policy }}
-  redrive_policy = "{{.Spec.redrive_policy}}"
+  redrive_policy = {
+      deadLetterTargetArn = "{{ .Spec.redrive_policy.deadLetterTargetArn }}"
+  }    
   {{ end }}
   {{ if .Spec.redrive_allow_policy }}
-  redrive_allow_policy = "{{.Spec.redrive_allow_policy}}"
+  redrive_allow_policy =  {
+    sourceQueueArns = "{{ .Spec.redrive_allow_policy.sourceQueueArns }}"
+  }
   {{ end }}
 }
