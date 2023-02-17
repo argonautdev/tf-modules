@@ -43,4 +43,10 @@ inputs = {
   {{ if .Spec.fifo_queue }}
   fifo_queue = "{{.Spec.fifo_queue}}"
   {{ end }}
+  {{ if .Spec.redrive_policy }}
+  redrive_policy = "{{.Spec.redrive_policy}}"
+  {{ end }}
+  {{ if .Spec.redrive_allow_policy }}
+  redrive_allow_policy = "{{.Spec.redrive_allow_policy}}"
+  {{ end }}
 }
