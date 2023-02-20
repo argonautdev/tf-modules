@@ -15,7 +15,7 @@ inputs = {
   default_labels = {
     "argonaut-id"          = "{{.Spec.id}}"
     "argonaut-name"        = "{{.Spec.name}}"
-    "argonaut-type"        = "gke"
+    "argonaut-type"        = "cloud_composer_v1"
     "argonaut-manager"     = "argonaut-dev"
     "argonaut-environment" = "{{.Environment.Name}}"
   }

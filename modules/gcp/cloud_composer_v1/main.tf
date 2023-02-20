@@ -25,4 +25,5 @@ module "composer" {
   disk_size  = var.workernode_disk_size
   network    = var.vpc_network_name
   subnetwork = var.subnetwork
+  image_version = var.image_version
 }
