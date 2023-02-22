@@ -17,7 +17,7 @@ variable "engine" {
 
 variable "engine_version" {
   description = "The engine version to use"
-  default = "10.3.35"
+  default = "10.6.8"
   type        = string
 }
 
@@ -66,6 +66,7 @@ variable "password" {
 variable "default_tags" {
   description = "Default Tags"
   type = map(string)
+  default = {}
 }
 
 variable "name" {
@@ -120,6 +121,8 @@ variable "deletion_protection" {
   default     = false
 }
 
+##Supported regions and versions for IAM database authentication
+## https://docs.amazonaws.cn/en_us/AmazonRDS/latest/UserGuide/Concepts.RDS_Fea_Regions_DB-eng.Feature.IamDatabaseAuthentication.html
 variable "iam_database_authentication_enabled" {
   description = "Specifies whether or not the mappings of AWS Identity and Access Management (IAM) accounts to database accounts are enabled"
   type        = bool
@@ -235,7 +238,7 @@ variable "monitoring_role_description" {
 variable "monitoring_role_arn" {
   description = "The ARN for the IAM role that permits RDS to send enhanced monitoring metrics to CloudWatch Logs. Must be specified if monitoring_interval is non-zero"
   type        = string
-  # default     = null
+  default     = null
 }
 
 
@@ -245,6 +248,11 @@ variable "enabled_cloudwatch_logs_exports" {
   default     = ["audit", "general", "error", "slowquery"]
 }
 
+variable "create_random_password" {
+  description = "Whether to create random password for RDS primary cluster"
+  type        = bool
+  default     = false
+}
 
 /* Performance Insights */
 variable "performance_insights_enabled" {
@@ -293,7 +301,7 @@ variable "parameter_group_description" {
 variable "family" {
   description = "The family of the DB parameter group"
   type        = string
-  default     = "mariadb10.3"
+  default     = "mariadb10.6"
 }
 
 variable "parameters" {
@@ -344,7 +352,7 @@ variable "option_group_description" {
 variable "major_engine_version" {
   description = "Specifies the major version of the engine that this option group should be associated with"
   type        = string
-  default     = "10.3"
+  default     = "10.6"
 }
 
 variable "options" {

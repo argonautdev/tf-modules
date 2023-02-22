@@ -51,10 +51,10 @@ module "db" {
   db_subnet_group_name                  = var.db_subnet_group_name
   db_subnet_group_description           = var.db_subnet_group_name
   subnet_ids = var.vpc.database_subnets
-  
+  create_random_password = var.create_random_password
   vpc_security_group_ids = [module.security_group.security_group_id]
   
-  name                                  = var.name
+  db_name                               = var.name
   engine                                = var.engine
   engine_version                        = var.engine_version
   
