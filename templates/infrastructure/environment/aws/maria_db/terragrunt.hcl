@@ -9,7 +9,7 @@ locals {
 terraform {
 
   # the below config is an example of what the config should like
-  source = "github.com/argonautdev/tf-modules.git//modules/aws/mariadb?ref={{.RefVersion}}"
+  source = "github.com/argonautdev/tf-modules.git//modules/aws/maria_db?ref={{.RefVersion}}"
 }
 
 dependency "vpc" {
