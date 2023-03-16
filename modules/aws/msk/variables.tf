@@ -8,6 +8,18 @@ variable "aws_region" {
   description = "AWS region"
 }
 
+variable "visibility" {
+  type        = string
+  description = "Visibility of the Kakfa Cluster"
+  default     = "private"
+}
+
+variable "cluster_public_access" {
+  type = string
+  description = "Cluster public access. should be set to 'DISABLED' when creating cluster. on modify change to 'SERVICE_PROVIDED_EIPS'"
+  default = "DISABLED"
+}
+
 variable "number_of_broker_nodes_per_zone" {
   type        = number
   default     = 1
