@@ -36,18 +36,13 @@ locals {
 }
 
 module "eks" {
-  source                   = "terraform-aws-modules/eks/aws"
-  version                  = "v17.4.0"
+  source = "github.com/argonautdev/terraform-eks?ref=v17.4.1"
   cluster_name             = var.cluster.name
   cluster_version          = var.cluster.version
   wait_for_cluster_timeout = 900
   subnets                  = var.vpc.subnets
 
   vpc_id = var.vpc.id
-
-  # node_groups_defaults = {
-  #   ami_type  = var.ami_type
-  # }
   
   node_groups = local.ng_list_replacements
 
