@@ -4,7 +4,7 @@ variable "aws_region" {
   default     = "ap-south-1"
 }
 
-variable "storage" {
+variable "disk_size" {
   description = "Storage capacity in GB"
   type        = number
 }
@@ -52,13 +52,13 @@ variable "copy_tags_to_snapshot" {
   default     = true
 }
 
-variable "username" {
+variable "master_username" {
   description = "Username for the master DB user"
   default = ""
   type        = string
 }
 
-variable "password" {
+variable "master_password" {
   description = "Password for the master DB user. Note that this may show up in logs, and it will be stored in the state file"
   type        = string
 }
@@ -69,19 +69,19 @@ variable "default_tags" {
   default = {}
 }
 
-variable "name" {
+variable "database_name" {
   description = "Name of the database"
   type        = string
 }
 
-variable "identifier" {
+variable "instance_name" {
   description = "Identifier of the RDS instance"
   type        = string
 }
 
 variable "visibility" {
   description = "Visibility of the rds instance"
-  default = "private"
+  default = "public"
   type        = string
 }
 

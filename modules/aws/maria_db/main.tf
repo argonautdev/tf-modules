@@ -7,7 +7,7 @@ module "security_group" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "~> 4"
 
-  name        = var.identifier
+  name        = var.instance_name
   description = "Complete ${var.engine} security group"
   vpc_id      = var.vpc.vpc_id
 
@@ -45,7 +45,7 @@ module "db" {
   source  = "terraform-aws-modules/rds/aws"
   version = "v5.1.1"
 
-  identifier = var.identifier
+  identifier = var.instance_name
   /* Subnets */
   create_db_subnet_group                = var.create_db_subnet_group
   db_subnet_group_name                  = var.db_subnet_group_name
@@ -54,19 +54,19 @@ module "db" {
   create_random_password = var.create_random_password
   vpc_security_group_ids = [module.security_group.security_group_id]
   
-  db_name                               = var.name
+  db_name                               = var.database_name
   engine                                = var.engine
   engine_version                        = var.engine_version
   
   /*Storage*/
   storage_type                          = var.storage_type
-  allocated_storage                     = var.storage
+  allocated_storage                     = var.disk_size
   iops                                  = var.iops
   max_allocated_storage                 = var.max_allocated_storage
   /* DB */
   instance_class                        = var.instance_class
-  username                              = var.username
-  password                              = var.password
+  username                              = var.master_username
+  password                              = var.master_password
 
   multi_az                              = var.multi_az
   port                                  = local.port

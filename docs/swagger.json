@@ -146,6 +146,140 @@
     }
    }
   },
+  "aws.mariadb": {
+   "type": "object",
+   "required": [
+    "disk_size",
+    "master_password",
+    "instance_name",
+    "master_username",
+    "database_name"
+   ],
+   "properties": {
+    "disk_size": {
+     "description": "Storage capacity in GB",
+     "type": "number",
+     "default": 50
+    },
+    "multi_az": {
+      "description": "Enable multi az"
+      "type": "boolean",
+      "default": false
+    },
+    "engine": {
+     "description": "The database engine to use",
+     "type": "string",
+     "default": "mariadb"
+    },
+    "engine_version": {
+      "description" : "The engine version to use",
+      "default" : "10.3.35",
+      "type"  : "array",
+      "enum": [
+       "10.3.34", 
+       "10.3.35", 
+       "10.3.36", 
+       "10.3.37", 
+       "10.3.38", 
+       "10.4.24", 
+       "10.4.25", 
+       "10.4.26", 
+       "10.4.27", 
+       "10.4.28", 
+       "10.5.12", 
+       "10.5.13", 
+       "10.5.15", 
+       "10.5.16", 
+       "10.5.17", 
+       "10.5.18", 
+       "10.5.19", 
+       "10.6.5", 
+       "10.6.7", 
+       "10.6.8", 
+       "10.6.10", 
+       "10.6.11", 
+       "10.6.12"
+      ],
+      "items": {}
+    },
+    "instance_class": {
+       "description" : "The instance type of the RDS instance",
+       "type" : "string",
+       "default": "db.t3.medium"
+    },
+    "aws_region": {
+     "description": "aws region",
+     "type": "string",
+     "default": ""
+    },
+    "backup_retention_period": {
+     "description": "The days to retain backups for. Default `9`",
+     "type": "number",
+     "format": "double",
+     "default": 9
+    },
+    "master_password": {
+     "description": "Password for the master DB user.",
+     "type": "string"
+    },
+    "master_username": {
+     "description": "Username for the master DB user",
+     "type": "string"
+    },
+    "instance_name": {
+     "description": "The name of the database instance",
+     "type": "string"
+    },
+    "database_name": {
+     "description": "Name for an automatically created database on cluster creation",
+     "type": "string"
+    },
+    "visibility": {
+     "description": "Visibility of the rds instance",
+     "type"  : "string",
+     "default": "public",
+     "enum": [
+      "public",
+      "private"
+     ],
+     "items": {}
+    }, 
+    "default_tags": {
+     "description": "Default Tags",
+     "type": "object",
+     "default": {},
+     "additionalProperties": {}
+    },
+    "major_engine_version": {
+     "description": "Specifies the major version of the engine that this option group should be associated with",
+     "type": "string",
+     "items": {},
+     "default": "10.3",
+     "enum": [
+      "10.3",
+      "10.4",
+      "10.5",
+      "10.6"
+     ],
+    },
+    "db_instance_family": {
+     "description": "The family of the DB parameter group",
+     "type": "string",
+     "items": {},
+     "default": "mariadb10.3",
+     "enum": [
+      "mariadb10.3",
+      "mariadb10.4",
+      "mariadb10.5",
+      "mariadb10.6"]
+    },
+    "vpc": {
+     "description": "All vpc info",
+     "type": "object",
+     "additionalProperties": {}
+    }
+   }
+  },
   "gcp.memcached": {
    "type": "object",
    "required": [

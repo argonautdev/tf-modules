@@ -38,19 +38,20 @@ inputs = {
 
   visibility = "{{ .Spec.visibility }}"
 
-  identifier     = "{{ .Spec.identifier }}"
-  name           = "{{ .Spec.name }}"
+  instance_name     = "{{ .Spec.instance_name }}"
+  database_name           = "{{ .Spec.database_name }}"
   multi_az = "{{.Spec.multi_az }}"
+  backup_retention_period = "{{.Spec.backup_retention_period }}"
 
   {{if eq .Spec.engine_version}}engine_version = "{{ .Spec.engine_version}}"{{else}}engine_version = "10.3.35"{{end}}
-  {{if eq .Spec.family}}family = "{{.Spec.family}}"{{else}}family = "mariadb10.3"{{end}}
+  {{if eq .Spec.db_instance_family}}family = "{{.Spec.db_instance_family}}"{{else}}family = "mariadb10.3"{{end}}
   {{if .Spec.major_engine_version}}major_engine_version       = "{{ .Spec.major_engine_version}}"{{else}}major_engine_version="10.3"{{end}}
   {{if or (eq .Spec.instance_class "db.t2.micro") (eq .Spec.instance_class "db.t2.small") (eq .Spec.instance_class "db.t3.micro") (eq .Spec.instance_class "db.t3.small")}}performance_insights_enabled=false{{else}}performance_insights_enabled=true{{end}}
   
-  storage        = {{ .Spec.storage }}
+  disk_size        = {{ .Spec.disk_size }}
   instance_class = "{{ .Spec.instance_class }}"
-  username       = "{{ .Spec.username }}"
-  password       = "{{ .Spec.password }}"
+  master_username       = "{{ .Spec.master_username }}"
+  master_password       = "{{ .Spec.master_password }}"
   // subnet group name
   db_subnet_group_name = "{{ .Spec.name }}-db-subnet"
   vpc = {
