@@ -162,7 +162,7 @@
      "default": 50
     },
     "multi_az": {
-      "description": "Enable multi az"
+      "description": "Enable multi az",
       "type": "boolean",
       "default": false
     },
@@ -260,7 +260,7 @@
       "10.4",
       "10.5",
       "10.6"
-     ],
+     ]
     },
     "db_instance_family": {
      "description": "The family of the DB parameter group",
