@@ -174,7 +174,7 @@
     "engine_version": {
       "description" : "The engine version to use",
       "default" : "10.3.35",
-      "type"  : "array",
+      "type"  : "string",
       "enum": [
        "10.3.34", 
        "10.3.35", 
