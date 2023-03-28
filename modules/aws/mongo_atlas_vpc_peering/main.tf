@@ -8,6 +8,7 @@ data "mongodbatlas_project" "aws_atlas" {
   project_id = var.atlas_project_id
 }
 
+##Container is Just VPC
 resource "mongodbatlas_network_container" "atlas_container" {
   atlas_cidr_block = var.atlas_vpc_cidr
   project_id       = data.mongodbatlas_project.aws_atlas.id
@@ -30,8 +31,26 @@ resource "mongodbatlas_network_peering" "aws-atlas" {
   aws_account_id         = data.aws_caller_identity.account.account_id
 }
 
+data "aws_route_tables" "private_rt_filters" {
+  vpc_id = var.vpc.vpc_id
+  filter  {
+    name = "tag:Name"
+    values = [
+       "${var.vpc.name}-private"
+    ]
+  }
+}
+
 resource "aws_route" "peeraccess" {
   route_table_id            = data.aws_vpc.primary.main_route_table_id
+  destination_cidr_block    = var.atlas_vpc_cidr
+  vpc_peering_connection_id = mongodbatlas_network_peering.aws-atlas.connection_id
+  depends_on                = [aws_vpc_peering_connection_accepter.peer]
+}
+
+resource "aws_route" "peerprivatertaccess" {
+  count                     = length(data.aws_route_tables.private_rt_filters.ids)
+  route_table_id            = tolist(data.aws_route_tables.private_rt_filters.ids)[count.index]
   destination_cidr_block    = var.atlas_vpc_cidr
   vpc_peering_connection_id = mongodbatlas_network_peering.aws-atlas.connection_id
   depends_on                = [aws_vpc_peering_connection_accepter.peer]
