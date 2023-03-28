@@ -41,6 +41,16 @@ data "aws_route_tables" "private_rt_filters" {
   }
 }
 
+data "aws_route_tables" "public_rt_filters" {
+  vpc_id = var.vpc.vpc_id
+  filter  {
+    name = "tag:Name"
+    values = [
+       "${var.vpc.name}-public"
+    ]
+  }
+}
+
 resource "aws_route" "peeraccess" {
   route_table_id            = data.aws_vpc.primary.main_route_table_id
   destination_cidr_block    = var.atlas_vpc_cidr
@@ -54,6 +64,21 @@ resource "aws_route" "peerprivatertaccess" {
   destination_cidr_block    = var.atlas_vpc_cidr
   vpc_peering_connection_id = mongodbatlas_network_peering.aws-atlas.connection_id
   depends_on                = [aws_vpc_peering_connection_accepter.peer]
+}
+
+resource "aws_route" "peerpublicrtaccess" {
+  count                     = length(data.aws_route_tables.public_rt_filters.ids)
+  route_table_id            = tolist(data.aws_route_tables.public_rt_filters.ids)[count.index]
+  destination_cidr_block    = var.atlas_vpc_cidr
+  vpc_peering_connection_id = mongodbatlas_network_peering.aws-atlas.connection_id
+  depends_on                = [aws_vpc_peering_connection_accepter.peer]
+}
+
+##IP Access List entry resource. The access list grants access from IPs, CIDRs or AWS Security Groups (if VPC Peering is enabled) to clusters within the Project.
+resource "mongodbatlas_project_ip_access_list" "atlas-ip-access-list-1" {
+  project_id = var.atlas_project_id
+  cidr_block = data.aws_vpc.primary.cidr_block
+  comment    = "CIDR block of the VPC"
 }
 
 resource "aws_vpc_peering_connection_accepter" "peer" {
