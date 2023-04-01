@@ -48,19 +48,19 @@ module "db" {
 
   identifier = var.identifier
 
-  db_name                                  = var.name
+  db_name                               = var.snapshot_identifier != null ? null: var.name
   allocated_storage                     = var.storage
   engine                                = var.engine
-  engine_version                        = var.engine_version
+  engine_version                        = var.snapshot_identifier != null ? null: var.engine_version
   major_engine_version                  = var.major_engine_version
   family                                = var.family
 
   instance_class                        = var.instance_class
-  username                              = var.username
-  password                              = var.password
+  username                              = var.snapshot_identifier != null ? null: var.username
+  password                              = var.snapshot_identifier != null ? null: var.password
 
-  snapshot_identifier                   = var.snapshot_identifier
-
+  snapshot_identifier                   = var.snapshot_identifier 
+  
   subnet_ids = var.vpc.database_subnets
   vpc_security_group_ids = [module.security_group.security_group_id]
   create_db_subnet_group = var.create_db_subnet_group

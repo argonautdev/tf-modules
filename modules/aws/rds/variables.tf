@@ -46,6 +46,7 @@ variable "username" {
 variable "password" {
   description = "Password for the master DB user. Note that this may show up in logs, and it will be stored in the state file"
   type        = string
+  default = null
 }
 
 variable "default_tags" {
@@ -56,6 +57,7 @@ variable "default_tags" {
 variable "name" {
   description = "Name of the database"
   type        = string
+  default = null
 }
 
 variable "identifier" {
@@ -102,7 +104,7 @@ variable "max_allocated_storage" {
 variable "iops" {
   description = "Provisioned IOPS"
   type        = number
-  default     = 0
+  default     = 3000
 }
 
 variable "performance_insights_enabled" {
