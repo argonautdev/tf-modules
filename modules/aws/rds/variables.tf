@@ -86,7 +86,7 @@ variable "storage_encrypted" {
 variable "storage_type" {
   description = "Storage type"
   type        = string
-  default     = "gp3"
+  default     = "gp2"
 }
 
 variable "multi_az" {
@@ -104,7 +104,7 @@ variable "max_allocated_storage" {
 variable "iops" {
   description = "Provisioned IOPS"
   type        = number
-  default     = 3000
+  default     = 0
 }
 
 variable "performance_insights_enabled" {
