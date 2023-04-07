@@ -3,6 +3,13 @@ variable "project_id" {
   type        = string
 }
 
+// required
+variable "region" {
+  description = "The region of the Cloud SQL resources"
+  type        = string
+  default     = "us-east4"
+}
+
 variable "vpc_network_name" {
   description = "The VPC Network name"
   type        = string
@@ -44,9 +51,4 @@ variable "atlas_vpc_cidr" {
 variable "atlas_project_id" {
   description = "MongoDB Atlas project id"
   type        = string
-}
-
-variable "default_tags" {
-  description = "Default Tags for peering connections"
-  type        = map(string)
 }

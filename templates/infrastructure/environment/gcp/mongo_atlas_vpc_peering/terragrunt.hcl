@@ -19,7 +19,7 @@ inputs = {
   atlas_private_key="{{.Spec.atlas_private_key}}"
   atlas_project_id="{{.Spec.atlas_project_id}}"
   
-  default_tags = {
+  default_labels = {
     "argonaut-id"        = "{{.Spec.id}}"
     "argonaut-name"        = "{{.Spec.name}}"
     "argonaut-type"        = "MongoDB-Atlas-VPC-Peering"
