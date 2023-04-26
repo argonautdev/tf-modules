@@ -42,8 +42,7 @@ inputs = {
   database_name           = "{{ .Spec.database_name }}"
   multi_az = "{{.Spec.multi_az }}"
   backup_retention_period = "{{.Spec.backup_retention_period }}"
-
-  {{if eq .Spec.engine_version}}engine_version = "{{ .Spec.engine_version}}"{{else}}engine_version = "10.3.35"{{end}}
+  engine_version = "{{ .Spec.engine_version}}"
   {{if eq .Spec.db_instance_family}}family = "{{.Spec.db_instance_family}}"{{else}}family = "mariadb10.3"{{end}}
   {{if .Spec.major_engine_version}}major_engine_version       = "{{ .Spec.major_engine_version}}"{{else}}major_engine_version="10.3"{{end}}
   {{if or (eq .Spec.instance_class "db.t2.micro") (eq .Spec.instance_class "db.t2.small") (eq .Spec.instance_class "db.t3.micro") (eq .Spec.instance_class "db.t3.small")}}performance_insights_enabled=false{{else}}performance_insights_enabled=true{{end}}
