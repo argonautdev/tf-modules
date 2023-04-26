@@ -3,7 +3,7 @@ include {
 }
 
 locals {
-  region = local.region_vars.locals.aws_region
+  region = "{{.Region}}"
 }
 
 terraform {
