@@ -4,6 +4,7 @@ include {
 
 locals {
   region = "{{.Region}}"
+  env = local.environment_vars.locals.environment
 }
 
 terraform {
