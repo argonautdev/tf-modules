@@ -79,10 +79,16 @@ inputs = {
 
   storage        = {{ .Spec.storage }}
   instance_class = "{{ .Spec.instance_class }}"
+  {{if .Spec.username}}
   username       = "{{ .Spec.username }}"
+  {{end}}
+  {{if .Spec.password}}
   password       = "{{ .Spec.password }}"
+  {{end}}
   db_subnet_group_name = "{{ .Spec.name }}-db-subnet"
-
+  {{if .Spec.snapshot_identifier}}
+  snapshot_identifier = "{{ .Spec.snapshot_identifier }}"
+  {{end}} 
   vpc = {
     name    = "${local.env}"
     vpc_id      = dependency.vpc.outputs.vpc_id
@@ -92,5 +98,4 @@ inputs = {
     database_subnets = dependency.vpc.outputs.database_subnets
     default_security_group_id = dependency.vpc.outputs.default_security_group_id
   }
-
 }
