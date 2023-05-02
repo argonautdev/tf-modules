@@ -167,6 +167,7 @@ variable "node_pools" {
       enable_gcfs = bool,##Set to true only if image streaming is required.
       accelerator_type = optional(string),
       accelerator_count = optional(number),
+      zones = optional(list(string))
   }))
   description = "List of maps containing node pools"
   default = [
@@ -178,7 +179,8 @@ variable "node_pools" {
       image_type      = "COS_CONTAINERD"
       autoscaling     = false
       auto_upgrade    = false,
-      enable_gcfs     = false
+      enable_gcfs     = false,
+      zones           = ["us-central1-a", "us-central1-b"]
     }
   ]
 }
