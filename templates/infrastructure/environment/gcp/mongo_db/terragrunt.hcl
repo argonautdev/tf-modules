@@ -4,7 +4,7 @@ include {
 
 terraform {
   # the below config is an example of what the config should like
-  source = "github.com/argonautdev/tf-modules.git//modules/gcp/mongo_atlas_vpc_peering?ref={{.RefVersion}}"
+  source = "github.com/argonautdev/tf-modules.git//modules/gcp/mongo_db?ref={{.RefVersion}}"
 }
 
 dependency "{{.Spec.vpc_id}}" {
