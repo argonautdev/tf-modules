@@ -164,6 +164,7 @@ variable "node_pools" {
       auto_repair = optional(bool),
       auto_upgrade = bool,
       preemptible = optional(bool),
+      spot = optional(bool),
       enable_gcfs = bool,##Set to true only if image streaming is required.
       accelerator_type = optional(string),
       accelerator_count = optional(number),
@@ -178,6 +179,7 @@ variable "node_pools" {
       image_type      = "COS_CONTAINERD"
       autoscaling     = false
       auto_upgrade    = false,
+      spot    = false,
       enable_gcfs     = false
     }
   ]
