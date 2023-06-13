@@ -138,7 +138,7 @@ variable "storage_encrypted" {
 variable "storage_type" {
   description = "Storage type"
   type        = string
-  default     = "gp3"
+  default     = "gp2"
 }
 
 variable "kms_key_id" {
