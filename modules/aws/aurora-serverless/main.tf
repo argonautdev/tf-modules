@@ -32,6 +32,7 @@ module "aurora_cluster" {
   name                    = var.cluster_name
   engine                  = var.cluster_engine
   engine_mode             = "serverless"
+  engine_version          = var.engine_version
   storage_encrypted       = var.storage_encrypted
   database_name           = var.database_name
   master_username         = var.master_username

@@ -114,11 +114,13 @@ variable "create_db_cluster_parameter_group" {
 variable "db_cluster_parameter_group_family" {
   description = "The family of the DB cluster parameter group"
   type        = string
-  default     = "aurora-mysql5.7"
-  validation {
-    condition     = var.db_cluster_parameter_group_family == "aurora-mysql5.7" || var.db_cluster_parameter_group_family == "aurora-postgresql10"
-    error_message = "The value choosen is not in the list of ( aurora-mysql5.7, aurora-postgresql10)."
-  }
+  default     = "aurora-postgresql13"
+}
+
+variable "engine_version" {
+  description = "The database engine version. Updating this argument results in an outage"
+  type        = string
+  default     = "13.9"
 }
 
 variable "db_cluster_parameter_group_parameters" {
