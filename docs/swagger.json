@@ -173,9 +173,12 @@
     },
     "engine_version": {
       "description" : "The engine version to use",
-      "default" : "10.4.24",
+      "default" : "10.3.39",
       "type"  : "string",
       "enum": [
+       "10.3.39",
+       "10.3.38",
+       "10.3.37",
        "10.4.24", 
        "10.4.25", 
        "10.4.26", 
