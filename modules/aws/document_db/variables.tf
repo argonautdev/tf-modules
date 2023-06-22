@@ -34,7 +34,7 @@ variable "allowed_cidr_blocks" {
 # https://docs.aws.amazon.com/documentdb/latest/developerguide/limits.html#suported-instance-types
 variable "instance_class" {
   type        = string
-  default     = "db.r5.large"
+  default     = "db.t3.medium"
   description = "The instance class to use. For more details, see https://docs.aws.amazon.com/documentdb/latest/developerguide/db-instance-classes.html#db-instance-class-specs"
 }
 
@@ -96,7 +96,7 @@ variable "cluster_parameters" {
 
 variable "cluster_family" {
   type        = string
-  default     = "docdb4.0"
+  default     = "docdb5.0"
   description = "The family of the DocumentDB cluster parameter group. For more details, see https://docs.aws.amazon.com/documentdb/latest/developerguide/db-cluster-parameter-group-create.html"
 }
 
@@ -108,7 +108,7 @@ variable "engine" {
 
 variable "engine_version" {
   type        = string
-  default     = "4.0.0"
+  default     = "5.0.0"
   description = "The version number of the database engine to use"
 }
 
