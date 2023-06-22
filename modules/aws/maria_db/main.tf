@@ -53,7 +53,7 @@ module "db" {
   subnet_ids = var.vpc.database_subnets
   create_random_password = var.create_random_password
   vpc_security_group_ids = [module.security_group.security_group_id]
-  
+  allow_major_version_upgrade = var.allow_major_version_upgrade
   db_name                               = var.database_name
   engine                                = var.engine
   engine_version                        = var.engine_version
