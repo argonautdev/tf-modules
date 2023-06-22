@@ -165,3 +165,9 @@ variable "cluster_max_capacity" {
   type        = number
   default     = 16
 }
+
+variable "allow_major_version_upgrade" {
+  description = "Enable to allow major engine version upgrades when changing engine versions. Defaults to `false`"
+  type        = bool
+  default     = true
+}
