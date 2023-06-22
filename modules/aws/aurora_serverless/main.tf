@@ -32,6 +32,7 @@ module "aurora_cluster" {
   name                    = var.cluster_name
   engine                  = var.cluster_engine
   engine_mode             = "serverless"
+  engine_version          = var.engine_version
   storage_encrypted       = var.storage_encrypted
   database_name           = var.database_name
   master_username         = var.master_username
@@ -46,7 +47,7 @@ module "aurora_cluster" {
   db_cluster_parameter_group_parameters = var.db_cluster_parameter_group_parameters
   vpc_id                  = var.vpc.vpc_id
   create_random_password  = var.create_random_password
-  
+  allow_major_version_upgrade = var.allow_major_version_upgrade
   //* creating security group and allowing from vpc cidr block
   create_security_group = true
   allowed_cidr_blocks   = [var.vpc.vpc_cidr_block]

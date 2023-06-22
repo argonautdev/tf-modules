@@ -21,7 +21,7 @@ locals {
 terraform {
 
   # the below config is an example of what the config should like
-  source = "github.com/argonautdev/tf-modules.git//modules/aws/aurora-serverless?ref={{.RefVersion}}"
+  source = "github.com/argonautdev/tf-modules.git//modules/aws/aurora_serverless?ref={{.RefVersion}}"
 }
 
 dependency "vpc" {
@@ -54,7 +54,6 @@ inputs = {
   {{if eq .Spec.cluster_engine "aurora-postgresql"}}
   // all values correspond to postgres
   create_db_cluster_parameter_group = true
-  db_cluster_parameter_group_family = "aurora-postgresql10"
   enabled_cloudwatch_logs_exports = ["postgres"]
   {{end}}
   
@@ -62,7 +61,6 @@ inputs = {
   // all values correspond to mysql
   //As we know enabling logs to cloudwatch requires custom parameter group. Hence, creating one
   create_db_cluster_parameter_group = true
-  db_cluster_parameter_group_family = "aurora-mysql5.7"
   enabled_cloudwatch_logs_exports = ["audit", "error", "general", "slowquery"]
   db_cluster_parameter_group_parameters = [
     {
@@ -82,10 +80,11 @@ inputs = {
       "value": "1"
     }
   ]
-  skip_final_snapshot = true
   {{end}}
 
   cluster_engine = "{{ .Spec.cluster_engine }}"
+  engine_version = "{{ .Spec.engine_version }}"
+  db_cluster_parameter_group_family = "{{ .Spec.db_cluster_parameter_group_family }}"
   database_name = "{{ .Spec.database_name }}"
   master_username = "{{ .Spec.master_username }}"
   master_password = "{{ .Spec.master_password }}"

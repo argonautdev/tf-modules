@@ -38,13 +38,13 @@ variable "instance_type" {
 
 variable "family" {
   type        = string
-  default = "redis6.x"
+  default = "redis7"
   description = "Redis family"
 }
 
 variable "engine_version" {
   type        = string
-  default = "6.x"
+  default = "7.0"
   description = "Redis engine version"
 }
 
