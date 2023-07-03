@@ -184,4 +184,53 @@ resource "aws_iam_role_policy_attachment" "ebs_csi_policy_attach" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
 }
 
+##Resource for creating an managed policy of SecretsManager&SSM Parameterstore readonly for Node Role
+resource "aws_iam_policy" "s3_read_only_policy" {
+  name_prefix = "SSMSecretsManagerReadOnlyPolicy"
+  policy = jsonencode({
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": [
+                "secretsmanager:DescribeSecret",
+                "secretsmanager:GetSecretValue",
+                "ssm:DescribeParameters",
+                "ssm:GetParameter",
+                "ssm:GetParameters",
+                "ssm:GetParametersByPath"
+            ],
+            "Effect": "Allow",
+            "Resource": "*"
+        },
+        {
+            "Action": [
+                "kms:DescribeCustomKeyStores",
+                "kms:ListKeys",
+                "kms:ListAliases"
+            ],
+            "Effect": "Allow",
+            "Resource": "*"
+        },
+        {
+            "Action": [
+                "kms:Decrypt",
+                "kms:GetKeyRotationStatus",
+                "kms:GetKeyPolicy",
+                "kms:DescribeKey"
+            ],
+            "Effect": "Allow",
+            "Resource": "*"
+        }
+    ]
+  })
+}
+
+##Resource for attaching Externalsecrets Readonly Policy to NodeIAMRole
+resource "aws_iam_role_policy_attachment" "secrets_policy_attach" {
+  role       = module.eks.worker_iam_role_name
+  policy_arn = aws_iam_policy.s3_read_only_policy.arn
+}
+
+
+
 
