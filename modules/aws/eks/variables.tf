@@ -40,6 +40,7 @@ variable "vpc" {
     name    = string
     id      = string
     subnets = list(string)
+    private_secondary_subnets = optional(list(string))
   })
 }
 
