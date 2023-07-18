@@ -31,9 +31,22 @@ locals {
     instance_types = [v.instance_type]
     name_prefix   = "${v.ng_name}-art-"
     version = var.cluster.version
-    subnets = var.vpc.private_secondary_subnets != null ? var.vpc.private_secondary_subnets : var.vpc.subnets
+    #subnets = var.vpc.private_secondary_subnets != null ? var.vpc.private_secondary_subnets : var.vpc.subnets
+    subnets = length(data.aws_subnets.private_secondary.ids) > 0 ?  data.aws_subnets.private_secondary.ids : var.vpc.subnets
     k8s_labels = merge(v.k8s_labels, { Environment = var.env })
   }, v)}
+}
+
+##Read the secondary subnets
+data "aws_subnets" "private_secondary" {
+  filter {
+    name   = "vpc-id"
+    values = [var.vpc.id]
+  }
+
+  tags = {
+    Type = "private_secondary"
+  }
 }
 
 module "eks" {
