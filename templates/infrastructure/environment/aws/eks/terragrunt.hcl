@@ -35,7 +35,6 @@ dependency "vpc" {
    mock_outputs = {
     vpc_id = "temporary-dummy-id",
     private_subnets = ["temporary-dummy-subnet-1", "temporary-dummy-subnet-2"]
-    
   }
 }
 
@@ -95,7 +94,6 @@ inputs = {
     name    = "${local.env}"
     id      = dependency.vpc.outputs.vpc_id
     subnets = dependency.vpc.outputs.private_subnets
-    
   }
 
   cluster = {
