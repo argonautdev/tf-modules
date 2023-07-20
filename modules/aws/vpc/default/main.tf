@@ -1,9 +1,7 @@
 data "aws_availability_zones" "available" {}
 
 module "vpc" {
-  # source = "terraform-aws-modules/vpc/aws"
-  # version = "v3.11.0"
-  source = "/home/ec2-user/environment/terraform-aws-vpc"
+  source = "github.com/argonautdev/terraform-aws-vpc?ref=v5.1.1"
 
   name = var.name
   # cidr = "10.0.0.0/16"
@@ -24,7 +22,7 @@ module "vpc" {
   // create_private_subnet_group = true
   secondary_cidr_blocks    = var.secondary_cidr_blocks
   
-
+  
   manage_default_route_table = true
   default_route_table_tags   = { DefaultRouteTable = true }
 
