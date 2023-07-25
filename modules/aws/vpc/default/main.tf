@@ -1,8 +1,7 @@
 data "aws_availability_zones" "available" {}
 
 module "vpc" {
-  source = "terraform-aws-modules/vpc/aws"
-  version = "v3.11.0"
+  source = "github.com/argonautdev/terraform-aws-vpc?ref=v5.1.1"
 
   name = var.name
   # cidr = "10.0.0.0/16"
@@ -13,6 +12,7 @@ module "vpc" {
   // public_subnets  = slice(var.public_subnet_cidr_blocks, 0, var.public_subnet_count)
   public_subnets  = var.public_subnet_cidr_blocks
   private_subnets = var.private_subnet_cidr_blocks
+  private_secondary_subnets = var.secondary_cidr_subnet_blocks
   database_subnets = var.database_subnet_cidr_blocks
   elasticache_subnets = var.elasticache_subnet_cidr_blocks
   #   redshift_subnets    = ["20.10.41.0/24", "20.10.42.0/24", "20.10.43.0/24"]
@@ -20,9 +20,9 @@ module "vpc" {
   create_database_subnet_group = true
   create_elasticache_subnet_group = true
   // create_private_subnet_group = true
-
+  secondary_cidr_blocks    = var.secondary_cidr_blocks
   
-
+  
   manage_default_route_table = true
   default_route_table_tags   = { DefaultRouteTable = true }
 

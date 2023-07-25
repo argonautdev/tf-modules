@@ -23,6 +23,20 @@ variable "enable_vpn_gateway" {
   type        = bool
 }
 
+variable "secondary_cidr_blocks" {
+  description = "List of secondary CIDR blocks to associate with the VPC to extend the IP Address pool"
+  type        = list(string)
+  default     = ["10.10.0.0/16"]
+}
+
+variable "secondary_cidr_subnet_blocks" {
+  description = "List of secondary subnet CIDR blocks to associate with the VPC to extend the IP Address pool"
+  type        = list(string)
+  # default     = []
+  default     = ["10.10.0.0/18", "10.10.64.0/18", "10.10.128.0/18" ]
+}
+
+
 variable "enable_dns_hostnames" {
   description = "Enable DNS hostnames in the VPC."
   type        = bool
