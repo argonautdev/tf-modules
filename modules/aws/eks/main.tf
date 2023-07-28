@@ -50,7 +50,7 @@ data "aws_subnets" "private_secondary" {
 }
 
 module "eks" {
-  source = "github.com/argonautdev/terraform-eks?ref=v17.4.1"
+  source = "github.com/argonautdev/terraform-eks?ref=v17.4.2"
   cluster_name             = var.cluster.name
   cluster_version          = var.cluster.version
   wait_for_cluster_timeout = 900
