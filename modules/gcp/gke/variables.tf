@@ -128,7 +128,7 @@ variable "horizontal_pod_autoscaling" {
 variable "kubernetes_version" {
   type        = string
   description = "The Kubernetes version of the masters."
-  default     = "1.24"
+  default     = "1.27"
 }
 
 variable "initial_node_count" {
