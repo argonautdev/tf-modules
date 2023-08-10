@@ -125,7 +125,7 @@ variable "horizontal_pod_autoscaling" {
 }
 
 ## https://cloud.google.com/kubernetes-engine/versioning#specifying_cluster_version
-variable "kubernetes_version" {
+variable "platform_version" {
   type        = string
   description = "The Kubernetes version of the masters."
   default     = "1.27"
