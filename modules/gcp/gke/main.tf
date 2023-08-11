@@ -39,7 +39,7 @@ resource "google_compute_subnetwork" "cluster_subnet" {
 
 module "gke" {
   depends_on = [google_compute_subnetwork.cluster_subnet]
-  source = "github.com/argonautdev/terraform-google-kubernetes-engine//modules/private-cluster?ref=v21.1.6"
+  source = "github.com/argonautdev/terraform-google-kubernetes-engine//modules/private-cluster?ref=v21.1.8"
   project_id                      = var.project_id
   name                            = var.cluster_name
   description                     = var.description
@@ -54,7 +54,7 @@ module "gke" {
   filestore_csi_driver            = var.filestore_csi_driver
   horizontal_pod_autoscaling      = var.horizontal_pod_autoscaling
   enable_vertical_pod_autoscaling = var.enable_vertical_pod_autoscaling
-  kubernetes_version              = var.kubernetes_version
+  kubernetes_version              = var.platform_version
   initial_node_count              = var.initial_node_count ##How many instances should be launched in each zone
   node_pools                      = var.node_pools
   remove_default_node_pool        = var.remove_default_node_pool
