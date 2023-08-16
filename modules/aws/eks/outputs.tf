@@ -50,3 +50,19 @@ output "eks_admin_group_arn" {
 output "eks_admin_policy_arn" {
   value = aws_iam_group_policy.eks_admin_group_policy.name
 }
+
+output "eks_worker_node_instance_profile_arn" {
+  value = module.karpenter.instance_profile_arn
+}
+
+output "eks_worker_node_instance_profile_name" {
+  value = module.karpenter.instance_profile_name
+}
+
+output "karpenter_controller_iam_role_arn" {
+  value = module.karpenter.irsa_arn
+}
+
+output "eks_worker_sg_id" {
+    value = module.eks.worker_security_group_id
+}
